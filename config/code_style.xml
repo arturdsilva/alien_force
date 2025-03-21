@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<code_scheme name="PEP8" version="173">
+  <!-- Limita o comprimento máximo das linhas para 78 caracteres -->
+  <option name="RIGHT_MARGIN" value="78" />
+
+  <!-- Define duas linhas em branco antes e depois de definições de funções/classes de nível superior -->
+  <option name="BLANK_LINES_AROUND_TOP_LEVEL_DEFINITION" value="2" />
+
+  <!-- Configurações específicas para o Python -->
+  <PythonCodeStyleSettings>
+    <!-- Outras opções podem ser adicionadas aqui para reforçar o padrão PEP 8 -->
+    <!-- Exemplo: garantir espaço após vírgulas -->
+    <option name="SPACE_AFTER_COMMA" value="true" />
+    <!-- Exemplo: garantir espaço após os dois pontos -->
+    <option name="SPACE_AFTER_COLON" value="true" />
+  </PythonCodeStyleSettings>
+</code_scheme>
