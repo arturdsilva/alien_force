@@ -1,6 +1,7 @@
 import pygame
-from config.Constants import Constants
 import numpy as np
+from config.Constants import Constants
+from entities.players.AbstractPlayer import AbstractPlayer
 
 
 # from states.Menu import Menu
@@ -13,16 +14,14 @@ class Game:
     def __init__(self):
         print('initializing game')
         self.clock = pygame.time.Clock()
-        self.elapsed_time = 1 / Constants.FPS
+        self.dt = 1 / Constants.FPS
         pygame.init()
         self.screen = pygame.display.set_mode(
             (Constants.WIDTH, Constants.HEIGHT))
         self.running = True
-        # self.player = Player()
-        # TODO: use class player instead o player_position and player_speed
-        self.player_position = np.array(
-            [Constants.WIDTH / 2, Constants.HEIGHT / 2])
-        self.player_speed = 300
+        self.player = AbstractPlayer()
+        self.all_sprites = pygame.sprite.Group(self.player)
+
 
     def run(self):
         print('Hi')
@@ -32,23 +31,19 @@ class Game:
             self.update()
             self.draw()
 
+
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
 
+
     def update(self):
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_w]:
-            self.player_position[1] -= self.player_speed * self.elapsed_time
-        if keys[pygame.K_s]:
-            self.player_position[1] += self.player_speed * self.elapsed_time
-        if keys[pygame.K_a]:
-            self.player_position[0] -= self.player_speed * self.elapsed_time
-        if keys[pygame.K_d]:
-            self.player_position[0] += self.player_speed * self.elapsed_time
+        self.all_sprites.update(keys, self.dt)
+
 
     def draw(self):
         self.screen.fill("purple")
-        pygame.draw.circle(self.screen, "red", self.player_position, 40)
+        self.all_sprites.draw(self.screen)
         pygame.display.flip()
