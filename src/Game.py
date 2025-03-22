@@ -2,6 +2,7 @@ import pygame
 import numpy as np
 from config.Constants import Constants
 from entities.players.AbstractPlayer import AbstractPlayer
+from entities.enemies.AbstractEnemy import AbstractEnemy
 
 
 # from states.Menu import Menu
@@ -13,14 +14,17 @@ from entities.players.AbstractPlayer import AbstractPlayer
 class Game:
     def __init__(self):
         print('initializing game')
+        pygame.init()
         self.clock = pygame.time.Clock()
         self.dt = 1 / Constants.FPS
-        pygame.init()
         self.screen = pygame.display.set_mode(
             (Constants.WIDTH, Constants.HEIGHT))
         self.running = True
-        self.player = AbstractPlayer()
-        self.all_sprites = pygame.sprite.Group(self.player)
+        self.spawn_timer = 0
+
+        # Sprite Groups
+        self.player = pygame.sprite.GroupSingle(AbstractPlayer())
+        self.enemies = pygame.sprite.Group()
 
 
     def run(self):
@@ -40,10 +44,21 @@ class Game:
 
     def update(self):
         keys = pygame.key.get_pressed()
-        self.all_sprites.update(keys, self.dt)
+        self.player.update(keys, self.dt)
+        self.enemies.update(self.dt)
+
+        self.spawn_timer += self.dt
+        if self.spawn_timer >= Constants.SPAWN_TIMER:
+            self.spawn_enemy()
+            self.spawn_timer = 0
 
 
     def draw(self):
         self.screen.fill("purple")
-        self.all_sprites.draw(self.screen)
+        self.player.draw(self.screen)
+        self.enemies.draw(self.screen)
         pygame.display.flip()
+
+
+    def spawn_enemy(self):
+        self.enemies.add(AbstractEnemy())
