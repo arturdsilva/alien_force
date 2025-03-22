@@ -1,13 +1,14 @@
 import pygame
-from config.Constants import Constants
+from config.Constants import Constants, Colors
 
 
 class AbstractPlayer(pygame.sprite.Sprite):
-    def __init__(self, x=Constants.WIDTH / 2, y=Constants.HEIGHT / 2):
+    def __init__(self, x = Constants.WIDTH / 2, y = Constants.HEIGHT / 2,
+                 color = Colors.WHITE):
         super().__init__()
         self.image = pygame.Surface(
             (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT))
-        self.image.fill(Constants.WHITE)
+        self.image.fill(color)
         self.rect = self.image.get_rect()
         self.rect.centerx = x
         self.rect.bottom = y
