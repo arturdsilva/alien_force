@@ -5,6 +5,8 @@ class Constants:
     PLAYER_WIDTH = 50
     PLAYER_HEIGHT = 100
     PLAYER_SPEED = 100
+    ENEMY_SPEED = 100
+    SPAWN_TIMER = 2
 
 
 class Colors:
