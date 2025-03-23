@@ -1,16 +1,9 @@
 import pygame
-import numpy as np
 from config.Constants import Constants
 from config.AvailableTerrains import AvailableTerrains
 from entities.players.AbstractPlayer import AbstractPlayer
 from entities.enemies.AbstractEnemy import AbstractEnemy
 from entities.Terrain import Terrain
-
-
-# from states.Menu import Menu
-
-
-# from entities.players.AbstractPlayer import AbstractPlayer
 
 
 class Game:
