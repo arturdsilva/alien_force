@@ -13,36 +13,29 @@ class AbstractPlayer(pygame.sprite.Sprite):
         self.rect.centerx = x
         self.rect.bottom = y
         self.jumping = False
-        self.last_vertical_speed = 0
-
+        self.y_speed = 0
 
     def update(self, terrain, keys, dt):
         self.handle_input(keys, terrain, dt)
         self._limit_bounds()
 
-
     def handle_input(self, terrain, keys, dt):
         self.compute_vertical_position(terrain, keys, dt)
         self.compute_horizontal_position(terrain, keys, dt)
 
-
     def compute_vertical_position(self, terrain, keys, dt):
-        speed = self.last_vertical_speed
         if (keys[pygame.K_w] or keys[pygame.K_s]) and not self.jumping:
-            speed = -Constants.JUMP_SPEED
+            self.y_speed = -Constants.JUMP_SPEED
             self.jumping = True
 
-        speed = speed + Constants.GRAVITY * dt
-        self.rect.y += speed * dt
+        self.y_speed += + Constants.GRAVITY * dt
+        self.rect.y += self.y_speed * dt
 
         hits = pygame.sprite.spritecollide(self, terrain, False)
         for block in hits:
             self.rect.bottom = block.rect.y
             self.jumping = False
-            speed = 0
-
-        self.last_vertical_speed = speed
-
+            self.y_speed = 0
 
     def compute_horizontal_position(self, terrain, keys, dt):
         if keys[pygame.K_a]:
@@ -57,7 +50,6 @@ class AbstractPlayer(pygame.sprite.Sprite):
                 self.rect.x = block.rect.right
             if keys[pygame.K_d]:
                 self.rect.right = block.rect.x
-
 
     def _limit_bounds(self):
         if self.rect.left < 0:

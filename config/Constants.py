@@ -23,7 +23,6 @@ class Constants:
     WAVY_ENEMY_ANGULAR_FREQUENCY = 5
 
 
-
 class Colors:
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)

@@ -345,7 +345,6 @@ class AvailableTerrains:
         ]
         self.terrains.append(terrain10)
 
-
     def get_random_terrain(self):
         terrain = random.choice(self.terrains)
         return terrain

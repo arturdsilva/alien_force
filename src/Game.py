@@ -24,7 +24,6 @@ class Game:
         terrain = terrains.get_random_terrain()
         self.terrain = Terrain(terrain)
 
-
     def run(self):
         while self.running:
             self.clock.tick(Constants.FPS)
@@ -32,12 +31,10 @@ class Game:
             self.update()
             self.draw()
 
-
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
-
 
     def update(self):
         keys = pygame.key.get_pressed()
@@ -49,14 +46,12 @@ class Game:
             self.spawn_enemy()
             self.spawn_timer = 0
 
-
     def draw(self):
         self.screen.fill("purple")
         self.player.draw(self.screen)
         self.enemies.draw(self.screen)
         self.terrain.draw(self.screen)
         pygame.display.flip()
-
 
     def spawn_enemy(self):
         if len(self.enemies) < Constants.MAX_ENEMIES:
