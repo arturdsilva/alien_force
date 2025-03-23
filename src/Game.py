@@ -1,8 +1,10 @@
 import pygame
 import numpy as np
 from config.Constants import Constants
+from config.AvailableTerrains import AvailableTerrains
 from entities.players.AbstractPlayer import AbstractPlayer
 from entities.enemies.AbstractEnemy import AbstractEnemy
+from entities.Terrain import Terrain
 
 
 # from states.Menu import Menu
@@ -25,6 +27,10 @@ class Game:
         # Sprite Groups
         self.player = pygame.sprite.GroupSingle(AbstractPlayer())
         self.enemies = pygame.sprite.Group()
+        map_terrains = AvailableTerrains()
+        terrain = map_terrains.get_random_terrain()
+        print(terrain[0])
+        self.map = Terrain(terrain)
 
 
     def run(self):
@@ -57,6 +63,7 @@ class Game:
         self.screen.fill("purple")
         self.player.draw(self.screen)
         self.enemies.draw(self.screen)
+        self.map.draw(self.screen)
         pygame.display.flip()
 
 
