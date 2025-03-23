@@ -33,7 +33,6 @@ class AbstractPlayer(pygame.sprite.Sprite):
             self.jumping = True
 
         speed = speed + Constants.GRAVITY * dt
-        print(speed)
         self.rect.y += speed * dt
 
         hits = pygame.sprite.spritecollide(self, terrain, False)
