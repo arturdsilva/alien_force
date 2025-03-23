@@ -1,19 +1,13 @@
 import pygame
-import numpy as np
 from config.Constants import Constants
+from config.AvailableTerrains import AvailableTerrains
 from entities.players.AbstractPlayer import AbstractPlayer
 from entities.enemies.AbstractEnemy import AbstractEnemy
-
-
-# from states.Menu import Menu
-
-
-# from entities.players.AbstractPlayer import AbstractPlayer
+from entities.Terrain import Terrain
 
 
 class Game:
     def __init__(self):
-        print('initializing game')
         pygame.init()
         self.clock = pygame.time.Clock()
         self.dt = 1 / Constants.FPS
@@ -25,10 +19,12 @@ class Game:
         # Sprite Groups
         self.player = pygame.sprite.GroupSingle(AbstractPlayer())
         self.enemies = pygame.sprite.Group()
+        terrains = AvailableTerrains()
+        terrain = terrains.get_random_terrain()
+        self.terrain = Terrain(terrain)
 
 
     def run(self):
-        print('Hi')
         while self.running:
             self.clock.tick(Constants.FPS)
             self.handle_events()
@@ -44,7 +40,7 @@ class Game:
 
     def update(self):
         keys = pygame.key.get_pressed()
-        self.player.update(keys, self.dt)
+        self.player.update(keys, self.terrain, self.dt)
         self.enemies.update(self.dt)
 
         self.spawn_timer += self.dt
@@ -57,6 +53,7 @@ class Game:
         self.screen.fill("purple")
         self.player.draw(self.screen)
         self.enemies.draw(self.screen)
+        self.terrain.draw(self.screen)
         pygame.display.flip()
 
 

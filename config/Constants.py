@@ -7,6 +7,8 @@ class Constants:
     PLAYER_SPEED = 100
     ENEMY_SPEED = 100
     SPAWN_TIMER = 2
+    JUMP_SPEED = 700
+    GRAVITY = 3000
 
 
 class Colors:
