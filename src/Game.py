@@ -19,10 +19,9 @@ class Game:
         # Sprite Groups
         self.player = pygame.sprite.GroupSingle(AbstractPlayer())
         self.enemies = pygame.sprite.Group()
-        map_terrains = AvailableTerrains()
-        terrain = map_terrains.get_random_terrain()
-        print(terrain[0])
-        self.map = Terrain(terrain)
+        terrains = AvailableTerrains()
+        terrain = terrains.get_random_terrain()
+        self.terrain = Terrain(terrain)
 
 
     def run(self):
@@ -41,7 +40,7 @@ class Game:
 
     def update(self):
         keys = pygame.key.get_pressed()
-        self.player.update(keys, self.map, self.dt)
+        self.player.update(keys, self.terrain, self.dt)
         self.enemies.update(self.dt)
 
         self.spawn_timer += self.dt
@@ -54,7 +53,7 @@ class Game:
         self.screen.fill("purple")
         self.player.draw(self.screen)
         self.enemies.draw(self.screen)
-        self.map.draw(self.screen)
+        self.terrain.draw(self.screen)
         pygame.display.flip()
 
 
