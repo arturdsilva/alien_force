@@ -15,7 +15,6 @@ from entities.Terrain import Terrain
 
 class Game:
     def __init__(self):
-        print('initializing game')
         pygame.init()
         self.clock = pygame.time.Clock()
         self.dt = 1 / Constants.FPS
@@ -34,7 +33,6 @@ class Game:
 
 
     def run(self):
-        print('Hi')
         while self.running:
             self.clock.tick(Constants.FPS)
             self.handle_events()
@@ -50,7 +48,7 @@ class Game:
 
     def update(self):
         keys = pygame.key.get_pressed()
-        self.player.update(keys, self.dt)
+        self.player.update(keys, self.map, self.dt)
         self.enemies.update(self.dt)
 
         self.spawn_timer += self.dt
