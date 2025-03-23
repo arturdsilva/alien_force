@@ -4,6 +4,7 @@ from config.AvailableTerrains import AvailableTerrains
 from entities.players.AbstractPlayer import AbstractPlayer
 from entities.enemies.AbstractEnemy import AbstractEnemy
 from entities.Terrain import Terrain
+from src.entities.enemies.WavyEnemy import WavyEnemy
 
 
 class Game:
@@ -58,4 +59,6 @@ class Game:
 
 
     def spawn_enemy(self):
-        self.enemies.add(AbstractEnemy())
+        if len(self.enemies) < Constants.MAX_ENEMIES:
+            self.enemies.add(AbstractEnemy())
+            self.enemies.add(WavyEnemy())
