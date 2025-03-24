@@ -1,10 +1,11 @@
 import pygame
-from config.Constants import Constants, Colors
+from config.Constants import Constants
+from src.entities.Projectile import ProjectileGenerator
 
 
 class AbstractPlayer(pygame.sprite.Sprite):
     def __init__(self, x=Constants.WIDTH / 2, y=Constants.HEIGHT / 2,
-                 color=Colors.WHITE):
+                 color=Constants.PLAYER_DEFAULT_COLOR):
         super().__init__()
         self.image = pygame.Surface(
             (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT))
@@ -15,13 +16,26 @@ class AbstractPlayer(pygame.sprite.Sprite):
         self.jumping = False
         self.y_speed = 0
 
-    def update(self, terrain, keys, dt):
-        self.handle_input(keys, terrain, dt)
-        self._limit_bounds()
+        projectile_image = pygame.Surface(
+            (Constants.PROJECTILE_DEFAULT_WIDTH, Constants.PROJECTILE_HEIGHT))
+        projectile_image.fill(Constants.PROJECTILE_DEFAULT_COLOR)
+        self.projectile_generator = ProjectileGenerator(self,
+                                                        Constants.PROJECTILE_DEFAULT_SPEED,
+                                                        Constants.PROJECTILE_DEFAULT_FREQUENCY,
+                                                        projectile_image,
+                                                        Constants.PROJECTILE_DEFAULT_DAMAGE)
 
-    def handle_input(self, terrain, keys, dt):
+    def update(self, terrain, keys, dt, projectiles):
+        self.handle_input(keys, terrain, dt, projectiles)
+        self.limit_bounds()
+
+    def handle_input(self, terrain, keys, dt, projectiles):
         self.compute_vertical_position(terrain, keys, dt)
         self.compute_horizontal_position(terrain, keys, dt)
+        if pygame.mouse.get_pressed()[0]:
+            target = pygame.math.Vector2(pygame.mouse.get_pos()[0],
+                                         pygame.mouse.get_pos()[1])
+            self.projectile_generator.generate(target, dt, projectiles)
 
     def compute_vertical_position(self, terrain, keys, dt):
         if (keys[pygame.K_w] or keys[pygame.K_s]) and not self.jumping:
@@ -51,7 +65,7 @@ class AbstractPlayer(pygame.sprite.Sprite):
             if keys[pygame.K_d]:
                 self.rect.right = block.rect.x
 
-    def _limit_bounds(self):
+    def limit_bounds(self):
         if self.rect.left < 0:
             self.rect.left = 0
         if self.rect.right > Constants.WIDTH:
