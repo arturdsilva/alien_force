@@ -1,6 +1,6 @@
 import pygame
 import math
-from config.Constants import Constants, Colors
+from config.Constants import Constants
 
 
 class Block(pygame.sprite.Sprite):
@@ -9,7 +9,7 @@ class Block(pygame.sprite.Sprite):
         self.image = pygame.Surface((math.ceil(width), math.ceil(height)))
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
-        self.image.fill(Colors.WHITE)
+        self.image.fill(Constants.TERRAIN_COLOR)
 
 
 class Terrain(pygame.sprite.Group):

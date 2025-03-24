@@ -49,7 +49,7 @@ class Game:
             self.spawn_timer = 0
 
     def draw(self):
-        self.screen.fill("purple")
+        self.screen.fill(Constants.BACKGROUND_COLOR)
         self.player.draw(self.screen)
         self.enemies.draw(self.screen)
         self.terrain.draw(self.screen)

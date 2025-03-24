@@ -1,11 +1,11 @@
 import pygame
-from config.Constants import Constants, Colors
+from config.Constants import Constants
 from src.entities.Projectile import ProjectileGenerator
 
 
 class AbstractPlayer(pygame.sprite.Sprite):
     def __init__(self, x=Constants.WIDTH / 2, y=Constants.HEIGHT / 2,
-                 color=Colors.WHITE):
+                 color=Constants.PLAYER_DEFAULT_COLOR):
         super().__init__()
         self.image = pygame.Surface(
             (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT))
@@ -18,7 +18,7 @@ class AbstractPlayer(pygame.sprite.Sprite):
 
         projectile_image = pygame.Surface(
             (Constants.PROJECTILE_DEFAULT_WIDTH, Constants.PROJECTILE_HEIGHT))
-        projectile_image.fill(Colors.BLUE)
+        projectile_image.fill(Constants.PROJECTILE_DEFAULT_COLOR)
         self.projectile_generator = ProjectileGenerator(self,
                                                         Constants.PROJECTILE_DEFAULT_SPEED,
                                                         Constants.PROJECTILE_DEFAULT_FREQUENCY,
