@@ -19,6 +19,7 @@ class Projectile(pygame.sprite.Sprite):
     def update(self, dt):
         self.position += self.velocity * dt
         self.rect.center = self.position
+        self.handle_bounds()
 
     def handle_bounds(self):
         if (self.rect.right < 0 or
