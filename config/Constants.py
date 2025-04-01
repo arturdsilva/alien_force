@@ -33,6 +33,7 @@ class Constants:
     PLAYER_SPEED = 100
     PLAYER_DEFAULT_COLOR = Colors.DARK_GRAY
     JUMP_SPEED = 700
+    PLAYER_MAX_HEALTH = 100
 
     # ENEMIES
     MAX_ENEMIES = 20
