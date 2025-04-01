@@ -8,7 +8,15 @@ from src.entities.enemies.WavyEnemy import WavyEnemy
 
 
 class Game:
+    """
+    Represents the game.
+    """
+
     def __init__(self):
+        """
+        Initializes the game.
+        """
+
         pygame.init()
         self._clock = pygame.time.Clock()
         self._dt = 1 / Constants.FPS
@@ -26,6 +34,10 @@ class Game:
         self._terrain = Terrain(terrain)
 
     def run(self):
+        """
+        Runs the game.
+        """
+
         while self._is_running:
             self._clock.tick(Constants.FPS)
             self.handle_events()
@@ -33,11 +45,19 @@ class Game:
             self.draw()
 
     def handle_events(self):
+        """
+        Handles pygame events.
+        """
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self._is_running = False
 
     def update(self):
+        """
+        Updates the game's entities.
+        """
+
         keys = pygame.key.get_pressed()
         self._player.update(keys, self._terrain, self._dt, self._projectiles)
         self._enemies.update(self._dt)
@@ -49,6 +69,10 @@ class Game:
             self._spawn_timer = 0
 
     def draw(self):
+        """
+        Draws game elements on screen.
+        """
+
         self.screen.fill(Constants.BACKGROUND_COLOR)
         self._player.draw(self.screen)
         self._enemies.draw(self.screen)
@@ -57,6 +81,10 @@ class Game:
         pygame.display.flip()
 
     def spawn_enemy(self):
+        """
+        Spawns enemies.
+        """
+
         if len(self._enemies) < Constants.MAX_ENEMIES:
             self._enemies.add(AbstractEnemy())
             self._enemies.add(WavyEnemy())
