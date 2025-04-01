@@ -5,7 +5,18 @@ import pygame
 
 
 class WavyEnemy(AbstractEnemy):
+    """
+    Represents an enemy with sinusoidal movement.
+    """
+
     def __init__(self, x=Constants.WIDTH, y=Constants.HEIGHT / 3):
+        """
+        Initializes a wavy enemy.
+
+        :param x: The initial enemy x coordinate.
+        :param y: The initial enemy y coordinate.
+        """
+
         super().__init__(x=x, y=y)
         self.image = pygame.Surface((Constants.WAVY_ENEMY_WIDTH,
                                      Constants.WAVY_ENEMY_HEIGHT))
@@ -20,11 +31,17 @@ class WavyEnemy(AbstractEnemy):
         self._health_points = Constants.WAVY_ENEMY_MAX_HEALTH
 
     def move(self, dt):
+        """
+        Updates the wavy enemy position.
+
+        :param dt: The duration of one iteration.
+        """
+
         self.rect.x += self._speed * dt
         self.rect.y = Constants.WAVY_ENEMY_Y + self._amplitude * np.sin(
             self._angular_frequency * self._timer)
         self._timer = (self._timer + dt) % (
-                    2 * np.pi / self._angular_frequency)
+                2 * np.pi / self._angular_frequency)
 
         if self.limit_bounds():
             self._speed = -self._speed

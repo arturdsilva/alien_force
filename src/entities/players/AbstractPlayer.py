@@ -75,7 +75,8 @@ class AbstractPlayer(pygame.sprite.Sprite):
         :param dt: The duration of one iteration.
         """
 
-        if (keys[pygame.K_w] or keys[pygame.K_SPACE]) and not self._is_jumping:
+        if (keys[pygame.K_w] or keys[
+            pygame.K_SPACE]) and not self._is_jumping:
             self._y_speed = -Constants.JUMP_SPEED
             self._is_jumping = True
 
@@ -112,7 +113,7 @@ class AbstractPlayer(pygame.sprite.Sprite):
 
     def limit_bounds(self):
         """
-        limits player position to inside screen boundaries.
+        Limits player position to inside screen boundaries.
         """
 
         if self.rect.left < 0:

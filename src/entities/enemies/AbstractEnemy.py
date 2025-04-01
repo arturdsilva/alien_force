@@ -4,7 +4,18 @@ from src.entities.Projectile import Projectile, ProjectileGenerator
 
 
 class AbstractEnemy(pygame.sprite.Sprite):
+    """
+    Represents an enemy.
+    """
+
     def __init__(self, x=0, y=Constants.HEIGHT / 10):
+        """
+        Initializes an enemy.
+
+        :param x: The initial enemy x coordinate.
+        :param y: The initial enemy y coordinate.
+        """
+
         super().__init__()
         self.image = pygame.Surface((50, 50))
         self.image.fill(Colors.RED)
@@ -16,15 +27,31 @@ class AbstractEnemy(pygame.sprite.Sprite):
         self.projectile_generator = None
 
     def update(self, dt):
+        """
+        Updates the enemy.
+
+        :param dt: The duration of one iteration.
+        """
+
         self.move(dt)
         self.limit_bounds()
 
     def move(self, dt):
+        """
+        Updates the enemy position.
+
+        :param dt: The duration of one iteration.
+        """
+
         self.rect.x += self._speed * dt
         if self.limit_bounds():
             self._speed = -self._speed
 
     def limit_bounds(self):
+        """
+        Limits enemy position to inside screen boundaries.
+        """
+
         out_of_bounds = False
         if self.rect.left < 0:
             self.rect.left = 0
