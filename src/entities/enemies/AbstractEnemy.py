@@ -1,29 +1,28 @@
 import pygame
 from config.Constants import Constants, Colors
+from src.entities.Projectile import Projectile, ProjectileGenerator
 
 
 class AbstractEnemy(pygame.sprite.Sprite):
-    def __init__(self, x=0, y=Constants.HEIGHT / 10,
-                 speed_factor=1,
-                 width=50,
-                 height=50,
-                 color=Colors.RED):
+    def __init__(self, x=0, y=Constants.HEIGHT / 10):
         super().__init__()
-        self.image = pygame.Surface((width, height))
-        self.image.fill(color)
+        self.image = pygame.Surface((50, 50))
+        self.image.fill(Colors.RED)
         self.rect = self.image.get_rect()
         self.rect.centerx = x
         self.rect.bottom = y
-        self.speed = speed_factor * Constants.ENEMY_SPEED
+        self._speed = 1 * Constants.ENEMY_SPEED
+        self._health_points = None
+        self.projectile_generator = None
 
     def update(self, dt):
         self.move(dt)
         self.limit_bounds()
 
     def move(self, dt):
-        self.rect.x += self.speed * dt
+        self.rect.x += self._speed * dt
         if self.limit_bounds():
-            self.speed = -self.speed
+            self._speed = -self._speed
 
     def limit_bounds(self):
         out_of_bounds = False
