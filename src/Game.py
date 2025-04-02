@@ -36,6 +36,7 @@ class Game:
         self.__enemies = pygame.sprite.Group()
         self.__player_projectiles = pygame.sprite.Group()
         self.__enemies_projectiles = pygame.sprite.Group()
+        self._abilities = pygame.sprite.Group()
 
     def run(self):
         """
@@ -68,6 +69,7 @@ class Game:
                              self.__player_projectiles,
                              self.__enemies_projectiles)
         self.__enemies.update(self.__dt, self.__player_projectiles)
+        self._abilities.update(self.__dt)
 
         self.__spawn_timer += self.__dt
         if self.__spawn_timer >= Constants.SPAWN_TIMER:
@@ -84,6 +86,7 @@ class Game:
         self.__enemies.draw(self.__screen)
         self.__terrain.draw(self.__screen)
         self.__player_projectiles.draw(self.__screen)
+        self._abilities.draw(self.screen)
         pygame.display.flip()
 
     def __spawn_enemy(self):

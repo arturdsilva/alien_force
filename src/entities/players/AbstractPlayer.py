@@ -1,6 +1,7 @@
 import pygame
 from config.Constants import Constants
 from src.entities.Projectile import ProjectileGenerator
+from src.entities.Abilitiy import MissileBarrage
 
 
 class AbstractPlayer(pygame.sprite.Sprite):
@@ -29,15 +30,19 @@ class AbstractPlayer(pygame.sprite.Sprite):
 
         projectile_image = pygame.Surface(
             (Constants.PROJECTILE_DEFAULT_WIDTH, Constants.PROJECTILE_HEIGHT))
+        ability_image = pygame.Surface(
+            (Constants.ABILITY_WITDTH, Constants.ABILITY_HEIGHT)
+        )
         projectile_image.fill(Constants.PROJECTILE_DEFAULT_COLOR)
         self.projectile_generator = ProjectileGenerator(self,
                                                         Constants.PROJECTILE_DEFAULT_SPEED,
                                                         Constants.PROJECTILE_DEFAULT_FREQUENCY,
                                                         projectile_image,
                                                         Constants.PROJECTILE_DEFAULT_DAMAGE)
+        self.ability_generator = MissileBarrage(self, Constants.ABILITY_SPEED, Constants.ABILITY_DAMAGE, ability_image)
 
     def update(self, terrain, keys, dt, player_projectiles,
-               enemies_projectiles):
+               enemies_projectiles, abilities):
         """
         Updates the player.
 
@@ -46,13 +51,14 @@ class AbstractPlayer(pygame.sprite.Sprite):
         :param dt: The duration of one iteration.
         :param player_projectiles: Player projectiles on screen.
         :param enemies_projectiles: Enemies projectiles on screen.
+        :param abilities: Abilities on screen.
         """
 
-        self._handle_input(keys, terrain, dt, player_projectiles)
+        self._handle_input(keys, terrain, dt, player_projectiles, abilities)
         self._limit_bounds()
         self._compute_damage(enemies_projectiles)
 
-    def _handle_input(self, terrain, keys, dt, projectiles):
+    def _handle_input(self, terrain, keys, dt, projectiles, abilities):
         """
         Handles player input.
 
@@ -60,6 +66,7 @@ class AbstractPlayer(pygame.sprite.Sprite):
         :param keys: Keys being input by the player.
         :param dt: The duration of one iteration.
         :param projectiles: Projectiles on screen.
+        :param abilities: Abilities on screen.
         """
 
         self._compute_vertical_position(terrain, keys, dt)
@@ -68,6 +75,10 @@ class AbstractPlayer(pygame.sprite.Sprite):
             target = pygame.math.Vector2(pygame.mouse.get_pos()[0],
                                          pygame.mouse.get_pos()[1])
             self.projectile_generator.generate(target, dt, projectiles)
+        if pygame.mouse.get_pressed()[2]:
+            target_ability = pygame.math.Vector2(pygame.mouse.get_pos()[0],
+                                         pygame.mouse.get_pos()[1])
+            self.ability_generator.generate(target_ability, dt, abilities)
 
     def _compute_vertical_position(self, terrain, keys, dt):
         """
