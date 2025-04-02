@@ -25,12 +25,12 @@ class WavyEnemy(AbstractEnemy):
         self.rect.centerx = x
         self.rect.bottom = y
         self._speed = 1.5 * Constants.ENEMY_SPEED
-        self._timer = 0
-        self._amplitude = Constants.WAVY_ENEMY_AMPLITUDE
-        self._angular_frequency = Constants.WAVY_ENEMY_ANGULAR_FREQUENCY
         self._health_points = Constants.WAVY_ENEMY_MAX_HEALTH
+        self.__timer = 0
+        self.__amplitude = Constants.WAVY_ENEMY_AMPLITUDE
+        self.__angular_frequency = Constants.WAVY_ENEMY_ANGULAR_FREQUENCY
 
-    def move(self, dt):
+    def _move(self, dt):
         """
         Updates the wavy enemy position.
 
@@ -38,10 +38,10 @@ class WavyEnemy(AbstractEnemy):
         """
 
         self.rect.x += self._speed * dt
-        self.rect.y = Constants.WAVY_ENEMY_Y + self._amplitude * np.sin(
-            self._angular_frequency * self._timer)
-        self._timer = (self._timer + dt) % (
-                2 * np.pi / self._angular_frequency)
+        self.rect.y = Constants.WAVY_ENEMY_Y + self.__amplitude * np.sin(
+            self.__angular_frequency * self.__timer)
+        self.__timer = (self.__timer + dt) % (
+                2 * np.pi / self.__angular_frequency)
 
-        if self.limit_bounds():
+        if self._limit_bounds():
             self._speed = -self._speed

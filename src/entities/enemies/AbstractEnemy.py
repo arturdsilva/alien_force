@@ -24,19 +24,21 @@ class AbstractEnemy(pygame.sprite.Sprite):
         self.rect.bottom = y
         self._speed = 1 * Constants.ENEMY_SPEED
         self._health_points = None
-        self.projectile_generator = None
+        self._projectile_generator = None
 
-    def update(self, dt):
+    def update(self, dt, player_projectiles):
         """
         Updates the enemy.
 
         :param dt: The duration of one iteration.
+        :param player_projectiles: Player projectiles on screen.
         """
 
-        self.move(dt)
-        self.limit_bounds()
+        self._move(dt)
+        self._limit_bounds()
+        self._compute_damage(player_projectiles)
 
-    def move(self, dt):
+    def _move(self, dt):
         """
         Updates the enemy position.
 
@@ -44,10 +46,10 @@ class AbstractEnemy(pygame.sprite.Sprite):
         """
 
         self.rect.x += self._speed * dt
-        if self.limit_bounds():
+        if self._limit_bounds():
             self._speed = -self._speed
 
-    def limit_bounds(self):
+    def _limit_bounds(self):
         """
         Limits enemy position to inside screen boundaries.
         """
@@ -67,3 +69,8 @@ class AbstractEnemy(pygame.sprite.Sprite):
             out_of_bounds = True
 
         return out_of_bounds
+
+    def _compute_damage(self, player_projectiles):
+        for projectile in player_projectiles:
+            if pygame.sprite.collide_rect(self, projectile):
+                print("hit")
