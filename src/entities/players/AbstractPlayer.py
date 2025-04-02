@@ -36,20 +36,23 @@ class AbstractPlayer(pygame.sprite.Sprite):
                                                         projectile_image,
                                                         Constants.PROJECTILE_DEFAULT_DAMAGE)
 
-    def update(self, terrain, keys, dt, projectiles):
+    def update(self, terrain, keys, dt, player_projectiles,
+               enemies_projectiles):
         """
         Updates the player.
 
         :param terrain: The terrain.
         :param keys: Keys being input by the player.
         :param dt: The duration of one iteration.
-        :param projectiles: Projectiles on screen.
+        :param player_projectiles: Player projectiles on screen.
+        :param enemies_projectiles: Enemies projectiles on screen.
         """
 
-        self.handle_input(keys, terrain, dt, projectiles)
-        self.limit_bounds()
+        self._handle_input(keys, terrain, dt, player_projectiles)
+        self._limit_bounds()
+        self._compute_damage(enemies_projectiles)
 
-    def handle_input(self, terrain, keys, dt, projectiles):
+    def _handle_input(self, terrain, keys, dt, projectiles):
         """
         Handles player input.
 
@@ -59,14 +62,14 @@ class AbstractPlayer(pygame.sprite.Sprite):
         :param projectiles: Projectiles on screen.
         """
 
-        self.compute_vertical_position(terrain, keys, dt)
-        self.compute_horizontal_position(terrain, keys, dt)
+        self._compute_vertical_position(terrain, keys, dt)
+        self._compute_horizontal_position(terrain, keys, dt)
         if pygame.mouse.get_pressed()[0]:
             target = pygame.math.Vector2(pygame.mouse.get_pos()[0],
                                          pygame.mouse.get_pos()[1])
             self.projectile_generator.generate(target, dt, projectiles)
 
-    def compute_vertical_position(self, terrain, keys, dt):
+    def _compute_vertical_position(self, terrain, keys, dt):
         """
         Computes player's vertical position.
 
@@ -89,7 +92,7 @@ class AbstractPlayer(pygame.sprite.Sprite):
             self._is_jumping = False
             self._y_speed = 0
 
-    def compute_horizontal_position(self, terrain, keys, dt):
+    def _compute_horizontal_position(self, terrain, keys, dt):
         """
         Computes player's horizontal position.
 
@@ -111,7 +114,7 @@ class AbstractPlayer(pygame.sprite.Sprite):
             if keys[pygame.K_d]:
                 self.rect.right = block.rect.x
 
-    def limit_bounds(self):
+    def _limit_bounds(self):
         """
         Limits player position to inside screen boundaries.
         """
@@ -124,3 +127,8 @@ class AbstractPlayer(pygame.sprite.Sprite):
             self.rect.top = 0
         if self.rect.bottom > Constants.HEIGHT:
             self.rect.bottom = Constants.HEIGHT
+
+    def _compute_damage(self, enemies_projectiles):
+        for projectile in enemies_projectiles:
+            if pygame.sprite.collide_rect(self, projectile):
+                print("got hit")
