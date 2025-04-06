@@ -5,6 +5,7 @@ from config.AvailableTerrains import AvailableTerrains
 from entities.enemies.AbstractEnemy import AbstractEnemy
 from entities.Terrain import Terrain
 from src.entities.enemies.WavyEnemy import WavyEnemy
+from src.states.Pause import Pause
 
 
 class Play(GameState):
@@ -53,8 +54,7 @@ class Play(GameState):
     def handle_events(self, events):
         for event in events:
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    from src.states.Pause import Pause
+                if event.key in [pygame.K_ESCAPE, pygame.K_p]:
                     self.next_state = Pause(self.game, self)
 
     def spawn_enemy(self):

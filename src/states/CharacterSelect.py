@@ -45,21 +45,18 @@ class CharacterSelect(GameState):
         ]
         
         self.selected = 0
-        self.preview_size = 150  # Tamanho do preview do personagem
+        self.preview_size = 150 
         self.update_character_info()
 
     def update_character_info(self):
         char = self.characters[self.selected]
         
-        # Nome do personagem
         self.char_name = self.font_chars.render(char['name'], True, char['color'])
         self.char_name_rect = self.char_name.get_rect(center=(Constants.WIDTH/2, Constants.HEIGHT/2 - 100))
         
-        # Descrição do personagem
         self.char_desc = self.font_desc.render(char['desc'], True, pygame.Color('white'))
         self.char_desc_rect = self.char_desc.get_rect(center=(Constants.WIDTH/2, Constants.HEIGHT/2 + 100))
         
-        # Controles
         self.controls = self.font_desc.render('← → para selecionar, ESPAÇO para confirmar', True, pygame.Color('white'))
         self.controls_rect = self.controls.get_rect(center=(Constants.WIDTH/2, Constants.HEIGHT - 80))
 
@@ -69,28 +66,24 @@ class CharacterSelect(GameState):
     def draw(self, screen):
         screen.fill(pygame.Color('black'))
         
-        # Desenha o título
         screen.blit(self.title, self.title_rect)
         
-        # Desenha o preview do personagem
         char = self.characters[self.selected]
         preview = pygame.Surface((self.preview_size, self.preview_size))
         preview.fill(char['color'])
         preview_rect = preview.get_rect(center=(Constants.WIDTH/2, Constants.HEIGHT/2))
         screen.blit(preview, preview_rect)
         
-        # Desenha setas de navegação
-        if self.selected > 0:  # Seta esquerda
+        if self.selected > 0: 
             left_arrow = self.font_chars.render('←', True, pygame.Color('white'))
             left_rect = left_arrow.get_rect(midright=(preview_rect.left - 30, Constants.HEIGHT/2))
             screen.blit(left_arrow, left_rect)
             
-        if self.selected < len(self.characters) - 1:  # Seta direita
+        if self.selected < len(self.characters) - 1:
             right_arrow = self.font_chars.render('→', True, pygame.Color('white'))
             right_rect = right_arrow.get_rect(midleft=(preview_rect.right + 30, Constants.HEIGHT/2))
             screen.blit(right_arrow, right_rect)
         
-        # Desenha nome e descrição
         screen.blit(self.char_name, self.char_name_rect)
         screen.blit(self.char_desc, self.char_desc_rect)
         screen.blit(self.controls, self.controls_rect)

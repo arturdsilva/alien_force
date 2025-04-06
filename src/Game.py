@@ -24,6 +24,7 @@ class Game:
             (Constants.WIDTH, Constants.HEIGHT))
         self.__is_running = True
         self.__current_state = Menu(self)
+        self.__next_state = None
 
     def run(self):
         """
@@ -43,7 +44,10 @@ class Game:
             
             # Verifica se precisa mudar de estado
             if self.__current_state.next_state != self.__current_state:
-                self.__current_state = self.__current_state.next_state
+                self.__next_state = self.__current_state.next_state
+                self.__current_state.next_state = self.__current_state  # Reseta o next_state
+                self.__current_state = self.__next_state
+                self.__next_state = None
             
             pygame.display.flip()
 
