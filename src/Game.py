@@ -5,6 +5,7 @@ from entities.players.DefaultPlayer import DefaultPlayer
 from entities.enemies.AbstractEnemy import AbstractEnemy
 from entities.Terrain import Terrain
 from src.entities.enemies.WavyEnemy import WavyEnemy
+from src.states.Menu import Menu
 
 
 class Game:
@@ -16,37 +17,35 @@ class Game:
         """
         Initializes the game.
         """
-
         pygame.init()
         self.__clock = pygame.time.Clock()
         self.__dt = 1 / Constants.FPS
         self.__screen = pygame.display.set_mode(
             (Constants.WIDTH, Constants.HEIGHT))
         self.__is_running = True
-        self.__spawn_timer = 0
-
-        # Terrain
-        terrains = AvailableTerrains()
-        random_terrain = terrains.get_random_terrain()
-        self.__terrain = Terrain(random_terrain)
-
-        # Sprite Groups
-        self.__player = pygame.sprite.GroupSingle(
-            DefaultPlayer())  # TODO: create logic to select player
-        self.__enemies = pygame.sprite.Group()
-        self.__player_projectiles = pygame.sprite.Group()
-        self.__enemies_projectiles = pygame.sprite.Group()
+        self.__current_state = Menu(self)
 
     def run(self):
         """
         Runs the game.
         """
-
         while self.__is_running:
             self.__clock.tick(Constants.FPS)
-            self.__handle_events()
-            self.__update()
-            self.__draw()
+            events = pygame.event.get()
+            
+            for event in events:
+                if event.type == pygame.QUIT:
+                    self.__is_running = False
+
+            self.__current_state.handle_events(events)
+            self.__current_state.update(self.__dt)
+            self.__current_state.draw(self.__screen)
+            
+            # Verifica se precisa mudar de estado
+            if self.__current_state.next_state != self.__current_state:
+                self.__current_state = self.__current_state.next_state
+            
+            pygame.display.flip()
 
     def __handle_events(self):
         """
