@@ -68,7 +68,7 @@ class CharacterSelect(GameState):
         self.char_desc_rect = self.char_desc.get_rect(center=(Constants.WIDTH/2, Constants.HEIGHT/2 + 100))
         
         # Controles
-        self.controls = self.font_desc.render('← → para selecionar, ESPAÇO para confirmar', True, pygame.Color('white'))
+        self.controls = self.font_desc.render('ESPAÇO para confirmar', True, pygame.Color('white'))
         self.controls_rect = self.controls.get_rect(center=(Constants.WIDTH/2, Constants.HEIGHT - 80))
 
     def update(self, dt):
@@ -99,12 +99,12 @@ class CharacterSelect(GameState):
         
         # Desenha setas de navegação
         if self.selected > 0:
-            left_arrow = self.font_chars.render('←', True, pygame.Color('white'))
+            left_arrow = self.font_chars.render('<', True, pygame.Color('white'))
             left_rect = left_arrow.get_rect(midright=(preview_rect.left - 30, Constants.HEIGHT/2))
             screen.blit(left_arrow, left_rect)
             
         if self.selected < len(self.characters) - 1:
-            right_arrow = self.font_chars.render('→', True, pygame.Color('white'))
+            right_arrow = self.font_chars.render('>', True, pygame.Color('white'))
             right_rect = right_arrow.get_rect(midleft=(preview_rect.right + 30, Constants.HEIGHT/2))
             screen.blit(right_arrow, right_rect)
         
@@ -121,11 +121,11 @@ class CharacterSelect(GameState):
         """
         for event in events:
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    self.selected = (self.selected - 1) % len(self.characters)
+                if event.key == pygame.K_LEFT and self.selected > 0:
+                    self.selected -= 1
                     self.update_character_info()
-                elif event.key == pygame.K_RIGHT:
-                    self.selected = (self.selected + 1) % len(self.characters)
+                elif event.key == pygame.K_RIGHT and self.selected < len(self.characters) - 1:
+                    self.selected += 1
                     self.update_character_info()
                 elif event.key == pygame.K_SPACE:
                     selected_char = self.characters[self.selected]['class']()
