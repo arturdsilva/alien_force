@@ -1,7 +1,7 @@
 import pygame
 from config.Constants import Constants
 from config.AvailableTerrains import AvailableTerrains
-from entities.players.AbstractPlayer import AbstractPlayer
+from entities.players.DefaultPlayer import DefaultPlayer
 from entities.enemies.AbstractEnemy import AbstractEnemy
 from entities.Terrain import Terrain
 from src.entities.enemies.WavyEnemy import WavyEnemy
@@ -32,7 +32,7 @@ class Game:
 
         # Sprite Groups
         self.__player = pygame.sprite.GroupSingle(
-            AbstractPlayer())  # TODO: create logic to select player
+            DefaultPlayer())  # TODO: create logic to select player
         self.__enemies = pygame.sprite.Group()
         self.__player_projectiles = pygame.sprite.Group()
         self.__enemies_projectiles = pygame.sprite.Group()
