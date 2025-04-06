@@ -1,10 +1,11 @@
 import pygame
+import random
 from src.states import GameState
 from config.Constants import Constants
 from config.AvailableTerrains import AvailableTerrains
-from entities.enemies.AbstractEnemy import AbstractEnemy
 from entities.Terrain import Terrain
 from src.entities.enemies.WavyEnemy import WavyEnemy
+from src.entities.enemies.LinearEnemy import LinearEnemy
 from src.states.Pause import Pause
 
 
@@ -96,8 +97,10 @@ class Play(GameState):
 
     def spawn_enemy(self):
         """
-        Gera inimigos no jogo quando apropriado.
+        Gera inimigos aleatórios no jogo quando apropriado.
+        Os inimigos são escolhidos aleatoriamente entre os tipos disponíveis.
         """
         if len(self.enemies) < Constants.MAX_ENEMIES:
-            self.enemies.add(AbstractEnemy())
-            self.enemies.add(WavyEnemy())
+            enemy_types = [WavyEnemy, LinearEnemy]
+            enemy_class = random.choice(enemy_types)
+            self.enemies.add(enemy_class())
