@@ -38,24 +38,26 @@ class WavyEnemy(AbstractEnemy):
         self.rect.centerx = x
         self.rect.bottom = y
 
-    def _move(self, dt):
+    def _move(self, dt, terrain=None):
         """
         Atualiza a posição do inimigo com movimento ondular.
 
         :param dt: Tempo desde a última atualização
+        :param terrain: Grupo de sprites do terreno (não utilizado por este inimigo)
         """
         self.rect.x += self._speed * dt
-        self.rect.y = self.__base_y + self.__amplitude * np.sin(
+        self.rect.y = Constants.WAVY_ENEMY_Y + self.__amplitude * np.sin(
             self.__angular_frequency * self.__timer)
         
         if self._limit_bounds():
             self._speed = -self._speed
 
-    def _update_behavior(self, dt):
+    def _update_behavior(self, dt, terrain=None):
         """
         Atualiza o timer para o movimento ondular.
 
         :param dt: Tempo desde a última atualização
+        :param terrain: Grupo de sprites do terreno (não utilizado por este inimigo)
         """
         self.__timer = (self.__timer + dt) % (
                 2 * np.pi / self.__angular_frequency)

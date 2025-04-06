@@ -54,6 +54,25 @@ class Constants:
     LINEAR_ENEMY_MAX_HEALTH = 80
     LINEAR_ENEMY_SPEED = 150
 
+    # Bouncing Enemy
+    BOUNCING_ENEMY_WIDTH = 35
+    BOUNCING_ENEMY_HEIGHT = 35
+    BOUNCING_ENEMY_MAX_HEALTH = 60
+    BOUNCING_ENEMY_HORIZONTAL_SPEED = 150
+    BOUNCING_ENEMY_FALL_SPEED = 500
+    BOUNCING_ENEMY_RISE_SPEED = 100
+    BOUNCING_ENEMY_BASE_HEIGHT = HEIGHT / 4  # Altura base para movimento horizontal
+    BOUNCING_ENEMY_MIN_TIME_BEFORE_FALL = 2  # Tempo mínimo antes de cair
+    BOUNCING_ENEMY_MAX_TIME_BEFORE_FALL = 5  # Tempo máximo antes de cair
+    BOUNCING_ENEMY_WAIT_TIME = 1  # Tempo de espera após cair/subir
+
+    # Tank Enemy
+    TANK_ENEMY_WIDTH = 80
+    TANK_ENEMY_HEIGHT = 60
+    TANK_ENEMY_MAX_HEALTH = 200
+    TANK_ENEMY_SPEED = 50
+    TANK_ENEMY_Y = 80  # Posição Y fixa no topo da tela
+
     # PROJECTILE
     PROJECTILE_DEFAULT_SPEED = 800
     PROJECTILE_DEFAULT_FREQUENCY = 10

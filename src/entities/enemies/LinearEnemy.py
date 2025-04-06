@@ -33,22 +33,24 @@ class LinearEnemy(AbstractEnemy):
         self.rect.centerx = x
         self.rect.centery = y
 
-    def _move(self, dt):
+    def _move(self, dt, terrain=None):
         """
         Atualiza a posição do inimigo com movimento linear.
 
         :param dt: Tempo desde a última atualização
+        :param terrain: Grupo de sprites do terreno (não utilizado por este inimigo)
         """
         self.rect.x += self._speed * dt
         
         if self._limit_bounds():
             self._speed = -self._speed
 
-    def _update_behavior(self, dt):
+    def _update_behavior(self, dt, terrain=None):
         """
         Atualiza comportamentos específicos do inimigo linear.
         Neste caso, não há comportamentos adicionais para atualizar.
 
         :param dt: Tempo desde a última atualização
+        :param terrain: Grupo de sprites do terreno (não utilizado por este inimigo)
         """
         pass 

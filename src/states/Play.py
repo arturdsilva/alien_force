@@ -6,6 +6,8 @@ from config.AvailableTerrains import AvailableTerrains
 from entities.Terrain import Terrain
 from src.entities.enemies.WavyEnemy import WavyEnemy
 from src.entities.enemies.LinearEnemy import LinearEnemy
+from src.entities.enemies.BouncingEnemy import BouncingEnemy
+from src.entities.enemies.TankEnemy import TankEnemy
 from src.states.Pause import Pause
 
 
@@ -65,7 +67,7 @@ class Play(GameState):
         self.player.update(keys, self.terrain, dt,
                           self.player_projectiles,
                           self.enemies_projectiles)
-        self.enemies.update(dt, self.player_projectiles)
+        self.enemies.update(dt, self.player_projectiles, self.terrain)
 
         self.spawn_timer += dt
         if self.spawn_timer >= Constants.SPAWN_TIMER:
@@ -98,9 +100,23 @@ class Play(GameState):
     def spawn_enemy(self):
         """
         Gera inimigos aleatórios no jogo quando apropriado.
-        Os inimigos são escolhidos aleatoriamente entre os tipos disponíveis.
+        Os inimigos são escolhidos aleatoriamente entre os tipos disponíveis,
+        com diferentes probabilidades baseadas na dificuldade.
         """
         if len(self.enemies) < Constants.MAX_ENEMIES:
-            enemy_types = [WavyEnemy, LinearEnemy]
-            enemy_class = random.choice(enemy_types)
+            # Lista de tipos de inimigos com seus pesos (probabilidades)
+            enemy_types = [
+                (WavyEnemy, 30),      # 30% de chance
+                (LinearEnemy, 30),     # 30% de chance
+                (BouncingEnemy, 25),   # 25% de chance
+                (TankEnemy, 15)        # 15% de chance
+            ]
+            
+            # Escolhe um inimigo baseado nos pesos
+            enemy_class = random.choices(
+                [enemy[0] for enemy in enemy_types],
+                weights=[enemy[1] for enemy in enemy_types]
+            )[0]
+            
+            # Cria e adiciona o inimigo ao grupo
             self.enemies.add(enemy_class())
