@@ -13,6 +13,12 @@ class Play(GameState):
     Estado do jogo em andamento.
     """
     def __init__(self, game, player):
+        """
+        Inicializa o estado de jogo.
+
+        :param game: A instância principal do jogo.
+        :param player: O personagem selecionado pelo jogador.
+        """
         super().__init__(game)
         self.spawn_timer = 0
 
@@ -21,17 +27,38 @@ class Play(GameState):
         random_terrain = terrains.get_random_terrain()
         self.terrain = Terrain(random_terrain)
 
-        # Posiciona o player no centro-x e na parte inferior da tela
+        # Posiciona o player no centro-x e acima do terreno
         player.rect.centerx = Constants.WIDTH / 2
-        player.rect.bottom = Constants.HEIGHT
-
+        player.rect.bottom = 0  # Começa no topo
+        
         # Sprite Groups
         self.player = pygame.sprite.GroupSingle(player)
         self.enemies = pygame.sprite.Group()
         self.player_projectiles = pygame.sprite.Group()
         self.enemies_projectiles = pygame.sprite.Group()
 
+        # Ajusta a posição inicial do player para ficar sobre o terreno
+        self._adjust_player_initial_position()
+
+    def _adjust_player_initial_position(self):
+        """
+        Ajusta a posição inicial do player para ficar sobre o terreno.
+        """
+        player = self.player.sprite
+        # Move o player para baixo até encontrar o terreno
+        while player.rect.bottom < Constants.HEIGHT:
+            player.rect.y += 1
+            hits = pygame.sprite.spritecollide(player, self.terrain, False)
+            if hits:
+                player.rect.bottom = hits[0].rect.top
+                break
+
     def update(self, dt):
+        """
+        Atualiza o estado do jogo.
+
+        :param dt: O intervalo de tempo desde a última atualização.
+        """
         keys = pygame.key.get_pressed()
         self.player_projectiles.update(dt)
         self.player.update(keys, self.terrain, dt,
@@ -45,13 +72,23 @@ class Play(GameState):
             self.spawn_timer = 0
 
     def draw(self, screen):
+        """
+        Desenha o estado do jogo.
+
+        :param screen: A superfície da tela onde desenhar.
+        """
         screen.fill(Constants.BACKGROUND_COLOR)
+        self.terrain.draw(screen)  # Desenha o terreno primeiro
         self.player.draw(screen)
         self.enemies.draw(screen)
-        self.terrain.draw(screen)
         self.player_projectiles.draw(screen)
 
     def handle_events(self, events):
+        """
+        Processa eventos do pygame durante o jogo.
+
+        :param events: Lista de eventos do pygame para processar.
+        """
         for event in events:
             if event.type == pygame.KEYDOWN:
                 if event.key in [pygame.K_ESCAPE, pygame.K_p]:
@@ -59,7 +96,7 @@ class Play(GameState):
 
     def spawn_enemy(self):
         """
-        Spawns enemies.
+        Gera inimigos no jogo quando apropriado.
         """
         if len(self.enemies) < Constants.MAX_ENEMIES:
             self.enemies.add(AbstractEnemy())

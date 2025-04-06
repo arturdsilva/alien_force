@@ -12,6 +12,11 @@ class CharacterSelect(GameState):
     Estado de seleção de personagem.
     """
     def __init__(self, game):
+        """
+        Inicializa a tela de seleção de personagem.
+
+        :param game: A instância principal do jogo.
+        """
         super().__init__(game)
         # Configuração das fontes
         self.font_title = pygame.font.Font(None, 74)
@@ -45,36 +50,55 @@ class CharacterSelect(GameState):
         ]
         
         self.selected = 0
-        self.preview_size = 150 
+        self.preview_size = 150
         self.update_character_info()
 
     def update_character_info(self):
+        """
+        Atualiza as informações do personagem selecionado.
+        """
         char = self.characters[self.selected]
         
+        # Nome do personagem
         self.char_name = self.font_chars.render(char['name'], True, char['color'])
         self.char_name_rect = self.char_name.get_rect(center=(Constants.WIDTH/2, Constants.HEIGHT/2 - 100))
         
+        # Descrição do personagem
         self.char_desc = self.font_desc.render(char['desc'], True, pygame.Color('white'))
         self.char_desc_rect = self.char_desc.get_rect(center=(Constants.WIDTH/2, Constants.HEIGHT/2 + 100))
         
+        # Controles
         self.controls = self.font_desc.render('← → para selecionar, ESPAÇO para confirmar', True, pygame.Color('white'))
         self.controls_rect = self.controls.get_rect(center=(Constants.WIDTH/2, Constants.HEIGHT - 80))
 
     def update(self, dt):
+        """
+        Atualiza o estado da seleção de personagem.
+
+        :param dt: O intervalo de tempo desde a última atualização.
+        """
         pass
 
     def draw(self, screen):
+        """
+        Desenha a tela de seleção de personagem.
+
+        :param screen: A superfície da tela onde desenhar.
+        """
         screen.fill(pygame.Color('black'))
         
+        # Desenha o título
         screen.blit(self.title, self.title_rect)
         
+        # Desenha o preview do personagem
         char = self.characters[self.selected]
         preview = pygame.Surface((self.preview_size, self.preview_size))
         preview.fill(char['color'])
         preview_rect = preview.get_rect(center=(Constants.WIDTH/2, Constants.HEIGHT/2))
         screen.blit(preview, preview_rect)
         
-        if self.selected > 0: 
+        # Desenha setas de navegação
+        if self.selected > 0:
             left_arrow = self.font_chars.render('←', True, pygame.Color('white'))
             left_rect = left_arrow.get_rect(midright=(preview_rect.left - 30, Constants.HEIGHT/2))
             screen.blit(left_arrow, left_rect)
@@ -84,11 +108,17 @@ class CharacterSelect(GameState):
             right_rect = right_arrow.get_rect(midleft=(preview_rect.right + 30, Constants.HEIGHT/2))
             screen.blit(right_arrow, right_rect)
         
+        # Desenha nome e descrição
         screen.blit(self.char_name, self.char_name_rect)
         screen.blit(self.char_desc, self.char_desc_rect)
         screen.blit(self.controls, self.controls_rect)
 
     def handle_events(self, events):
+        """
+        Processa eventos do pygame na seleção de personagem.
+
+        :param events: Lista de eventos do pygame para processar.
+        """
         for event in events:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
