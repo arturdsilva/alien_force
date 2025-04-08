@@ -100,7 +100,6 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
                 self._health_points -= projectile.damage
                 projectile.kill()
                 if self._health_points <= 0:
-                    self.kill()
                     return True
         return False
 

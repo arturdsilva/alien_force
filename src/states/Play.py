@@ -9,6 +9,7 @@ from src.entities.enemies.LinearEnemy import LinearEnemy
 from src.entities.enemies.BouncingEnemy import BouncingEnemy
 from src.entities.enemies.TankEnemy import TankEnemy
 from src.states.Pause import Pause
+from src.ui.Hud import Hud
 
 
 class Play(GameState):
@@ -40,6 +41,9 @@ class Play(GameState):
         self.player_projectiles = pygame.sprite.Group()
         self.enemies_projectiles = pygame.sprite.Group()
 
+        # Initialize HUD
+        self.hud = Hud(player)
+
         # Ajusta a posição inicial do player para ficar sobre o terreno
         self._adjust_player_initial_position()
 
@@ -68,6 +72,24 @@ class Play(GameState):
                           self.player_projectiles,
                           self.enemies_projectiles)
         self.enemies.update(dt, self.player_projectiles, self.terrain)
+        
+        # Update HUD
+        self.hud.update(dt)
+        
+        # Check for enemy destruction to update score
+        for enemy in self.enemies.sprites():
+            if enemy.health <= 0:
+                # Add points based on enemy type
+                if isinstance(enemy, TankEnemy):
+                    self.hud.add_score(100)
+                elif isinstance(enemy, WavyEnemy):
+                    self.hud.add_score(50)
+                elif isinstance(enemy, LinearEnemy):
+                    self.hud.add_score(30)
+                elif isinstance(enemy, BouncingEnemy):
+                    self.hud.add_score(40)
+                # Mata o inimigo após atualizar a pontuação
+                enemy.kill()
 
         self.spawn_timer += dt
         if self.spawn_timer >= Constants.SPAWN_TIMER:
@@ -81,10 +103,13 @@ class Play(GameState):
         :param screen: A superfície da tela onde desenhar.
         """
         screen.fill(Constants.BACKGROUND_COLOR)
-        self.terrain.draw(screen)  # Desenha o terreno primeiro
+        self.terrain.draw(screen)
         self.player.draw(screen)
         self.enemies.draw(screen)
         self.player_projectiles.draw(screen)
+        
+        # Draw HUD on top of everything
+        self.hud.draw(screen)
 
     def handle_events(self, events):
         """

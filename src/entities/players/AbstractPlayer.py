@@ -81,7 +81,6 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
 
         self._handle_input(keys, terrain, dt, player_projectiles)
         self._limit_bounds()
-        self._compute_damage(enemies_projectiles)
 
     def _handle_input(self, terrain, keys, dt, projectiles):
         """
@@ -158,8 +157,8 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
             self.rect.top = 0
         if self.rect.bottom > Constants.HEIGHT:
             self.rect.bottom = Constants.HEIGHT
-
     def _compute_damage(self, enemies_projectiles):
         for projectile in enemies_projectiles:
             if pygame.sprite.collide_rect(self, projectile):
                 print("got hit")
+
