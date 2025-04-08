@@ -5,9 +5,9 @@ from src.entities.players.AbstractPlayer import AbstractPlayer
 
 class Rain(AbstractPlayer):
     """
-    Tenente Rain - Especialista em precisão e sobrevivência
-    Ataque básico: Rifle de precisão com recarga muito lenta
-    Habilidade especial: Modo Sobrevivência (aumento de velocidade e recarga)
+    Lieutenant Rain - Precision and survival specialist
+    Basic attack: Precision rifle with very slow reload
+    Special ability: Survival Mode (speed and reload buff)
     """
 
     def get_player_color(self):
@@ -27,4 +27,4 @@ class Rain(AbstractPlayer):
     def get_projectile_damage(self):
         return int(Constants.PROJECTILE_DEFAULT_DAMAGE * 1.8)  
 
-    # TODO: Implementar habilidade especial - Modo Sobrevivência (buff de velocidade e recarga)
+    # TODO: Implement special ability - Survival Mode (speed and reload buff)

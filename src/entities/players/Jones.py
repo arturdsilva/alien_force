@@ -5,9 +5,9 @@ from src.entities.players.AbstractPlayer import AbstractPlayer
 
 class Jones(AbstractPlayer):
     """
-    Sargento Jones - Especialista em explosivos e dano em área
-    Ataque básico: Lançador de granadas com recarga lenta
-    Habilidade especial: Barragem de Mísseis
+    Sergeant Jones - Explosives and area damage specialist
+    Basic attack: Grenade launcher with slow reload
+    Special ability: Missile Barrage
     """
 
     def get_player_color(self):
@@ -28,5 +28,5 @@ class Jones(AbstractPlayer):
     def get_projectile_damage(self):
         return int(Constants.PROJECTILE_DEFAULT_DAMAGE * 2) 
 
-    # TODO: Implementar dano em área para as granadas
-    # TODO: Implementar habilidade especial - Barragem de Mísseis (múltiplos projéteis simultâneos)
+    # TODO: Implement area damage for grenades
+    # TODO: Implement special ability - Missile Barrage (multiple simultaneous projectiles)

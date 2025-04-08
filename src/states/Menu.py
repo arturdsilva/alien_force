@@ -6,13 +6,13 @@ from config.Constants import Constants
 
 class Menu(GameState):
     """
-    Estado do menu principal do jogo.
+    Main menu game state.
     """
     def __init__(self, game):
         """
-        Inicializa o menu principal.
+        Initializes the main menu.
 
-        :param game: A instância principal do jogo.
+        :param game: The main game instance.
         """
         super().__init__(game)
         self.font = pygame.font.Font(None, 74)
@@ -25,17 +25,17 @@ class Menu(GameState):
 
     def update(self, dt):
         """
-        Atualiza o estado do menu.
+        Updates the menu state.
 
-        :param dt: O intervalo de tempo desde a última atualização.
+        :param dt: Time interval since last update.
         """
         pass
 
     def draw(self, screen):
         """
-        Desenha o menu na tela.
+        Draws the menu on screen.
 
-        :param screen: A superfície da tela onde desenhar.
+        :param screen: The screen surface to draw on.
         """
         screen.fill(pygame.Color('black'))
         screen.blit(self.title, self.title_rect)
@@ -43,9 +43,9 @@ class Menu(GameState):
 
     def handle_events(self, events):
         """
-        Processa eventos do pygame no menu.
+        Processes pygame events in menu.
 
-        :param events: Lista de eventos do pygame para processar.
+        :param events: List of pygame events to process.
         """
         for event in events:
             if event.type == pygame.KEYDOWN:

@@ -5,15 +5,15 @@ import pygame
 
 class TankEnemy(AbstractEnemy):
     """
-    Inimigo grande e resistente que se move lentamente no topo da tela.
+    Large and resistant enemy that moves slowly at the top of the screen.
     """
 
     def __init__(self, x=Constants.WIDTH, y=Constants.TANK_ENEMY_Y):
         """
-        Inicializa um inimigo tanque.
+        Initializes a tank enemy.
 
-        :param x: Coordenada x inicial do inimigo
-        :param y: Coordenada y inicial do inimigo (fixo no topo)
+        :param x: Initial enemy x coordinate
+        :param y: Initial enemy y coordinate (fixed at top)
         """
         super().__init__(x=x, y=y)
         self._health_points = Constants.TANK_ENEMY_MAX_HEALTH
@@ -21,10 +21,10 @@ class TankEnemy(AbstractEnemy):
 
     def _initialize_sprite(self, x, y):
         """
-        Inicializa o sprite do inimigo tanque.
+        Initializes the tank enemy sprite.
 
-        :param x: Coordenada x inicial
-        :param y: Coordenada y inicial
+        :param x: Initial x coordinate
+        :param y: Initial y coordinate
         """
         self.image = pygame.Surface((Constants.TANK_ENEMY_WIDTH,
                                    Constants.TANK_ENEMY_HEIGHT))
@@ -35,18 +35,18 @@ class TankEnemy(AbstractEnemy):
 
     def _move(self, dt, terrain=None):
         """
-        Atualiza a posição do inimigo tanque.
-        Move-se apenas horizontalmente no topo da tela.
+        Updates the tank enemy position.
+        Moves only horizontally at the top of the screen.
 
-        :param dt: Tempo desde a última atualização
-        :param terrain: Grupo de sprites do terreno (não utilizado por este inimigo)
+        :param dt: Time since last update
+        :param terrain: Terrain sprite group (not used by this enemy)
         """
         self.rect.x += self._speed * dt
         
-        # Mantém o Y fixo no topo
+        # Keep Y fixed at top
         self.rect.centery = Constants.TANK_ENEMY_Y
         
-        # Inverte direção nas bordas
+        # Reverse direction at edges
         if self.rect.left <= 0:
             self.rect.left = 0
             self._speed = abs(self._speed)
@@ -56,10 +56,10 @@ class TankEnemy(AbstractEnemy):
 
     def _update_behavior(self, dt, terrain=None):
         """
-        Atualiza comportamentos específicos do inimigo tanque.
-        Neste caso, não há comportamentos adicionais para atualizar.
+        Updates specific tank enemy behaviors.
+        In this case, there are no additional behaviors to update.
 
-        :param dt: Tempo desde a última atualização
-        :param terrain: Grupo de sprites do terreno (não utilizado por este inimigo)
+        :param dt: Time since last update
+        :param terrain: Terrain sprite group (not used by this enemy)
         """
         pass 

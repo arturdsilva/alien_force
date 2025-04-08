@@ -16,7 +16,6 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
         :param x: The initial enemy x coordinate.
         :param y: The initial enemy y coordinate.
         """
-
         super().__init__()
         self.image = None
         self.rect = None
@@ -37,11 +36,11 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
 
     def update(self, dt, player_projectiles, terrain=None):
         """
-        Atualiza o estado do inimigo.
+        Updates the enemy state.
 
-        :param dt: Tempo desde a última atualização
-        :param player_projectiles: Projéteis do jogador na tela
-        :param terrain: Grupo de sprites do terreno (opcional)
+        :param dt: Time since last update
+        :param player_projectiles: Player projectiles on screen
+        :param terrain: Terrain sprite group (optional)
         """
         self._move(dt, terrain)
         self._limit_bounds()
@@ -51,22 +50,22 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
     @abstractmethod
     def _move(self, dt, terrain=None):
         """
-        Método abstrato para definir o movimento do inimigo.
-        Deve ser implementado por cada classe filha.
+        Abstract method to define enemy movement.
+        Must be implemented by each child class.
 
-        :param dt: Tempo desde a última atualização
-        :param terrain: Grupo de sprites do terreno (opcional)
+        :param dt: Time since last update
+        :param terrain: Terrain sprite group (optional)
         """
         pass
 
     @abstractmethod
     def _update_behavior(self, dt, terrain=None):
         """
-        Método abstrato para atualizar comportamentos específicos do inimigo.
-        Deve ser implementado por cada classe filha.
+        Abstract method to update specific enemy behaviors.
+        Must be implemented by each child class.
 
-        :param dt: Tempo desde a última atualização
-        :param terrain: Grupo de sprites do terreno (opcional)
+        :param dt: Time since last update
+        :param terrain: Terrain sprite group (optional)
         """
         pass
 
@@ -74,7 +73,6 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
         """
         Limits enemy position to inside screen boundaries.
         """
-
         out_of_bounds = False
         if self.rect.left < 0:
             self.rect.left = 0
@@ -92,10 +90,10 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
 
     def _compute_damage(self, player_projectiles):
         """
-        Calcula o dano recebido por projéteis do jogador.
+        Calculates damage received from player projectiles.
         
-        :param player_projectiles: Lista de projéteis do jogador
-        :return: True se o inimigo foi destruído
+        :param player_projectiles: List of player projectiles
+        :return: True if enemy was destroyed
         """
         for projectile in player_projectiles:
             if pygame.sprite.collide_rect(self, projectile):
@@ -109,8 +107,8 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
     @property
     def health(self):
         """
-        Retorna a vida atual do inimigo.
+        Returns the current enemy health.
         
-        :return: Pontos de vida atuais
+        :return: Current health points
         """
         return self._health_points

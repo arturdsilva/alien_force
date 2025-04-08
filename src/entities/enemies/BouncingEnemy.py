@@ -6,27 +6,27 @@ import random
 
 class BouncingEnemy(AbstractEnemy):
     """
-    Inimigo que se move horizontalmente e ocasionalmente cai rapidamente,
-    subindo lentamente depois.
+    Enemy that moves horizontally and occasionally drops quickly,
+    rising slowly afterward.
     """
 
-    # Estados do inimigo
-    MOVING = 'moving'      # Movendo horizontalmente
-    PREPARING = 'preparing'  # Preparando para cair
-    FALLING = 'falling'    # Caindo
-    WAITING = 'waiting'    # Esperando após cair/subir
-    RISING = 'rising'      # Subindo
+    # Enemy states
+    MOVING = 'moving'      # Moving horizontally
+    PREPARING = 'preparing'  # Preparing to drop
+    FALLING = 'falling'    # Falling
+    WAITING = 'waiting'    # Waiting after falling/rising
+    RISING = 'rising'      # Rising
 
     def __init__(self, x=Constants.WIDTH, y=Constants.BOUNCING_ENEMY_BASE_HEIGHT):
         """
-        Inicializa um inimigo que alterna entre movimento horizontal e vertical.
+        Initializes an enemy that alternates between horizontal and vertical movement.
 
-        :param x: Coordenada x inicial do inimigo
-        :param y: Coordenada y inicial do inimigo
+        :param x: Initial enemy x coordinate
+        :param y: Initial enemy y coordinate
         """
         super().__init__(x=x, y=y)
         self._health_points = Constants.BOUNCING_ENEMY_MAX_HEALTH
-        self._velocity_x = -Constants.BOUNCING_ENEMY_HORIZONTAL_SPEED  # Começa indo para a esquerda
+        self._velocity_x = -Constants.BOUNCING_ENEMY_HORIZONTAL_SPEED  # Starts moving left
         self._state = self.MOVING
         self._timer = 0
         self._wait_timer = 0
@@ -38,10 +38,10 @@ class BouncingEnemy(AbstractEnemy):
 
     def _initialize_sprite(self, x, y):
         """
-        Inicializa o sprite do inimigo.
+        Initializes the enemy sprite.
 
-        :param x: Coordenada x inicial
-        :param y: Coordenada y inicial
+        :param x: Initial x coordinate
+        :param y: Initial y coordinate
         """
         self.image = pygame.Surface((Constants.BOUNCING_ENEMY_WIDTH,
                                    Constants.BOUNCING_ENEMY_HEIGHT))
@@ -52,16 +52,16 @@ class BouncingEnemy(AbstractEnemy):
 
     def _move(self, dt, terrain=None):
         """
-        Atualiza a posição do inimigo baseado no estado atual.
+        Updates enemy position based on current state.
 
-        :param dt: Tempo desde a última atualização
-        :param terrain: Grupo de sprites do terreno
+        :param dt: Time since last update
+        :param terrain: Terrain sprite group
         """
         if self._state == self.MOVING:
-            # Movimento horizontal com velocidade constante
+            # Constant horizontal movement
             self.rect.x += self._velocity_x * dt
             
-            # Inverte direção nas bordas
+            # Reverse direction at edges
             if self.rect.left <= 0:
                 self.rect.left = 0
                 self._velocity_x = Constants.BOUNCING_ENEMY_HORIZONTAL_SPEED
@@ -70,10 +70,10 @@ class BouncingEnemy(AbstractEnemy):
                 self._velocity_x = -Constants.BOUNCING_ENEMY_HORIZONTAL_SPEED
 
         elif self._state == self.FALLING:
-            # Movimento de queda rápida
+            # Fast falling movement
             self.rect.y += Constants.BOUNCING_ENEMY_FALL_SPEED * dt
             
-            # Verifica colisão com o terreno
+            # Check terrain collision
             if terrain:
                 hits = pygame.sprite.spritecollide(self, terrain, False)
                 if hits:
@@ -83,10 +83,10 @@ class BouncingEnemy(AbstractEnemy):
                     return
 
         elif self._state == self.RISING:
-            # Movimento de subida lenta
+            # Slow rising movement
             self.rect.y -= Constants.BOUNCING_ENEMY_RISE_SPEED * dt
             if self.rect.centery <= self._original_y:
-                # Apenas muda o estado, sem forçar a posição Y
+                # Only change state, don't force Y position
                 self._state = self.MOVING
                 self._timer = 0
                 self._fall_time = random.uniform(
@@ -96,10 +96,10 @@ class BouncingEnemy(AbstractEnemy):
 
     def _update_behavior(self, dt, terrain=None):
         """
-        Atualiza o estado do inimigo e seus temporizadores.
+        Updates enemy state and timers.
 
-        :param dt: Tempo desde a última atualização
-        :param terrain: Grupo de sprites do terreno
+        :param dt: Time since last update
+        :param terrain: Terrain sprite group
         """
         if self._state == self.MOVING:
             self._timer += dt
@@ -114,7 +114,7 @@ class BouncingEnemy(AbstractEnemy):
                 self._timer = 0
 
         elif self._state == self.FALLING:
-            # A verificação de colisão com o terreno está no método _move
+            # Terrain collision check is in _move method
             pass
 
         elif self._state == self.WAITING:

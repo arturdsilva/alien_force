@@ -5,9 +5,9 @@ from src.entities.players.AbstractPlayer import AbstractPlayer
 
 class Kane(AbstractPlayer):
     """
-    Capitão "Ciborgue" Kane - Especialista em armas de assalto e plasma
-    Ataque básico: Fuzil de assalto com recarga rápida
-    Habilidade especial: Canhão acelerador de plasma
+    Captain "Cyborg" Kane - Assault weapons and plasma specialist
+    Basic attack: Assault rifle with fast reload
+    Special ability: Plasma accelerator cannon
     """
 
     def get_player_color(self):
@@ -28,4 +28,4 @@ class Kane(AbstractPlayer):
     def get_projectile_damage(self):
         return int(Constants.PROJECTILE_DEFAULT_DAMAGE * 1.2) 
 
-    # TODO: Implementar habilidade especial - Canhão acelerador de plasma
+    # TODO: Implement special ability - Plasma accelerator cannon

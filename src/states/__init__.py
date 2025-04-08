@@ -4,13 +4,13 @@ import pygame
 
 class GameState(ABC):
     """
-    Classe base abstrata para os estados do jogo.
+    Abstract base class for game states.
     """
     def __init__(self, game):
         """
-        Inicializa um estado do jogo.
+        Initializes a game state.
 
-        :param game: A instância principal do jogo.
+        :param game: The main game instance.
         """
         self.game = game
         self.next_state = self
@@ -18,26 +18,26 @@ class GameState(ABC):
     @abstractmethod
     def update(self, dt):
         """
-        Atualiza o estado.
+        Updates the state.
 
-        :param dt: O intervalo de tempo desde a última atualização.
+        :param dt: Time interval since last update.
         """
         pass
 
     @abstractmethod
     def draw(self, screen):
         """
-        Desenha o estado na tela.
+        Draws the state on screen.
 
-        :param screen: A superfície da tela onde desenhar.
+        :param screen: The screen surface to draw on.
         """
         pass
 
     @abstractmethod
     def handle_events(self, events):
         """
-        Processa eventos do pygame.
+        Processes pygame events.
 
-        :param events: Lista de eventos do pygame para processar.
+        :param events: List of pygame events to process.
         """
         pass

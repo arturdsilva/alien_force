@@ -6,15 +6,15 @@ import pygame
 
 class WavyEnemy(AbstractEnemy):
     """
-    Inimigo que se move em um padrão sinusoidal.
+    Enemy that moves in a sinusoidal pattern.
     """
 
     def __init__(self, x=Constants.WIDTH, y=Constants.HEIGHT / 3):
         """
-        Inicializa um inimigo com movimento ondular.
+        Initializes a wavy enemy.
 
-        :param x: Coordenada x inicial do inimigo
-        :param y: Coordenada y inicial do inimigo
+        :param x: Initial enemy x coordinate
+        :param y: Initial enemy y coordinate
         """
         super().__init__(x=x, y=y)
         self._health_points = Constants.WAVY_ENEMY_MAX_HEALTH
@@ -26,10 +26,10 @@ class WavyEnemy(AbstractEnemy):
 
     def _initialize_sprite(self, x, y):
         """
-        Inicializa o sprite do inimigo ondular.
+        Initializes the wavy enemy sprite.
 
-        :param x: Coordenada x inicial
-        :param y: Coordenada y inicial
+        :param x: Initial x coordinate
+        :param y: Initial y coordinate
         """
         self.image = pygame.Surface((Constants.WAVY_ENEMY_WIDTH,
                                    Constants.WAVY_ENEMY_HEIGHT))
@@ -40,10 +40,10 @@ class WavyEnemy(AbstractEnemy):
 
     def _move(self, dt, terrain=None):
         """
-        Atualiza a posição do inimigo com movimento ondular.
+        Updates the wavy enemy position.
 
-        :param dt: Tempo desde a última atualização
-        :param terrain: Grupo de sprites do terreno (não utilizado por este inimigo)
+        :param dt: Time since last update
+        :param terrain: Terrain sprite group (not used by this enemy)
         """
         self.rect.x += self._speed * dt
         self.rect.y = Constants.WAVY_ENEMY_Y + self.__amplitude * np.sin(
@@ -54,10 +54,10 @@ class WavyEnemy(AbstractEnemy):
 
     def _update_behavior(self, dt, terrain=None):
         """
-        Atualiza o timer para o movimento ondular.
+        Updates the timer for wavy movement.
 
-        :param dt: Tempo desde a última atualização
-        :param terrain: Grupo de sprites do terreno (não utilizado por este inimigo)
+        :param dt: Time since last update
+        :param terrain: Terrain sprite group (not used by this enemy)
         """
         self.__timer = (self.__timer + dt) % (
                 2 * np.pi / self.__angular_frequency)

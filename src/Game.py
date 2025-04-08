@@ -37,10 +37,10 @@ class Game:
             self.__current_state.update(self.__dt)
             self.__current_state.draw(self.__screen)
             
-            # Verifica se precisa mudar de estado
+            # Check if state change is needed
             if self.__current_state.next_state != self.__current_state:
                 self.__next_state = self.__current_state.next_state
-                self.__current_state.next_state = self.__current_state  # Reseta o next_state
+                self.__current_state.next_state = self.__current_state  # Reset next_state
                 self.__current_state = self.__next_state
                 self.__next_state = None
             

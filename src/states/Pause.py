@@ -5,20 +5,20 @@ from config.Constants import Constants
 
 class Pause(GameState):
     """
-    Estado de pausa do jogo.
+    Game pause state.
     """
     def __init__(self, game, play_state):
         """
-        Inicializa o menu de pausa.
+        Initializes the pause menu.
 
-        :param game: A instância principal do jogo.
-        :param play_state: O estado do jogo que foi pausado.
+        :param game: The main game instance.
+        :param play_state: The game state that was paused.
         """
         super().__init__(game)
-        self.play_state = play_state  # Guarda o estado do jogo para poder retornar
+        self.play_state = play_state  # Stores the game state to return to
         self.next_state = self 
         
-        # Configuração das fontes
+        # Font configuration
         self.font_title = pygame.font.Font(None, 74)
         self.font_options = pygame.font.Font(None, 48)
         
@@ -26,7 +26,7 @@ class Pause(GameState):
         self.title = self.font_title.render('PAUSADO', True, pygame.Color('white'))
         self.title_rect = self.title.get_rect(center=(Constants.WIDTH/2, Constants.HEIGHT/3))
         
-        # Opções
+        # Options
         self.options = [
             {'text': 'Continuar (P)', 'action': self.resume_game},
             {'text': 'Menu Principal (ESC)', 'action': self.return_to_menu}
@@ -43,37 +43,37 @@ class Pause(GameState):
 
     def update(self, dt):
         """
-        Atualiza o estado do menu de pausa.
+        Updates the pause menu state.
 
-        :param dt: O intervalo de tempo desde a última atualização.
+        :param dt: Time interval since last update.
         """
         pass
 
     def draw(self, screen):
         """
-        Desenha o menu de pausa.
+        Draws the pause menu.
 
-        :param screen: A superfície da tela onde desenhar.
+        :param screen: The screen surface to draw on.
         """
-        # Desenha o estado atual do jogo (congelado)
+        # Draw current game state (frozen)
         self.play_state.draw(screen)
         
-        # Cria uma superfície semi-transparente para escurecer o jogo
+        # Create semi-transparent surface to darken the game
         overlay = pygame.Surface((Constants.WIDTH, Constants.HEIGHT))
         overlay.fill(pygame.Color('black'))
-        overlay.set_alpha(128)  # 128 é 50% de opacidade
+        overlay.set_alpha(128)  # 128 is 50% opacity
         screen.blit(overlay, (0, 0))
         
-        # Desenha o menu de pausa
+        # Draw pause menu
         screen.blit(self.title, self.title_rect)
         for surface, rect in zip(self.options_surfaces, self.options_rects):
             screen.blit(surface, rect)
 
     def handle_events(self, events):
         """
-        Processa eventos do pygame no menu de pausa.
+        Processes pygame events in pause menu.
 
-        :param events: Lista de eventos do pygame para processar.
+        :param events: List of pygame events to process.
         """
         for event in events:
             if event.type == pygame.KEYDOWN:
@@ -84,13 +84,13 @@ class Pause(GameState):
 
     def resume_game(self):
         """
-        Retorna ao jogo pausado.
+        Returns to the paused game.
         """
         self.next_state = self.play_state
 
     def return_to_menu(self):
         """
-        Retorna ao menu principal.
+        Returns to the main menu.
         """
         from src.states.Menu import Menu
         self.next_state = Menu(self.game)

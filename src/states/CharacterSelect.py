@@ -9,16 +9,16 @@ from config.Constants import Constants
 
 class CharacterSelect(GameState):
     """
-    Estado de seleção de personagem.
+    Character selection state.
     """
     def __init__(self, game):
         """
-        Inicializa a tela de seleção de personagem.
+        Initializes the character selection screen.
 
-        :param game: A instância principal do jogo.
+        :param game: The main game instance.
         """
         super().__init__(game)
-        # Configuração das fontes
+        # Font configuration
         self.font_title = pygame.font.Font(None, 74)
         self.font_chars = pygame.font.Font(None, 54)
         self.font_desc = pygame.font.Font(None, 36)
@@ -27,7 +27,7 @@ class CharacterSelect(GameState):
         self.title = self.font_title.render('Selecione seu Personagem', True, pygame.Color('white'))
         self.title_rect = self.title.get_rect(center=(Constants.WIDTH/2, 80))
         
-        # Personagens disponíveis
+        # Available characters
         self.characters = [
             {
                 'name': 'Capitão Kane',
@@ -55,15 +55,15 @@ class CharacterSelect(GameState):
 
     def update_character_info(self):
         """
-        Atualiza as informações do personagem selecionado.
+        Updates the selected character information.
         """
         char = self.characters[self.selected]
         
-        # Nome do personagem
+        # Character name
         self.char_name = self.font_chars.render(char['name'], True, char['color'])
         self.char_name_rect = self.char_name.get_rect(center=(Constants.WIDTH/2, Constants.HEIGHT/2 - 100))
         
-        # Descrição do personagem
+        # Character description
         self.char_desc = self.font_desc.render(char['desc'], True, pygame.Color('white'))
         self.char_desc_rect = self.char_desc.get_rect(center=(Constants.WIDTH/2, Constants.HEIGHT/2 + 100))
         
@@ -73,31 +73,31 @@ class CharacterSelect(GameState):
 
     def update(self, dt):
         """
-        Atualiza o estado da seleção de personagem.
+        Updates the character selection state.
 
-        :param dt: O intervalo de tempo desde a última atualização.
+        :param dt: Time interval since last update.
         """
         pass
 
     def draw(self, screen):
         """
-        Desenha a tela de seleção de personagem.
+        Draws the character selection screen.
 
-        :param screen: A superfície da tela onde desenhar.
+        :param screen: The screen surface to draw on.
         """
         screen.fill(pygame.Color('black'))
         
-        # Desenha o título
+        # Draw title
         screen.blit(self.title, self.title_rect)
         
-        # Desenha o preview do personagem
+        # Draw character preview
         char = self.characters[self.selected]
         preview = pygame.Surface((self.preview_size, self.preview_size))
         preview.fill(char['color'])
         preview_rect = preview.get_rect(center=(Constants.WIDTH/2, Constants.HEIGHT/2))
         screen.blit(preview, preview_rect)
         
-        # Desenha setas de navegação
+        # Draw navigation arrows
         if self.selected > 0:
             left_arrow = self.font_chars.render('<', True, pygame.Color('white'))
             left_rect = left_arrow.get_rect(midright=(preview_rect.left - 30, Constants.HEIGHT/2))
@@ -108,16 +108,16 @@ class CharacterSelect(GameState):
             right_rect = right_arrow.get_rect(midleft=(preview_rect.right + 30, Constants.HEIGHT/2))
             screen.blit(right_arrow, right_rect)
         
-        # Desenha nome e descrição
+        # Draw name and description
         screen.blit(self.char_name, self.char_name_rect)
         screen.blit(self.char_desc, self.char_desc_rect)
         screen.blit(self.controls, self.controls_rect)
 
     def handle_events(self, events):
         """
-        Processa eventos do pygame na seleção de personagem.
+        Processes pygame events in character selection.
 
-        :param events: Lista de eventos do pygame para processar.
+        :param events: List of pygame events to process.
         """
         for event in events:
             if event.type == pygame.KEYDOWN:
