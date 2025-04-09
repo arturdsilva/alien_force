@@ -28,7 +28,7 @@ class AbstractPlayer(pygame.sprite.Sprite):
         self._health_points = Constants.PLAYER_MAX_HEALTH
 
         projectile_image = pygame.Surface(
-            (Constants.PROJECTILE_DEFAULT_WIDTH, Constants.PROJECTILE_HEIGHT))
+            (Constants.PROJECTILE_DEFAULT_WIDTH, Constants.PROJECTILE_DEFAULT_HEIGHT))
         projectile_image.fill(Constants.PROJECTILE_DEFAULT_COLOR)
         self.projectile_generator = ProjectileGenerator(self,
                                                         Constants.PROJECTILE_DEFAULT_SPEED,
@@ -51,6 +51,9 @@ class AbstractPlayer(pygame.sprite.Sprite):
         self._handle_input(keys, terrain, dt, player_projectiles)
         self._limit_bounds()
         self._compute_damage(enemies_projectiles)
+
+        if self._health_points <= 0:
+            self.kill()
 
     def _handle_input(self, terrain, keys, dt, projectiles):
         """
@@ -129,6 +132,12 @@ class AbstractPlayer(pygame.sprite.Sprite):
             self.rect.bottom = Constants.HEIGHT
 
     def _compute_damage(self, enemies_projectiles):
+        """
+        Computes projectile collision and damage taken.
+        :param enemies_projectiles: Enemies projectiles on screen.
+        """
+
         for projectile in enemies_projectiles:
             if pygame.sprite.collide_rect(self, projectile):
-                print("got hit")
+                self._health_points -= projectile.damage
+                projectile.kill()
