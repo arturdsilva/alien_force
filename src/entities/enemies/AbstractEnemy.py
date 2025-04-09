@@ -39,9 +39,10 @@ class AbstractEnemy(pygame.sprite.Sprite):
         self._limit_bounds()
         self._compute_damage(player_projectiles)
 
-        target = pygame.math.Vector2(player.sprite.rect.x,
-                                     player.sprite.rect.y)
-        self._attack(dt, target, enemies_projectiles)
+        if player:
+            target = pygame.math.Vector2(player.sprite.rect.centerx,
+                                         player.sprite.rect.centery)
+            self._attack(dt, target, enemies_projectiles)
 
         if self.is_dead():
             self.kill()
