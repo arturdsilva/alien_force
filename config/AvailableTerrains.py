@@ -32,9 +32,9 @@ class AvailableTerrains:
             '                                        ',
             '                                        ',
             '                                        ',
-            '             XXXXX                      ',
-            '     XXXXX   XXXXX     XXXXXX     XXXXX',
-            'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+            '              XXXX                      ',
+            '     XXXXX   XXXXX     XXXXXX     XXXXXX',
+            ' XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
             'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
         ]
         self.terrains.append(terrain1)
@@ -67,7 +67,7 @@ class AvailableTerrains:
             '                                        ',
             '                                        ',
             '    XXXX                                ',
-            'XXXXXXXXXX     XXXXXXXX    XXXX     XXXX',
+            ' XXXXXXXXX     XXXXXXXX    XXXX     XXXX',
             'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
             'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
         ]
@@ -100,7 +100,7 @@ class AvailableTerrains:
             '                                        ',
             '                                        ',
             '                                        ',
-            'XXXXX       XXXXX                       ',
+            'XXXXX        XXXX                       ',
             'XXXXXXXXXX  XXXXX   XXXX   XXXXXXXX     ',
             'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
             'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
@@ -135,7 +135,7 @@ class AvailableTerrains:
             '                                        ',
             '                                        ',
             'XXXXXXX         XXXXXX   XXXX           ',
-            'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX    XXXXX',
+            'XXXXXXXXXX  XXXXXXXXXXXXXXXXXXX    XXXXX',
             'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
             'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
         ]
@@ -236,8 +236,8 @@ class AvailableTerrains:
             '                                        ',
             '                                        ',
             '                                        ',
-            '    XXXX     XXXX                       ',
-            'XXXXXXX  XXXXXXXX    XXXXX     XXXXXXXX',
+            '   XXX       XXXX                       ',
+            'XXXXXXX  XXXXXXXX    XXXXX     XXXXXXXXX',
             'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
             'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
         ]
@@ -269,9 +269,9 @@ class AvailableTerrains:
             '                                        ',
             '                                        ',
             '                                        ',
-            '                                        ',
-            'XXXXX   XXXXXXX                         ',
-            'XXXXXXXXXXXXXXXXX    XXXXXXXX      XXXX',
+            '                                       X',
+            'XXXXX   XXXXXXX                      XXX',
+            'XXXXXXXXXXXXXXXXX    XXXXXXXX      XXXXX',
             'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
             'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
         ]
@@ -305,7 +305,7 @@ class AvailableTerrains:
             '                                        ',
             '                                        ',
             '         XXXXXX                         ',
-            'XXXXX    XXXXXXXX     XXXXXXXX    XXXXXX',
+            'XXXX     XXXXXXXX     XXXXXXXX    XXXXXX',
             'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
             'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
         ]
