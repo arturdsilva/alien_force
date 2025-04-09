@@ -24,19 +24,27 @@ class AbstractEnemy(pygame.sprite.Sprite):
         self.rect.bottom = y
         self._speed = 1 * Constants.ENEMY_SPEED
         self._health_points = None
-        self._projectile_generator = None
 
-    def update(self, dt, player_projectiles):
+    def update(self, dt, player_projectiles, enemies_projectiles, player):
         """
         Updates the enemy.
 
         :param dt: The duration of one iteration.
         :param player_projectiles: Player projectiles on screen.
+        :param enemies_projectiles: Enemies projectiles on screen.
+        :param player: The player to be targeted.
         """
 
         self._move(dt)
         self._limit_bounds()
         self._compute_damage(player_projectiles)
+
+        target = pygame.math.Vector2(player.sprite.rect.x,
+                                     player.sprite.rect.y)
+        self._attack(dt, target, enemies_projectiles)
+
+        if self.is_dead():
+            self.kill()
 
     def _move(self, dt):
         """
@@ -71,6 +79,23 @@ class AbstractEnemy(pygame.sprite.Sprite):
         return out_of_bounds
 
     def _compute_damage(self, player_projectiles):
+        """
+        Computes projectile collision and damage taken.
+
+        :param player_projectiles: Player projectiles on scree.
+        """
+
         for projectile in player_projectiles:
             if pygame.sprite.collide_rect(self, projectile):
-                print("hit")
+                self._health_points -= projectile.damage
+                projectile.kill()
+
+    def is_dead(self):
+        """
+        If enemy is out of health points.
+        """
+
+        return self._health_points <= 0
+
+    def _attack(self, dt, target, projectiles):
+        raise NotImplementedError("Attack method not implemented")

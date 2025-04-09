@@ -50,6 +50,14 @@ class Projectile(pygame.sprite.Sprite):
                 self.rect.bottom < 0 or self.rect.top > Constants.HEIGHT):
             self.kill()
 
+    @property
+    def damage(self):
+        """
+        The damage the projectile will inflict.
+        """
+
+        return self.__damage
+
 
 class ProjectileGenerator:
     """
