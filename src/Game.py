@@ -65,11 +65,12 @@ class Game:
 
         keys = pygame.key.get_pressed()
         self.__player_projectiles.update(self.__dt)
+        self._abilities.update(self.__dt)
         self.__player.update(keys, self.__terrain, self.__dt,
                              self.__player_projectiles,
-                             self.__enemies_projectiles)
+                             self.__enemies_projectiles, self._abilities)
         self.__enemies.update(self.__dt, self.__player_projectiles)
-        self._abilities.update(self.__dt)
+
 
         self.__spawn_timer += self.__dt
         if self.__spawn_timer >= Constants.SPAWN_TIMER:
@@ -86,7 +87,7 @@ class Game:
         self.__enemies.draw(self.__screen)
         self.__terrain.draw(self.__screen)
         self.__player_projectiles.draw(self.__screen)
-        self._abilities.draw(self.screen)
+        self._abilities.draw(self.__screen)
         pygame.display.flip()
 
     def __spawn_enemy(self):
