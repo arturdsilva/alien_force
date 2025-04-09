@@ -29,6 +29,15 @@ class Projectile(pygame.sprite.Sprite):
         self.rect.center = position
         self.__damage = damage
 
+    @property
+    def damage(self):
+        """
+        Retorna o dano que o projétil causa.
+        
+        :return: Valor do dano do projétil
+        """
+        return self.__damage
+
     def update(self, dt):
         """
         Updates the projectile's position.

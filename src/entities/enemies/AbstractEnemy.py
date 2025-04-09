@@ -1,9 +1,10 @@
 import pygame
+from abc import ABC, abstractmethod
 from config.Constants import Constants, Colors
 from src.entities.Projectile import Projectile, ProjectileGenerator
 
 
-class AbstractEnemy(pygame.sprite.Sprite):
+class AbstractEnemy(pygame.sprite.Sprite, ABC):
     """
     Represents an enemy.
     """
@@ -15,54 +16,71 @@ class AbstractEnemy(pygame.sprite.Sprite):
         :param x: The initial enemy x coordinate.
         :param y: The initial enemy y coordinate.
         """
-
         super().__init__()
-        self.image = pygame.Surface((50, 50))
-        self.image.fill(Colors.RED)
-        self.rect = self.image.get_rect()
-        self.rect.centerx = x
-        self.rect.bottom = y
-        self._speed = 1 * Constants.ENEMY_SPEED
+        self.image = None
+        self.rect = None
+        self._speed = Constants.ENEMY_SPEED
         self._health_points = None
+        self._initialize_sprite(x, y)
 
-    def update(self, dt, player_projectiles, enemies_projectiles, player):
+    @abstractmethod
+    def _initialize_sprite(self, x, y):
+        pass
+
+    def update(self, dt, player_projectiles, enemies_projectiles, player,
+               terrain=None):
+
         """
-        Updates the enemy.
+        Updates the enemy state.
 
-        :param dt: The duration of one iteration.
-        :param player_projectiles: Player projectiles on screen.
+        :param dt: Time since last update
+        :param player_projectiles: Player projectiles on screen
         :param enemies_projectiles: Enemies projectiles on screen.
         :param player: The player to be targeted.
+        :param terrain: Terrain sprite group (optional)
         """
-
-        self._move(dt)
+        self._move(dt, terrain)
         self._limit_bounds()
         self._compute_damage(player_projectiles)
+        self._update_behavior(dt, terrain)
 
         if player:
             target = pygame.math.Vector2(player.sprite.rect.centerx,
                                          player.sprite.rect.centery)
             self._attack(dt, target, enemies_projectiles)
 
-        if self.is_dead():
+        if self._health_points <= 0:
             self.kill()
 
-    def _move(self, dt):
+    @abstractmethod
+    def _move(self, dt, terrain=None):
         """
-        Updates the enemy position.
+        Abstract method to define enemy movement.
+        Must be implemented by each child class.
 
-        :param dt: The duration of one iteration.
+        :param dt: Time since last update
+        :param terrain: Terrain sprite group (optional)
         """
 
-        self.rect.x += self._speed * dt
-        if self._limit_bounds():
-            self._speed = -self._speed
+        pass
+
+
+    @abstractmethod
+    def _update_behavior(self, dt, terrain=None):
+        """
+        Abstract method to update specific enemy behaviors.
+        Must be implemented by each child class.
+
+        :param dt: Time since last update
+        :param terrain: Terrain sprite group (optional)
+        """
+        pass
+
 
     def _limit_bounds(self):
         """
         Limits enemy position to inside screen boundaries.
         """
-
         out_of_bounds = False
         if self.rect.left < 0:
             self.rect.left = 0
@@ -76,14 +94,14 @@ class AbstractEnemy(pygame.sprite.Sprite):
         if self.rect.bottom > Constants.HEIGHT:
             self.rect.bottom = Constants.HEIGHT
             out_of_bounds = True
-
         return out_of_bounds
+
 
     def _compute_damage(self, player_projectiles):
         """
         Computes projectile collision and damage taken.
 
-        :param player_projectiles: Player projectiles on scree.
+        :param player_projectiles: Player projectiles on screen.
         """
 
         for projectile in player_projectiles:
@@ -91,12 +109,15 @@ class AbstractEnemy(pygame.sprite.Sprite):
                 self._health_points -= projectile.damage
                 projectile.kill()
 
-    def is_dead(self):
-        """
-        If enemy is out of health points.
-        """
-
-        return self._health_points <= 0
-
+    @abstractmethod
     def _attack(self, dt, target, projectiles):
-        raise NotImplementedError("Attack method not implemented")
+        pass
+
+    @property
+    def health(self):
+        """
+        Returns the current enemy health.
+
+        :return: Current health points
+        """
+        return self._health_points
