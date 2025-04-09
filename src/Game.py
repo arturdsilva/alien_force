@@ -68,6 +68,9 @@ class Game:
         self.__player.update(keys, self.__terrain, self.__dt,
                              self.__player_projectiles,
                              self.__enemies_projectiles)
+        if self.__player.sprite is None:
+            self.__game_over()
+
         self.__enemies.update(self.__dt, self.__player_projectiles,
                               self.__enemies_projectiles,
                               self.__player)

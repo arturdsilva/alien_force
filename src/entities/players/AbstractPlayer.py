@@ -52,7 +52,7 @@ class AbstractPlayer(pygame.sprite.Sprite):
         self._limit_bounds()
         self._compute_damage(enemies_projectiles)
 
-        if self.is_dead():
+        if self._health_points <= 0:
             self.kill()
 
     def _handle_input(self, terrain, keys, dt, projectiles):
@@ -141,10 +141,3 @@ class AbstractPlayer(pygame.sprite.Sprite):
             if pygame.sprite.collide_rect(self, projectile):
                 self._health_points -= projectile.damage
                 projectile.kill()
-
-    def is_dead(self):
-        """
-        If player is out of health points.
-        """
-
-        return self._health_points <= 0
