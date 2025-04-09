@@ -1,6 +1,10 @@
 import pygame
 from config.Constants import Constants
 from src.states.Menu import Menu
+from config.AvailableTerrains import AvailableTerrains
+from entities.players.AbstractPlayer import AbstractPlayer
+from entities.Terrain import Terrain
+from src.entities.enemies.WavyEnemy import WavyEnemy
 
 
 class Game:
@@ -28,7 +32,7 @@ class Game:
         while self.__is_running:
             self.__clock.tick(Constants.FPS)
             events = pygame.event.get()
-            
+
             for event in events:
                 if event.type == pygame.QUIT:
                     self.__is_running = False
@@ -36,12 +40,12 @@ class Game:
             self.__current_state.handle_events(events)
             self.__current_state.update(self.__dt)
             self.__current_state.draw(self.__screen)
-            
+
             # Check if state change is needed
             if self.__current_state.next_state != self.__current_state:
                 self.__next_state = self.__current_state.next_state
                 self.__current_state.next_state = self.__current_state
                 self.__current_state = self.__next_state
                 self.__next_state = None
-            
+
             pygame.display.flip()

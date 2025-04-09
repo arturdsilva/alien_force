@@ -121,4 +121,7 @@ class BouncingEnemy(AbstractEnemy):
             self._timer += dt
             if self._timer >= Constants.BOUNCING_ENEMY_WAIT_TIME:
                 self._state = self.RISING
-                self._timer = 0 
+                self._timer = 0
+
+    def _attack(self, dt, target, enemies_projectiles):
+        pass

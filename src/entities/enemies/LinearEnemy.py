@@ -53,4 +53,7 @@ class LinearEnemy(AbstractEnemy):
         :param dt: Time since last update
         :param terrain: Terrain sprite group (not used by this enemy)
         """
-        pass 
+        pass
+
+    def _attack(self, dt, target, enemies_projectiles):
+        pass

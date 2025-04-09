@@ -21,31 +21,36 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
         self.rect = None
         self._speed = Constants.ENEMY_SPEED
         self._health_points = None
-        self._projectile_generator = None
         self._initialize_sprite(x, y)
-        
+
     @abstractmethod
     def _initialize_sprite(self, x, y):
-        """
-        Updates the enemy.
-
-        :param dt: The duration of one iteration.
-        :param player_projectiles: Player projectiles on screen.
-        """
         pass
 
-    def update(self, dt, player_projectiles, terrain=None):
+    def update(self, dt, player_projectiles, enemies_projectiles, player,
+               terrain=None):
+
         """
         Updates the enemy state.
 
         :param dt: Time since last update
         :param player_projectiles: Player projectiles on screen
+        :param enemies_projectiles: Enemies projectiles on screen.
+        :param player: The player to be targeted.
         :param terrain: Terrain sprite group (optional)
         """
         self._move(dt, terrain)
         self._limit_bounds()
         self._compute_damage(player_projectiles)
         self._update_behavior(dt, terrain)
+
+        if player:
+            target = pygame.math.Vector2(player.sprite.rect.centerx,
+                                         player.sprite.rect.centery)
+            self._attack(dt, target, enemies_projectiles)
+
+        if self._health_points <= 0:
+            self.kill()
 
     @abstractmethod
     def _move(self, dt, terrain=None):
@@ -56,7 +61,9 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
         :param dt: Time since last update
         :param terrain: Terrain sprite group (optional)
         """
+
         pass
+
 
     @abstractmethod
     def _update_behavior(self, dt, terrain=None):
@@ -68,6 +75,7 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
         :param terrain: Terrain sprite group (optional)
         """
         pass
+
 
     def _limit_bounds(self):
         """
@@ -88,26 +96,28 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
             out_of_bounds = True
         return out_of_bounds
 
+
     def _compute_damage(self, player_projectiles):
         """
-        Calculates damage received from player projectiles.
-        
-        :param player_projectiles: List of player projectiles
-        :return: True if enemy was destroyed
+        Computes projectile collision and damage taken.
+
+        :param player_projectiles: Player projectiles on screen.
         """
+
         for projectile in player_projectiles:
             if pygame.sprite.collide_rect(self, projectile):
                 self._health_points -= projectile.damage
                 projectile.kill()
-                if self._health_points <= 0:
-                    return True
-        return False
+
+    @abstractmethod
+    def _attack(self, dt, target, projectiles):
+        pass
 
     @property
     def health(self):
         """
         Returns the current enemy health.
-        
+
         :return: Current health points
         """
         return self._health_points

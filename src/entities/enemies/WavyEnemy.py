@@ -1,5 +1,6 @@
 from src.entities.enemies.AbstractEnemy import AbstractEnemy
 from config.Constants import Constants, Colors
+from src.entities.Projectile import ProjectileGenerator
 import numpy as np
 import pygame
 
@@ -22,7 +23,12 @@ class WavyEnemy(AbstractEnemy):
         self.__timer = 0
         self.__amplitude = Constants.WAVY_ENEMY_AMPLITUDE
         self.__angular_frequency = Constants.WAVY_ENEMY_ANGULAR_FREQUENCY
-        self.__base_y = y
+        projectile_image = pygame.Surface(
+            (Constants.PROJECTILE_DEFAULT_WIDTH,
+             Constants.PROJECTILE_DEFAULT_HEIGHT))
+        projectile_image.fill(Colors.GREEN)
+        self._projectile_generator = ProjectileGenerator(self, 300, 1,
+                                                         projectile_image, 5)
 
     def _initialize_sprite(self, x, y):
         """
@@ -32,7 +38,7 @@ class WavyEnemy(AbstractEnemy):
         :param y: Initial y coordinate
         """
         self.image = pygame.Surface((Constants.WAVY_ENEMY_WIDTH,
-                                   Constants.WAVY_ENEMY_HEIGHT))
+                                     Constants.WAVY_ENEMY_HEIGHT))
         self.image.fill(Colors.BLUE)
         self.rect = self.image.get_rect()
         self.rect.centerx = x
@@ -61,3 +67,14 @@ class WavyEnemy(AbstractEnemy):
         """
         self.__timer = (self.__timer + dt) % (
                 2 * np.pi / self.__angular_frequency)
+
+    def _attack(self, dt, target, projectiles):
+        """
+        Attacks an enemy by shooting projectiles.
+
+        :param target: Point where projectile will be headed at.
+        :param dt: The duration of one iteration.
+        :param projectiles: Projectiles sprite group.
+        """
+
+        self._projectile_generator.generate(target, dt, projectiles)
