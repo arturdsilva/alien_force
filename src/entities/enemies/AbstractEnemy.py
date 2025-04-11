@@ -68,7 +68,6 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
 
         pass
 
-
     @abstractmethod
     def _update_behavior(self, dt, terrain=None):
         """
@@ -79,7 +78,6 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
         :param terrain: Terrain sprite group (optional)
         """
         pass
-
 
     def _limit_bounds(self):
         """
@@ -99,7 +97,6 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
             self.rect.bottom = Constants.HEIGHT
             out_of_bounds = True
         return out_of_bounds
-
 
     def _compute_damage(self, player_projectiles):
         """

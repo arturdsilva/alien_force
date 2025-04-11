@@ -1,8 +1,9 @@
-from src.entities.enemies.AbstractEnemy import AbstractEnemy
-from config.Constants import Constants, Colors
-from src.entities.Projectile import ProjectileGenerator
 import numpy as np
 import pygame
+
+from config.Constants import Constants, Colors
+from src.entities.Projectile import ProjectileGenerator
+from src.entities.enemies.AbstractEnemy import AbstractEnemy
 
 
 class WavyEnemy(AbstractEnemy):

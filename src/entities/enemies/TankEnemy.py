@@ -1,6 +1,7 @@
-from src.entities.enemies.AbstractEnemy import AbstractEnemy
-from config.Constants import Constants, Colors
 import pygame
+
+from config.Constants import Constants, Colors
+from src.entities.enemies.AbstractEnemy import AbstractEnemy
 
 
 class TankEnemy(AbstractEnemy):
@@ -27,7 +28,7 @@ class TankEnemy(AbstractEnemy):
         :param y: Initial y coordinate
         """
         self.image = pygame.Surface((Constants.TANK_ENEMY_WIDTH,
-                                   Constants.TANK_ENEMY_HEIGHT))
+                                     Constants.TANK_ENEMY_HEIGHT))
         self.image.fill(Colors.PURPLE)
         self.rect = self.image.get_rect()
         self.rect.centerx = x
@@ -42,10 +43,10 @@ class TankEnemy(AbstractEnemy):
         :param terrain: Terrain sprite group (not used by this enemy)
         """
         self.rect.x += self._speed * dt
-        
+
         # Keep Y fixed at top
         self.rect.centery = Constants.TANK_ENEMY_Y
-        
+
         # Reverse direction at edges
         if self.rect.left <= 0:
             self.rect.left = 0

@@ -1,13 +1,15 @@
-import pygame
 import random
-from src.states import GameState
-from config.Constants import Constants
+
+import pygame
+
 from config.AvailableTerrains import AvailableTerrains
+from config.Constants import Constants
 from src.entities.Terrain import Terrain
-from src.entities.enemies.WavyEnemy import WavyEnemy
-from src.entities.enemies.LinearEnemy import LinearEnemy
 from src.entities.enemies.BouncingEnemy import BouncingEnemy
+from src.entities.enemies.LinearEnemy import LinearEnemy
 from src.entities.enemies.TankEnemy import TankEnemy
+from src.entities.enemies.WavyEnemy import WavyEnemy
+from src.states import GameState
 from src.states.Pause import Pause
 from src.ui.Hud import Hud
 
@@ -80,7 +82,7 @@ class Play(GameState):
         self.__enemies.update(dt, self.__player_projectiles,
                               self.__enemies_projectiles,
                               self.__player, self.__terrain,
-                              self.__speed_multiplier)  #
+                              self.__speed_multiplier)
 
         # Update HUD
         self.hud.update(dt)
