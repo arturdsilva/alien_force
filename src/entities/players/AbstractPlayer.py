@@ -1,4 +1,5 @@
 import pygame
+from abc import ABC, abstractmethod
 from config.Constants import Constants
 from src.entities.Projectile import ProjectileGenerator
 from src.entities.Abilitiy import MissileBarrage
@@ -6,9 +7,9 @@ from src.entities.Abilitiy import LaserBeam
 from src.entities.Abilitiy import CriticalShot
 
 
-class AbstractPlayer(pygame.sprite.Sprite):
+class AbstractPlayer(pygame.sprite.Sprite, ABC):
     """
-    Represents a player.
+    Represents an abstract player.
     """
 
     def __init__(self, x=Constants.WIDTH / 2, y=Constants.HEIGHT / 2):
@@ -22,33 +23,36 @@ class AbstractPlayer(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.Surface(
             (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT))
-        self.image.fill(Constants.PLAYER_DEFAULT_COLOR)
+        self.image.fill(self.get_player_color())
         self.rect = self.image.get_rect()
         self.rect.centerx = x
         self.rect.bottom = y
         self._is_jumping = False
         self._y_speed = 0
-        self._health_points = Constants.PLAYER_MAX_HEALTH
+        self._health_points = self.get_initial_health()
         self._ready_ability = True
         self._time_cooldown_ability = 0
         self._time_duration_ability = 0
-        self.__CHARACTER_ID = 2
+        self.__CHARACTER_ID = 2  # TODO: selecionar nas classes filhas
         self._prev_mouse_pressed = False
         self._charging_critical = 0
 
-        projectile_image = pygame.Surface(
-            (Constants.PROJECTILE_DEFAULT_WIDTH, Constants.PROJECTILE_HEIGHT))
+        projectile_image = pygame.Surface((
+            Constants.PROJECTILE_DEFAULT_WIDTH,
+            Constants.PROJECTILE_DEFAULT_HEIGHT))
+        projectile_image.fill(Constants.PROJECTILE_DEFAULT_COLOR)
+        self.projectile_generator = ProjectileGenerator(self,
+                                                        self.get_projectile_speed(),
+                                                        self.get_projectile_frequency(),
+                                                        projectile_image,
+                                                        self.get_projectile_damage())
+
         ability_image = pygame.Surface(
             (Constants.ABILITY_WIDTH, Constants.ABILITY_HEIGHT)
         )
-        projectile_image.fill(Constants.PROJECTILE_DEFAULT_COLOR)
         ability_image.fill(Constants.ABILITY_DEFAULT_COLOR)
-        self.projectile_generator = ProjectileGenerator(self,
-                                                        Constants.PROJECTILE_DEFAULT_SPEED,
-                                                        Constants.PROJECTILE_DEFAULT_FREQUENCY,
-                                                        projectile_image,
-                                                        Constants.PROJECTILE_DEFAULT_DAMAGE)
 
+        # TODO: tirar do construtor do player
         ABILITY_FACTORIES = {
             1: lambda self, image: MissileBarrage(
                 self,
@@ -67,7 +71,7 @@ class AbstractPlayer(pygame.sprite.Sprite):
             ),
             3: lambda self, image: CriticalShot(
                 self,
-                Constants.ABILITY_SPEED*3,
+                Constants.ABILITY_SPEED * 3,
                 image,
                 Constants.ABILITY_DAMAGE,
             )
@@ -75,6 +79,54 @@ class AbstractPlayer(pygame.sprite.Sprite):
         factory = ABILITY_FACTORIES.get(self.__CHARACTER_ID)
         if factory:
             self.ability_generator = factory(self, ability_image)
+
+    @abstractmethod
+    def get_player_color(self):
+        """
+        Returns the color of the player.
+        """
+
+        pass
+
+    @abstractmethod
+    def get_initial_health(self):
+        """
+        Returns the initial health of the player.
+        """
+
+        pass
+
+    @abstractmethod
+    def get_projectile_color(self):
+        """
+        Returns the color of the projectiles.
+        """
+
+        pass
+
+    @abstractmethod
+    def get_projectile_speed(self):
+        """
+        Returns the speed of the projectiles.
+        """
+
+        pass
+
+    @abstractmethod
+    def get_projectile_frequency(self):
+        """
+        Returns the frequency of the projectiles.
+        """
+
+        pass
+
+    @abstractmethod
+    def get_projectile_damage(self):
+        """
+        Returns the damage of the projectiles.
+        """
+
+        pass
 
     def update(self, terrain, keys, dt, player_projectiles,
                enemies_projectiles, abilities):
@@ -92,6 +144,9 @@ class AbstractPlayer(pygame.sprite.Sprite):
         self._handle_input(keys, terrain, dt, player_projectiles, abilities)
         self._limit_bounds()
         self._compute_damage(enemies_projectiles)
+
+        if self._health_points <= 0:
+            self.kill()
 
     def _handle_input(self, terrain, keys, dt, projectiles, abilities):
         """
@@ -179,9 +234,15 @@ class AbstractPlayer(pygame.sprite.Sprite):
             self.rect.bottom = Constants.HEIGHT
 
     def _compute_damage(self, enemies_projectiles):
+        """
+        Computes projectile collision and damage taken.
+        :param enemies_projectiles: Enemies projectiles on screen.
+        """
+
         for projectile in enemies_projectiles:
             if pygame.sprite.collide_rect(self, projectile):
-                print("got hit")
+                self._health_points -= projectile.damage
+                projectile.kill()
 
     def _compute_cooldown_ability(self, dt):
         """
