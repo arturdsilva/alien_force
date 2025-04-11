@@ -3,7 +3,7 @@ import random
 from src.states import GameState
 from config.Constants import Constants
 from config.AvailableTerrains import AvailableTerrains
-from entities.Terrain import Terrain
+from src.entities.Terrain import Terrain
 from src.entities.enemies.WavyEnemy import WavyEnemy
 from src.entities.enemies.LinearEnemy import LinearEnemy
 from src.entities.enemies.BouncingEnemy import BouncingEnemy
