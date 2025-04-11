@@ -5,18 +5,18 @@ from config.Constants import Constants
 
 class BaseProjectile(pygame.sprite.Sprite, ABC):
     """
-    Classe base abstrata para todos os tipos de projéteis.
-    Define a interface comum que todos os projéteis devem implementar.
+    Abstract base class for all projectile types.
+    Defines the common interface that all projectiles must implement.
     """
     
     def __init__(self, position, velocity, image, damage):
         """
-        Inicializa um projétil base.
+        Initializes a base projectile.
 
-        :param position: Posição inicial do projétil
-        :param velocity: Vetor de velocidade do projétil
-        :param image: Imagem do projétil
-        :param damage: Dano causado pelo projétil
+        :param position: Initial position of the projectile
+        :param velocity: Velocity vector of the projectile
+        :param image: Projectile image
+        :param damage: Damage caused by the projectile
         """
         super().__init__()
         self._position = position
@@ -29,18 +29,18 @@ class BaseProjectile(pygame.sprite.Sprite, ABC):
     @abstractmethod
     def update(self, dt, terrain=None, player=None):
         """
-        Atualiza o estado do projétil.
-        Método abstrato que deve ser implementado pelas classes filhas.
+        Updates the projectile state.
+        Abstract method that must be implemented by child classes.
 
-        :param dt: Tempo desde a última atualização
-        :param terrain: Grupo de sprites do terreno (opcional)
-        :param player: Sprite do jogador (opcional)
+        :param dt: Time since last update
+        :param terrain: Terrain sprite group (optional)
+        :param player: Player sprite (optional)
         """
         pass
 
     def _handle_bounds(self):
         """
-        Remove projéteis que saem dos limites da tela.
+        Removes projectiles that go out of screen bounds.
         """
         if (self.rect.right < 0 or
                 self.rect.left > Constants.WIDTH or
@@ -50,16 +50,16 @@ class BaseProjectile(pygame.sprite.Sprite, ABC):
     @abstractmethod
     def draw(self, screen):
         """
-        Desenha o projétil na tela.
-        Método abstrato que deve ser implementado pelas classes filhas.
+        Draws the projectile on screen.
+        Abstract method that must be implemented by child classes.
 
-        :param screen: Superfície da tela
+        :param screen: Screen surface
         """
         pass
 
     @property
     def damage(self):
         """
-        Retorna o dano causado pelo projétil.
+        Returns the damage caused by the projectile.
         """
         return self._damage 

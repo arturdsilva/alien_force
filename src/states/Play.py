@@ -14,15 +14,15 @@ from src.ui.Hud import Hud
 
 class Play(GameState):
     """
-    Estado do jogo em andamento.
+    Game in progress state.
     """
 
     def __init__(self, game, player):
         """
-        Inicializa o estado de jogo.
+        Initializes the game state.
 
-        :param game: A instância principal do jogo.
-        :param player: O personagem selecionado pelo jogador.
+        :param game: The main game instance.
+        :param player: The character selected by the player.
         """
         super().__init__(game)
         self.spawn_timer = 0
@@ -51,7 +51,7 @@ class Play(GameState):
 
     def _adjust_player_initial_position(self):
         """
-        Ajusta a posição inicial do player para ficar sobre o terreno.
+        Adjusts the initial player position to be on terrain.
         """
         player = self.__player.sprite
         # Move o player para baixo até encontrar o terreno
@@ -64,9 +64,9 @@ class Play(GameState):
 
     def update(self, dt):
         """
-        Atualiza o estado do jogo.
+        Updates the game state.
 
-        :param dt: O intervalo de tempo desde a última atualização.
+        :param dt: Time since last update.
         """
         keys = pygame.key.get_pressed()
         player = self.__player.sprite
@@ -111,9 +111,9 @@ class Play(GameState):
 
     def draw(self, screen):
         """
-        Desenha o estado do jogo.
+        Draws the game state.
 
-        :param screen: A superfície da tela onde desenhar.
+        :param screen: The screen surface to draw on.
         """
         screen.fill(Constants.BACKGROUND_COLOR)
         self.__terrain.draw(screen)
@@ -135,9 +135,9 @@ class Play(GameState):
 
     def handle_events(self, events):
         """
-        Processa eventos do pygame durante o jogo.
+        Processes pygame events during the game.
 
-        :param events: Lista de eventos do pygame para processar.
+        :param events: List of pygame events to process.
         """
         for event in events:
             if event.type == pygame.KEYDOWN:
@@ -146,9 +146,9 @@ class Play(GameState):
 
     def spawn_enemy(self):
         """
-        Gera inimigos aleatórios no jogo quando apropriado.
-        Os inimigos são escolhidos aleatoriamente entre os tipos disponíveis,
-        com diferentes probabilidades baseadas na dificuldade.
+        Spawns random enemies in the game when appropriate.
+        Enemies are chosen randomly from available types,
+        with different probabilities based on difficulty.
         """
         if len(self.__enemies) < Constants.MAX_ENEMIES:
             # Lista de tipos de inimigos com seus pesos (probabilidades)

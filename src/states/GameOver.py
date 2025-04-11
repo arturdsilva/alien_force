@@ -5,16 +5,16 @@ from config.Constants import Constants, Colors
 
 class GameOver(GameState):
     """
-    Estado de game over do jogo.
-    Mostra o score final e opções para reiniciar ou voltar ao menu.
+    Game over state of the game.
+    Shows the final score and options to restart or return to menu.
     """
 
     def __init__(self, game, score):
         """
-        Inicializa o estado de game over.
+        Initializes the game over state.
 
-        :param game: A instância principal do jogo.
-        :param score: O score final do jogador.
+        :param game: The main game instance.
+        :param score: The player's final score.
         """
         super().__init__(game)
         self.score = score
@@ -24,35 +24,34 @@ class GameOver(GameState):
 
     def update(self, dt):
         """
-        Atualiza o estado de game over.
-        Não há atualizações necessárias neste estado.
+        Updates the game over state.
+        No updates are needed in this state.
 
-        :param dt: O intervalo de tempo desde a última atualização.
+        :param dt: Time since last update.
         """
         pass
 
     def draw(self, screen):
         """
-        Desenha a tela de game over.
+        Draws the game over screen.
 
-        :param screen: A superfície da tela onde desenhar.
+        :param screen: The screen surface to draw on.
         """
-        # Fundo escuro semi-transparente
         overlay = pygame.Surface((Constants.WIDTH, Constants.HEIGHT), pygame.SRCALPHA)
         overlay.fill((0, 0, 0, 200))
         screen.blit(overlay, (0, 0))
 
-        # Título
+        # Title
         title = self.font_large.render("GAME OVER", True, Colors.RED)
         title_rect = title.get_rect(center=(Constants.WIDTH/2, Constants.HEIGHT/3))
         screen.blit(title, title_rect)
 
         # Score
-        score_text = self.font_medium.render(f"Score Final: {self.score}", True, Colors.WHITE)
+        score_text = self.font_medium.render(f"Final Score: {self.score}", True, Colors.WHITE)
         score_rect = score_text.get_rect(center=(Constants.WIDTH/2, Constants.HEIGHT/2))
         screen.blit(score_text, score_rect)
 
-        # Instruções
+
         restart_text = self.font_small.render("Pressione R para reiniciar", True, Colors.WHITE)
         menu_text = self.font_small.render("Pressione M para voltar ao menu", True, Colors.WHITE)
         
@@ -64,9 +63,9 @@ class GameOver(GameState):
 
     def handle_events(self, events):
         """
-        Processa eventos do pygame durante o game over.
+        Processes pygame events during game over.
 
-        :param events: Lista de eventos do pygame para processar.
+        :param events: List of pygame events to process.
         """
         for event in events:
             if event.type == pygame.KEYDOWN:

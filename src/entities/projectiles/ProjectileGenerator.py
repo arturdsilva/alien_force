@@ -7,20 +7,20 @@ from .NormalProjectile import NormalProjectile
 
 class ProjectileGenerator:
     """
-    Gerador de projéteis que controla a criação e comportamento dos projéteis.
+    Projectile generator that controls projectile creation and behavior.
     """
     
     def __init__(self, agent, projectile_speed, frequency, projectile_image, projectile_damage, projectile_type="normal", is_player_projectile=False):
         """
-        Inicializa um gerador de projéteis.
+        Initializes a projectile generator.
 
-        :param agent: Agente que dispara os projéteis
-        :param projectile_speed: Velocidade dos projéteis
-        :param frequency: Frequência de disparo
-        :param projectile_image: Imagem do projétil
-        :param projectile_damage: Dano do projétil
-        :param projectile_type: Tipo do projétil ("normal" ou "bomb")
-        :param is_player_projectile: Indica se é um projétil do jogador
+        :param agent: Agent that fires the projectiles
+        :param projectile_speed: Projectile speed
+        :param frequency: Firing frequency
+        :param projectile_image: Projectile image
+        :param projectile_damage: Projectile damage
+        :param projectile_type: Projectile type ("normal" or "bomb")
+        :param is_player_projectile: Indicates if it's a player projectile
         """
         self._agent = agent
         self._projectile_speed = projectile_speed
@@ -33,11 +33,11 @@ class ProjectileGenerator:
 
     def generate(self, target, dt, projectiles):
         """
-        Gera um projétil se o tempo entre disparos permitir.
+        Generates a projectile if the time between shots allows.
 
-        :param target: Ponto para onde o projétil será direcionado
-        :param dt: Tempo desde a última atualização
-        :param projectiles: Grupo de sprites dos projéteis
+        :param target: Point where the projectile will be directed
+        :param dt: Time since last update
+        :param projectiles: Projectile sprite group
         """
         self._time_without_generation += dt
         
@@ -76,11 +76,11 @@ class ProjectileGenerator:
     @staticmethod
     def _compute_shot_angle(origin, target):
         """
-        Calcula o ângulo entre o eixo x e a trajetória do tiro.
+        Calculates the angle between the x-axis and the shot trajectory.
 
-        :param origin: Ponto de origem do tiro
-        :param target: Ponto alvo do tiro
-        :return: Ângulo em radianos
+        :param origin: Shot origin point
+        :param target: Shot target point
+        :return: Angle in radians
         """
         if np.abs(target.x - origin.x) < Constants.EPSILON:
             if target.y > origin.y:

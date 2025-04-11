@@ -5,20 +5,20 @@ from config.Constants import Constants
 
 class Ability(pygame.sprite.Sprite):
     """
-    Representa uma habilidade genérica
+    Represents a generic ability
     """
 
     def __init__(self, position, angle, velocity, image, damage,
                  lifetime=None):
         """
-        Inicializa uma habilidade
+        Initializes an ability
 
-        :param position: posição da habilidade
-        :param angle: ângulo em radianos (0 a 2pi)
-        :param velocity: velocidade da habilidade
-        :param image: imagem da habilidade
-        :param damage: dano causado pela habilidade
-        :param lifetime: tempo de vida em segundos (None para ilimitado)
+        :param position: ability position
+        :param angle: angle in radians (0 to 2pi)
+        :param velocity: ability velocity
+        :param image: ability image
+        :param damage: damage caused by the ability
+        :param lifetime: lifetime in seconds (None for unlimited)
         """
         super().__init__()
 
@@ -36,9 +36,9 @@ class Ability(pygame.sprite.Sprite):
 
     def update(self, dt):
         """
-        Atualiza a posição e tempo de vida da habilidade.
+        Updates the position and lifetime of the ability.
 
-        :param dt: Duração de uma iteração.
+        :param dt: Duration of one iteration.
         """
         if self.__lifetime is not None:
             self._time_alive += dt
@@ -54,7 +54,7 @@ class Ability(pygame.sprite.Sprite):
 
     def _handle_bounds(self):
         """
-        Remove objetos que saem da tela
+        Removes objects that go out of screen
         """
         if (self.rect.right < 0 or
                 self.rect.left > Constants.WIDTH or
@@ -97,13 +97,13 @@ class Ability(pygame.sprite.Sprite):
 
 class MissileBarrage(Ability):
     """
-    Represents an Abilitiy Missile Barrage
+    Represents an Ability Missile Barrage
     """
 
     def __init__(self, agent, missile_speed, missile_image,
                  missile_damage, num_missiles, angle_spread=10):
         """
-        Initializes an Abilitiy Missile Barrage
+        Initializes an Ability Missile Barrage
 
         :param agent: agent of the missile barrage
         :param missile_speed: speed of the missile
@@ -168,7 +168,7 @@ class MissileBarrage(Ability):
 
 class LaserBeam(Ability):
     """
-    Representa um feixe de laser fluido e contínuo
+    Represents a fluid and continuous laser beam
     """
 
     def __init__(self, agent, damage, duration, width,
@@ -181,7 +181,6 @@ class LaserBeam(Ability):
         :param duration: duration of the laser in seconds
         :param width: width of the laser
         :param color: color of the laser (RGB)
-        :param color: color of the laser (RGBA)
         :param lifetime: lifetime of the laser
         """
         self.__agent = agent

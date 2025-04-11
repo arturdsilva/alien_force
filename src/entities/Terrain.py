@@ -4,7 +4,18 @@ from config.Constants import Constants
 
 
 class Block(pygame.sprite.Sprite):
+    """
+    Represents a terrain block sprite.
+    """
     def __init__(self, x, y, width, height):
+        """
+        Initializes a terrain block.
+
+        :param x: X position of the block
+        :param y: Y position of the block
+        :param width: Width of the block
+        :param height: Height of the block
+        """
         super().__init__()
         self.image = pygame.Surface((math.ceil(width), math.ceil(height)))
         self.rect = self.image.get_rect()
@@ -13,7 +24,15 @@ class Block(pygame.sprite.Sprite):
 
 
 class Terrain(pygame.sprite.Group):
+    """
+    Represents a group of terrain blocks that form the game terrain.
+    """
     def __init__(self, terrain):
+        """
+        Initializes the terrain from a matrix.
+
+        :param terrain: Matrix where 'X' represents a block and other characters represent empty space
+        """
         super().__init__()
 
         num_blocks_horizontal = len(terrain[0])

@@ -4,18 +4,18 @@ from .BaseProjectile import BaseProjectile
 
 class BombProjectile(BaseProjectile):
     """
-    Projétil do tipo bomba que cai verticalmente e explode ao atingir o terreno ou o jogador.
+    Bomb-type projectile that falls vertically and explodes upon hitting terrain or player.
     """
     
     def __init__(self, position, velocity, image, damage, explosion_radius):
         """
-        Inicializa uma bomba.
+        Initializes a bomb.
 
-        :param position: Posição inicial da bomba
-        :param velocity: Vetor de velocidade da bomba
-        :param image: Imagem da bomba
-        :param damage: Dano causado pela bomba
-        :param explosion_radius: Raio da explosão
+        :param position: Initial position of the bomb
+        :param velocity: Velocity vector of the bomb
+        :param image: Bomb image
+        :param damage: Damage caused by the bomb
+        :param explosion_radius: Explosion radius
         """
         super().__init__(position, velocity, image, damage)
         self._explosion_radius = explosion_radius
@@ -27,11 +27,11 @@ class BombProjectile(BaseProjectile):
 
     def update(self, dt, terrain=None, player=None):
         """
-        Atualiza o estado da bomba.
+        Updates the bomb state.
 
-        :param dt: Tempo desde a última atualização
-        :param terrain: Grupo de sprites do terreno (opcional)
-        :param player: Sprite do jogador (opcional)
+        :param dt: Time since last update
+        :param terrain: Terrain sprite group (optional)
+        :param player: Player sprite (optional)
         """
         if not self._exploded:
             self._position += self._velocity * dt
@@ -54,10 +54,10 @@ class BombProjectile(BaseProjectile):
 
     def _explode(self, terrain, player):
         """
-        Dispara a explosão da bomba e aplica dano na área.
+        Triggers the bomb explosion and applies damage in the area.
 
-        :param terrain: Grupo de sprites do terreno
-        :param player: Sprite do jogador
+        :param terrain: Terrain sprite group
+        :param player: Player sprite
         """
         self._exploded = True
         
@@ -77,9 +77,9 @@ class BombProjectile(BaseProjectile):
 
     def draw(self, screen):
         """
-        Desenha a bomba ou explosão na tela.
+        Draws the bomb or explosion on screen.
 
-        :param screen: Superfície da tela
+        :param screen: Screen surface
         """
         if self._exploded and self._explosion_surface:
             # Calcula alpha baseado no tempo restante
@@ -92,13 +92,13 @@ class BombProjectile(BaseProjectile):
     @property
     def explosion_radius(self):
         """
-        Retorna o raio da explosão.
+        Returns the explosion radius.
         """
         return self._explosion_radius
 
     @property
     def exploded(self):
         """
-        Retorna se a bomba explodiu.
+        Returns whether the bomb has exploded.
         """
         return self._exploded 
