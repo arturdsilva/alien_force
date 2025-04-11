@@ -1,5 +1,6 @@
-import pygame
 import numpy as np
+import pygame
+
 from config.Constants import Constants
 
 
@@ -34,12 +35,15 @@ class Ability(pygame.sprite.Sprite):
         self.__lifetime = lifetime
         self._time_alive = 0
 
-    def update(self, dt):
+    def update(self, dt, speed_multiplier=1.0):
         """
         Updates the skill's position and lifetime.
 
         :param dt: Duration of one iteration.
+        :param speed_multiplier: increase the ability speed
         """
+        dt *= speed_multiplier
+
         if self.__lifetime is not None:
             self._time_alive += dt
             if self._time_alive >= self.__lifetime:
@@ -61,7 +65,6 @@ class Ability(pygame.sprite.Sprite):
                 self.rect.bottom < 0 or
                 self.rect.top > Constants.HEIGHT):
             self.kill()
-
 
     @staticmethod
     def compute_shot_angle(origin, target):
@@ -231,7 +234,8 @@ class LaserBeam(Ability):
                     0 <= segment_start.x <= Constants.WIDTH and 0 <= segment_start.y <= Constants.HEIGHT):
                 continue
             perpendicular = pygame.math.Vector2(-direction.y, direction.x)
-            wave_offset = np.sin(time_factor + i * 0.2) * (self.__width_laser * 0.2)
+            wave_offset = np.sin(time_factor + i * 0.2) * (
+                        self.__width_laser * 0.2)
             segment_pos = segment_start + perpendicular * wave_offset
             segment_surface = self._create_segment_surface(segment_length)
             angle = np.arctan2(direction.y, direction.x)

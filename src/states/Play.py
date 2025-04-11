@@ -1,13 +1,15 @@
-import pygame
 import random
-from src.states import GameState
-from config.Constants import Constants
+
+import pygame
+
 from config.AvailableTerrains import AvailableTerrains
+from config.Constants import Constants
 from src.entities.Terrain import Terrain
-from src.entities.enemies.WavyEnemy import WavyEnemy
-from src.entities.enemies.LinearEnemy import LinearEnemy
 from src.entities.enemies.BouncingEnemy import BouncingEnemy
+from src.entities.enemies.LinearEnemy import LinearEnemy
 from src.entities.enemies.TankEnemy import TankEnemy
+from src.entities.enemies.WavyEnemy import WavyEnemy
+from src.states import GameState
 from src.states.Pause import Pause
 from src.ui.Hud import Hud
 
@@ -26,6 +28,7 @@ class Play(GameState):
         """
         super().__init__(game)
         self.spawn_timer = 0
+        self.__speed_multiplier = 1.0
 
         # Terrain
         terrains = AvailableTerrains()
@@ -70,15 +73,16 @@ class Play(GameState):
         """
         keys = pygame.key.get_pressed()
         self.__player_projectiles.update(dt)
-        self.__enemies_projectiles.update(dt)
-        self.__abilities.update(dt)
+        self.__enemies_projectiles.update(dt, self.__speed_multiplier)
+        self.__abilities.update(dt, self.__speed_multiplier)
         self.__player.update(keys, self.__terrain, dt,
                              self.__player_projectiles,
                              self.__enemies_projectiles, self.__abilities)
 
         self.__enemies.update(dt, self.__player_projectiles,
                               self.__enemies_projectiles,
-                              self.__player, self.__terrain)
+                              self.__player, self.__terrain,
+                              self.__speed_multiplier)
 
         # Update HUD
         self.hud.update(dt)
@@ -102,6 +106,9 @@ class Play(GameState):
         if self.spawn_timer >= Constants.SPAWN_TIMER:
             self.spawn_enemy()
             self.spawn_timer = 0
+
+        if self.__speed_multiplier < Constants.SPEED_MULTIPLIER_LIMIT:
+            self.__speed_multiplier += Constants.DIFFICULTY_FACTOR
 
     def draw(self, screen):
         """

@@ -1,6 +1,7 @@
-from src.entities.enemies.AbstractEnemy import AbstractEnemy
-from config.Constants import Constants, Colors
 import pygame
+
+from config.Constants import Constants, Colors
+from src.entities.enemies.AbstractEnemy import AbstractEnemy
 
 
 class LinearEnemy(AbstractEnemy):
@@ -27,7 +28,7 @@ class LinearEnemy(AbstractEnemy):
         :param y: Initial y coordinate
         """
         self.image = pygame.Surface((Constants.LINEAR_ENEMY_WIDTH,
-                                   Constants.LINEAR_ENEMY_HEIGHT))
+                                     Constants.LINEAR_ENEMY_HEIGHT))
         self.image.fill(Colors.RED)
         self.rect = self.image.get_rect()
         self.rect.centerx = x
@@ -41,7 +42,7 @@ class LinearEnemy(AbstractEnemy):
         :param terrain: Terrain sprite group (not used by this enemy)
         """
         self.rect.x += self._speed * dt
-        
+
         if self._limit_bounds():
             self._speed = -self._speed
 

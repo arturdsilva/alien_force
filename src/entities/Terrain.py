@@ -1,5 +1,7 @@
-import pygame
 import math
+
+import pygame
+
 from config.Constants import Constants
 
 
