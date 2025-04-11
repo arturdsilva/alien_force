@@ -1,7 +1,7 @@
 import pygame
 from config.Constants import Constants
 from src.entities.players.AbstractPlayer import AbstractPlayer
-from src.entities.Abilitiy import CriticalShot
+from src.entities.Ability import CriticalShot
 
 
 class Rain(AbstractPlayer):

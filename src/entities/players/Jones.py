@@ -1,7 +1,7 @@
 import pygame
 from config.Constants import Constants
 from src.entities.players.AbstractPlayer import AbstractPlayer
-from src.entities.Abilitiy import MissileBarrage
+from src.entities.Ability import MissileBarrage
 
 
 class Jones(AbstractPlayer):

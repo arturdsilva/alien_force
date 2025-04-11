@@ -5,20 +5,20 @@ from config.Constants import Constants
 
 class Ability(pygame.sprite.Sprite):
     """
-    Representa uma habilidade genérica
+    Represents a generic skill
     """
 
     def __init__(self, position, angle, velocity, image, damage,
                  lifetime=None):
         """
-        Inicializa uma habilidade
+        Initializes a skill
 
-        :param position: posição da habilidade
-        :param angle: ângulo em radianos (0 a 2pi)
-        :param velocity: velocidade da habilidade
-        :param image: imagem da habilidade
-        :param damage: dano causado pela habilidade
-        :param lifetime: tempo de vida em segundos (None para ilimitado)
+        :param position: position of the skill
+        :param angle: angle in radians (0 to 2pi)
+        :param velocity: speed of the skill
+        :param image: image of the skill
+        :param damage: damage caused by the skill
+        :param lifetime: lifetime in seconds (None to unlimited)
         """
         super().__init__()
 
@@ -36,9 +36,9 @@ class Ability(pygame.sprite.Sprite):
 
     def update(self, dt):
         """
-        Atualiza a posição e tempo de vida da habilidade.
+        Updates the skill's position and lifetime.
 
-        :param dt: Duração de uma iteração.
+        :param dt: Duration of one iteration.
         """
         if self.__lifetime is not None:
             self._time_alive += dt
@@ -54,7 +54,7 @@ class Ability(pygame.sprite.Sprite):
 
     def _handle_bounds(self):
         """
-        Remove objetos que saem da tela
+        Removes objects that go off screen
         """
         if (self.rect.right < 0 or
                 self.rect.left > Constants.WIDTH or

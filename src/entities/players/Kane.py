@@ -1,7 +1,7 @@
 import pygame
 from config.Constants import Constants
 from src.entities.players.AbstractPlayer import AbstractPlayer
-from src.entities.Abilitiy import LaserBeam
+from src.entities.Ability import LaserBeam
 
 
 class Kane(AbstractPlayer):
