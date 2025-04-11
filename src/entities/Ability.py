@@ -39,6 +39,7 @@ class Ability(pygame.sprite.Sprite):
         Updates the skill's position and lifetime.
 
         :param dt: Duration of one iteration.
+        :param speed_multiplier: increase the ability speed
         """
         dt *= speed_multiplier
 
