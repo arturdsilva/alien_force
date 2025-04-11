@@ -50,9 +50,6 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
                                          player.sprite.rect.centery)
             self._attack(dt, target, enemies_projectiles)
 
-        if self._health_points <= 0:
-            self.kill()
-
     @abstractmethod
     def _move(self, dt, terrain=None):
         """
