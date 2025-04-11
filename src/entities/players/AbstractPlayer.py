@@ -169,8 +169,7 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
             target_ability = pygame.math.Vector2(pygame.mouse.get_pos()[0],
                                                  pygame.mouse.get_pos()[1])
             if self._ready_ability:
-                self.ability_generator.generate(target_ability, dt,
-                                                abilities)
+                self.ability_generator.generate(target_ability, dt, abilities)
         self._compute_duration_ability(dt)
 
     def _compute_vertical_position(self, terrain, keys, dt):
@@ -242,3 +241,20 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
             if pygame.sprite.collide_rect(self, projectile):
                 self._health_points -= projectile.damage
                 projectile.kill()
+
+    def to_dict(self):
+        """
+        Converts the player's state into a dictionary.
+        """
+        return {
+            "type": self.__class__.__name__,
+            # Salvamos a posição baseada no retângulo
+            "centerx": self.rect.centerx,
+            "bottom": self.rect.bottom,
+            "health": self._health_points,
+            "is_jumping": self._is_jumping,
+            "y_speed": self._y_speed,
+            "ready_ability": self._ready_ability,
+            "time_cooldown_ability": self._time_cooldown_ability,
+            "time_duration_ability": self._time_duration_ability
+        }

@@ -63,3 +63,25 @@ class Jones(AbstractPlayer):
             self._ready_ability = False
 
     # TODO: Implement area damage for grenades
+
+    def to_dict(self):
+        """
+        Converts the player's state into a dictionary.
+        """
+        return super().to_dict()
+
+    @classmethod
+    def from_dict(cls, data):
+        """
+        Creates an instance of Jones from a dictionary.
+        """
+        instance = cls()
+        instance.rect.centerx = data["centerx"]
+        instance.rect.bottom = data["bottom"]
+        instance._health_points = data["health"]
+        instance._is_jumping = data["is_jumping"]
+        instance._y_speed = data["y_speed"]
+        instance._ready_ability = data["ready_ability"]
+        instance._time_cooldown_ability = data["time_cooldown_ability"]
+        instance._time_duration_ability = data["time_duration_ability"]
+        return instance
