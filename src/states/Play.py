@@ -41,6 +41,7 @@ class Play(GameState):
         self.__enemies = pygame.sprite.Group()
         self.__player_projectiles = pygame.sprite.Group()
         self.__enemies_projectiles = pygame.sprite.Group()
+        self.__abilities = pygame.sprite.Group()
 
         # Initialize HUD
         self.hud = Hud(player)
@@ -70,9 +71,10 @@ class Play(GameState):
         keys = pygame.key.get_pressed()
         self.__player_projectiles.update(dt)
         self.__enemies_projectiles.update(dt)
+        self.__abilities.update(dt)
         self.__player.update(keys, self.__terrain, dt,
                              self.__player_projectiles,
-                             self.__enemies_projectiles)
+                             self.__enemies_projectiles, self.__abilities)
 
         self.__enemies.update(dt, self.__player_projectiles,
                               self.__enemies_projectiles,
@@ -113,6 +115,7 @@ class Play(GameState):
         self.__enemies.draw(screen)
         self.__player_projectiles.draw(screen)
         self.__enemies_projectiles.draw(screen)
+        self.__abilities.draw(screen)
 
         # Draw HUD on top of everything
         self.hud.draw(screen)

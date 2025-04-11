@@ -2,6 +2,9 @@ import pygame
 from abc import ABC, abstractmethod
 from config.Constants import Constants
 from src.entities.Projectile import ProjectileGenerator
+from src.entities.Abilitiy import MissileBarrage
+from src.entities.Abilitiy import LaserBeam
+from src.entities.Abilitiy import CriticalShot
 
 
 class AbstractPlayer(pygame.sprite.Sprite, ABC):
@@ -27,10 +30,16 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         self._is_jumping = False
         self._y_speed = 0
         self._health_points = self.get_initial_health()
+        self._ready_ability = True
+        self._time_cooldown_ability = 0
+        self._time_duration_ability = 0
+        self.__CHARACTER_ID = 2  # TODO: selecionar nas classes filhas
+        self._prev_mouse_pressed = False
+        self._charging_critical = 0
 
-        projectile_image = pygame.Surface(
-            (Constants.PROJECTILE_DEFAULT_WIDTH,
-             Constants.PROJECTILE_DEFAULT_HEIGHT))
+        projectile_image = pygame.Surface((
+            Constants.PROJECTILE_DEFAULT_WIDTH,
+            Constants.PROJECTILE_DEFAULT_HEIGHT))
         projectile_image.fill(Constants.PROJECTILE_DEFAULT_COLOR)
         self.projectile_generator = ProjectileGenerator(self,
                                                         self.get_projectile_speed(),
@@ -38,38 +47,89 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
                                                         projectile_image,
                                                         self.get_projectile_damage())
 
+        ability_image = pygame.Surface(
+            (Constants.ABILITY_WIDTH, Constants.ABILITY_HEIGHT)
+        )
+        ability_image.fill(Constants.ABILITY_DEFAULT_COLOR)
+
+        # TODO: tirar do construtor do player
+        ABILITY_FACTORIES = {
+            1: lambda self, image: MissileBarrage(
+                self,
+                Constants.ABILITY_SPEED,
+                image,
+                Constants.ABILITY_DAMAGE,
+                Constants.MISSILE_SHOT_CAPACITY
+            ),
+            2: lambda self, image: LaserBeam(
+                self,
+                Constants.ABILITY_DAMAGE,
+                Constants.LASER_DURATION,
+                Constants.LASER_WIDTH,
+                Constants.COLOR_LASER,
+                Constants.LASER_LIFETIME
+            ),
+            3: lambda self, image: CriticalShot(
+                self,
+                Constants.ABILITY_SPEED * 3,
+                image,
+                Constants.ABILITY_DAMAGE,
+            )
+        }
+        factory = ABILITY_FACTORIES.get(self.__CHARACTER_ID)
+        if factory:
+            self.ability_generator = factory(self, ability_image)
+
     @abstractmethod
     def get_player_color(self):
-        """Returns the color of the player."""
+        """
+        Returns the color of the player.
+        """
+
         pass
 
     @abstractmethod
     def get_initial_health(self):
-        """Returns the initial health of the player."""
+        """
+        Returns the initial health of the player.
+        """
+
         pass
 
     @abstractmethod
     def get_projectile_color(self):
-        """Returns the color of the projectiles."""
+        """
+        Returns the color of the projectiles.
+        """
+
         pass
 
     @abstractmethod
     def get_projectile_speed(self):
-        """Returns the speed of the projectiles."""
+        """
+        Returns the speed of the projectiles.
+        """
+
         pass
 
     @abstractmethod
     def get_projectile_frequency(self):
-        """Returns the frequency of the projectiles."""
+        """
+        Returns the frequency of the projectiles.
+        """
+
         pass
 
     @abstractmethod
     def get_projectile_damage(self):
-        """Returns the damage of the projectiles."""
+        """
+        Returns the damage of the projectiles.
+        """
+
         pass
 
     def update(self, terrain, keys, dt, player_projectiles,
-               enemies_projectiles):
+               enemies_projectiles, abilities):
         """
         Updates the player.
 
@@ -78,16 +138,17 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         :param dt: The duration of one iteration.
         :param player_projectiles: Player projectiles on screen.
         :param enemies_projectiles: Enemies projectiles on screen.
+        :param abilities: Abilities on screen.
         """
 
-        self._handle_input(keys, terrain, dt, player_projectiles)
+        self._handle_input(keys, terrain, dt, player_projectiles, abilities)
         self._limit_bounds()
         self._compute_damage(enemies_projectiles)
 
         if self._health_points <= 0:
             self.kill()
 
-    def _handle_input(self, terrain, keys, dt, projectiles):
+    def _handle_input(self, terrain, keys, dt, projectiles, abilities):
         """
         Handles player input.
 
@@ -95,6 +156,7 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         :param keys: Keys being input by the player.
         :param dt: The duration of one iteration.
         :param projectiles: Projectiles on screen.
+        :param abilities: Abilities on screen.
         """
 
         self._compute_vertical_position(terrain, keys, dt)
@@ -103,6 +165,14 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
             target = pygame.math.Vector2(pygame.mouse.get_pos()[0],
                                          pygame.mouse.get_pos()[1])
             self.projectile_generator.generate(target, dt, projectiles)
+        self._compute_cooldown_ability(dt)
+        if pygame.mouse.get_pressed()[2]:
+            target_ability = pygame.math.Vector2(pygame.mouse.get_pos()[0],
+                                                 pygame.mouse.get_pos()[1])
+            if self._ready_ability:
+                self.ability_generator.generate(target_ability, dt,
+                                                abilities)
+        self._compute_duration_ability(dt)
 
     def _compute_vertical_position(self, terrain, keys, dt):
         """
@@ -173,3 +243,45 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
             if pygame.sprite.collide_rect(self, projectile):
                 self._health_points -= projectile.damage
                 projectile.kill()
+
+    def _compute_cooldown_ability(self, dt):
+        """
+        Updates the cooldown timer for the character's special ability.
+
+        :param dt: The duration of one iteration.
+        """
+        if self.__CHARACTER_ID == 1 or self.__CHARACTER_ID == 2:
+            if not self._ready_ability:
+                self._time_cooldown_ability += dt
+                if self._time_cooldown_ability >= Constants.ABILITY_COOLDOWN:
+                    self._ready_ability = True
+                    self._time_cooldown_ability = 0
+        elif self.__CHARACTER_ID == 3:
+            mouse_buttons = pygame.mouse.get_pressed()
+            if mouse_buttons[0] and not self._prev_mouse_pressed:
+                self.charging_critical += 1
+                if self.charging_critical >= Constants.NORMAL_SHOTS_REQUIRED:
+                    self._ready_ability = True
+            self.prev_mouse_pressed = mouse_buttons[0]
+
+    def _compute_duration_ability(self, dt):
+        """
+        Updates the duration logic for the character's ability based on character type.
+
+        :param dt: The duration of one iteration.
+        """
+
+        if self.__CHARACTER_ID == 1:
+            if pygame.mouse.get_pressed()[2]:
+                self._ready_ability = False
+        elif self.__CHARACTER_ID == 2:
+            if pygame.mouse.get_pressed()[2]:
+                self._time_duration_ability += dt
+                if self._time_duration_ability >= Constants.ABILITY_DURATION:
+                    self._time_duration_ability = 0
+                    self._ready_ability = False
+        elif self.__CHARACTER_ID == 3:
+            if pygame.mouse.get_pressed()[2]:
+                self._ready_ability = False
+                if self._charging_critical >= Constants.NORMAL_SHOTS_REQUIRED:
+                    self.charging_critical = 0
