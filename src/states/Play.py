@@ -99,6 +99,11 @@ class Play(GameState):
                 # Mata o inimigo após atualizar a pontuação
                 enemy.kill()
 
+        # Verifica se o jogador morreu
+        if player._health_points <= 0:
+            from src.states.GameOver import GameOver
+            self.next_state = GameOver(self.game, self.hud.score)
+
         self.spawn_timer += dt
         if self.spawn_timer >= Constants.SPAWN_TIMER:
             self.spawn_enemy()
