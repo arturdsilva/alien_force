@@ -69,8 +69,9 @@ class Play(GameState):
         :param dt: O intervalo de tempo desde a última atualização.
         """
         keys = pygame.key.get_pressed()
-        self.__player_projectiles.update(dt)
-        self.__enemies_projectiles.update(dt)
+        player = self.__player.sprite
+        self.__player_projectiles.update(dt, self.__terrain, player)
+        self.__enemies_projectiles.update(dt, self.__terrain, player)
         self.__abilities.update(dt)
         self.__player.update(keys, self.__terrain, dt,
                              self.__player_projectiles,
@@ -113,8 +114,15 @@ class Play(GameState):
         self.__terrain.draw(screen)
         self.__player.draw(screen)
         self.__enemies.draw(screen)
-        self.__player_projectiles.draw(screen)
-        self.__enemies_projectiles.draw(screen)
+        
+        # Desenha os projéteis do jogador
+        for projectile in self.__player_projectiles:
+            projectile.draw(screen)
+            
+        # Desenha os projéteis dos inimigos
+        for projectile in self.__enemies_projectiles:
+            projectile.draw(screen)
+            
         self.__abilities.draw(screen)
 
         # Draw HUD on top of everything

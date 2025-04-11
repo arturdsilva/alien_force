@@ -1,5 +1,6 @@
 from src.entities.enemies.AbstractEnemy import AbstractEnemy
 from config.Constants import Constants, Colors
+from entities.projectiles.ProjectileGenerator import ProjectileGenerator
 import pygame
 
 
@@ -18,6 +19,12 @@ class LinearEnemy(AbstractEnemy):
         super().__init__(x=x, y=y)
         self._health_points = Constants.LINEAR_ENEMY_MAX_HEALTH
         self._speed = Constants.LINEAR_ENEMY_SPEED
+        projectile_image = pygame.Surface(
+            (Constants.PROJECTILE_DEFAULT_WIDTH,
+             Constants.PROJECTILE_DEFAULT_HEIGHT))
+        projectile_image.fill(Colors.RED)
+        self._projectile_generator = ProjectileGenerator(self, 150, 1,
+                                                         projectile_image, 10)
 
     def _initialize_sprite(self, x, y):
         """
@@ -55,5 +62,13 @@ class LinearEnemy(AbstractEnemy):
         """
         pass
 
-    def _attack(self, dt, target, enemies_projectiles):
-        pass
+    def _attack(self, dt, target, projectiles):
+        """
+        Attacks an enemy by shooting projectiles.
+
+        :param target: Point where projectile will be headed at.
+        :param dt: The duration of one iteration.
+        :param projectiles: Projectiles sprite group.
+        """
+
+        self._projectile_generator.generate(target, dt, projectiles)

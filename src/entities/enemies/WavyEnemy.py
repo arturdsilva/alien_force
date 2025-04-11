@@ -1,6 +1,6 @@
 from src.entities.enemies.AbstractEnemy import AbstractEnemy
 from config.Constants import Constants, Colors
-from src.entities.Projectile import ProjectileGenerator
+from entities.projectiles.ProjectileGenerator import ProjectileGenerator
 import numpy as np
 import pygame
 
