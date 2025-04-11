@@ -45,7 +45,7 @@ Instituto Tecnológico de Aeronáutica
 
 3. **Install the dependencies:**
     ```bash
-   pip3 instal -r requirements.txt
+   pip3 install -r requirements.txt
 
 4. **Run the Game:**
     ```bash
@@ -61,8 +61,8 @@ Instituto Tecnológico de Aeronáutica
 #### Objective
 
 Survive as long as possible against continuously increasing waves of alien
-enemies. Not just the number of enemies, but also their speed is incremented
-along the time.
+enemies. Not only does the number of enemies increase, but their speed also
+increases over time.
 
 #### Game mechanics
 
@@ -124,12 +124,12 @@ along the time.
 
 ### Development Documentation
 
-During the game development, some good practices related to code versioning
-have been followed. Thus, for every new feature, a new branch has been created
-and, once the feature had been finalized and tested, a Pull Request was made
+During the development of the game, best practices related to version control
+were followed. Thus, for every new feature, a new branch has been created
+and, once the feature had been finalized and tested, a Pull Request was opened
 and reviewed by another developer. To document the development process, we
 added a description to all the Pull Requests, enabling anyone to
-visualize the development details as a timeline by accessing the Pull Requests
+view the development details as a timeline by accessing the Pull Requests
 tab on GitHub.
 
 In addition, the code has been fully documented using the Python docstring
@@ -189,8 +189,6 @@ standards.
 ---
 
 ## Credits
-
-- Assets:
 
 - Special Thanks: To Professor Karla D. Fook and the team members for their
   guidance and collaboration.
