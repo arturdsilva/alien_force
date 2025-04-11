@@ -28,7 +28,7 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
         pass
 
     def update(self, dt, player_projectiles, enemies_projectiles, player,
-               terrain=None):
+               terrain=None, speed_multiplier=1.0):
 
         """
         Updates the enemy state.
@@ -38,7 +38,11 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
         :param enemies_projectiles: Enemies projectiles on screen.
         :param player: The player to be targeted.
         :param terrain: Terrain sprite group (optional)
+        :param speed_multiplier: increases the enemy speed.
         """
+
+        dt *= speed_multiplier
+
         self._move(dt, terrain)
         self._limit_bounds()
         self._compute_damage(player_projectiles)

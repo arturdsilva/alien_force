@@ -34,12 +34,14 @@ class Ability(pygame.sprite.Sprite):
         self.__lifetime = lifetime
         self._time_alive = 0
 
-    def update(self, dt):
+    def update(self, dt, speed_multiplier=1.0):
         """
         Updates the skill's position and lifetime.
 
         :param dt: Duration of one iteration.
         """
+        dt *= speed_multiplier
+
         if self.__lifetime is not None:
             self._time_alive += dt
             if self._time_alive >= self.__lifetime:

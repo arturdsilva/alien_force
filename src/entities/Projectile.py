@@ -38,14 +38,15 @@ class Projectile(pygame.sprite.Sprite):
         """
         return self.__damage
 
-    def update(self, dt):
+    def update(self, dt, speed_multiplier=1.0):
         """
         Updates the projectile's position.
 
+        :param speed_multiplier: increases projectile's speed.
         :param dt: The duration of one iteration.
         """
 
-        self.__position += self.__velocity * dt
+        self.__position += self.__velocity * dt * speed_multiplier
         self.rect.center = self.__position
         self.__handle_bounds()
 
