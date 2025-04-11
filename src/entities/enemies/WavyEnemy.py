@@ -27,7 +27,7 @@ class WavyEnemy(AbstractEnemy):
             (Constants.PROJECTILE_DEFAULT_WIDTH,
              Constants.PROJECTILE_DEFAULT_HEIGHT))
         projectile_image.fill(Colors.GREEN)
-        self._projectile_generator = ProjectileGenerator(self, 300, 1,
+        self._projectile_generator = ProjectileGenerator(self, 200, 1,
                                                          projectile_image, 5)
 
     def _initialize_sprite(self, x, y):
