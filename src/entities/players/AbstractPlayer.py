@@ -1,5 +1,7 @@
-import pygame
 from abc import ABC, abstractmethod
+
+import pygame
+
 from config.Constants import Constants
 from src.entities.Projectile import ProjectileGenerator
 
@@ -40,7 +42,8 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
                                                         self.get_projectile_speed(),
                                                         self.get_projectile_frequency(),
                                                         projectile_image,
-                                                        self.get_projectile_damage())
+                                                        self.get_projectile_damage(),
+                                                        self.get_projectile_sound())
 
         ability_image = pygame.Surface(
             (Constants.ABILITY_WIDTH, Constants.ABILITY_HEIGHT)
@@ -92,6 +95,14 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
     def get_projectile_damage(self):
         """
         Returns the damage of the projectiles.
+        """
+
+        pass
+
+    @abstractmethod
+    def get_projectile_sound(self):
+        """
+        Returns the sound of the projectile.
         """
 
         pass
@@ -162,12 +173,11 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
                                          pygame.mouse.get_pos()[1])
             self.projectile_generator.generate(target, dt, projectiles)
         self._compute_cooldown_ability(dt)
-        if pygame.mouse.get_pressed()[2]:
+        if pygame.mouse.get_pressed()[2] and self._ready_ability:
             target_ability = pygame.math.Vector2(pygame.mouse.get_pos()[0],
                                                  pygame.mouse.get_pos()[1])
-            if self._ready_ability:
-                self.ability_generator.generate(target_ability, dt,
-                                                abilities)
+            self.ability_generator.generate(target_ability, dt,
+                                            abilities)
         self._compute_duration_ability(dt)
 
     def _compute_vertical_position(self, terrain, keys, dt):

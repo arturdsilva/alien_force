@@ -1,5 +1,5 @@
 import pygame
-from config.Constants import Constants
+from config.Constants import Constants, Sounds
 from src.entities.players.AbstractPlayer import AbstractPlayer
 from src.entities.Ability import CriticalShot
 
@@ -31,6 +31,9 @@ class Rain(AbstractPlayer):
 
     def get_projectile_damage(self):
         return int(Constants.PROJECTILE_DEFAULT_DAMAGE * 1.8)
+
+    def get_projectile_sound(self):
+        return Sounds.GUN_SHOT
 
     def choose_ability_generator(self, ability_image):
         return CriticalShot(

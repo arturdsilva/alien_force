@@ -1,6 +1,7 @@
 import pygame
 import numpy as np
-from config.Constants import Constants
+from config.Constants import Constants, Sounds
+from src.utils.AudioManager import AudioManager
 
 
 class Projectile(pygame.sprite.Sprite):
@@ -74,7 +75,7 @@ class ProjectileGenerator:
     """
 
     def __init__(self, agent, projectile_speed, frequency, projectile_image,
-                 projectile_damage):
+                 projectile_damage, sound):
         """
         Initializes a projectile generator.
 
@@ -83,6 +84,7 @@ class ProjectileGenerator:
         :param frequency: The frequency at which projectiles are generated.
         :param projectile_image: The image used for the projectile.
         :param projectile_damage: The damage each projectile will inflict.
+        :param sound: The sound the projectile makes.
         """
 
         self.__agent = agent
@@ -91,6 +93,8 @@ class ProjectileGenerator:
         self.__projectile_image = projectile_image
         self.__projectile_damage = projectile_damage
         self.time_without_generation = 0
+        self.__sound = sound
+        self.__audio_manager = AudioManager()
 
     def generate(self, target, dt, projectiles):
         """
@@ -124,6 +128,7 @@ class ProjectileGenerator:
                     projectile.kill()
                 else:
                     projectiles.add(projectile)
+                    self.__audio_manager.play_sound(self.__sound)
                     self_collision = False
 
     @staticmethod

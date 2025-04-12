@@ -1,5 +1,5 @@
 from src.entities.enemies.AbstractEnemy import AbstractEnemy
-from config.Constants import Constants, Colors
+from config.Constants import Constants, Colors, Sounds
 from src.entities.Projectile import ProjectileGenerator
 import numpy as np
 import pygame
@@ -28,7 +28,8 @@ class WavyEnemy(AbstractEnemy):
              Constants.PROJECTILE_DEFAULT_HEIGHT))
         projectile_image.fill(Colors.GREEN)
         self._projectile_generator = ProjectileGenerator(self, 300, 1,
-                                                         projectile_image, 5)
+                                                         projectile_image,
+                                                         5, Sounds.LASER_SHOT)
 
     def _initialize_sprite(self, x, y):
         """
@@ -54,7 +55,7 @@ class WavyEnemy(AbstractEnemy):
         self.rect.x += self._speed * dt
         self.rect.y = Constants.WAVY_ENEMY_Y + self.__amplitude * np.sin(
             self.__angular_frequency * self.__timer)
-        
+
         if self._limit_bounds():
             self._speed = -self._speed
 

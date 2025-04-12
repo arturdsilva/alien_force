@@ -1,7 +1,8 @@
 import pygame
 from src.states import GameState
 from src.states.CharacterSelect import CharacterSelect
-from config.Constants import Constants
+from config.Constants import Constants, Sounds
+from src.utils.AudioManager import AudioManager
 
 
 class Menu(GameState):
@@ -22,6 +23,7 @@ class Menu(GameState):
         self.font_options = pygame.font.Font(None, 54)
         self.start_text = self.font_options.render('Pressione ESPAÇO para iniciar', True, pygame.Color('white'))
         self.start_rect = self.start_text.get_rect(center=(Constants.WIDTH/2, Constants.HEIGHT*3/4))
+        self.__audio_manager = AudioManager()
 
     def update(self, dt):
         """
@@ -51,3 +53,4 @@ class Menu(GameState):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     self.next_state = CharacterSelect(self.game)
+                    self.__audio_manager.play_sound(Sounds.CLICK)

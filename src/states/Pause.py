@@ -1,6 +1,7 @@
 import pygame
 from src.states import GameState
 from config.Constants import Constants
+from src.utils.AudioManager import AudioManager
 
 
 class Pause(GameState):
@@ -16,7 +17,8 @@ class Pause(GameState):
         """
         super().__init__(game)
         self.play_state = play_state  # Stores the game state to return to
-        self.next_state = self 
+        self.next_state = self
+        self.__audio_manager = AudioManager()
         
         # Font configuration
         self.font_title = pygame.font.Font(None, 74)
@@ -79,8 +81,10 @@ class Pause(GameState):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_p:
                     self.resume_game()
+                    self.__audio_manager.unpause_music()
                 elif event.key == pygame.K_ESCAPE:
                     self.return_to_menu()
+                    self.__audio_manager.unpause_music()
 
     def resume_game(self):
         """

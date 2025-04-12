@@ -16,6 +16,16 @@ class Colors:
     BROWN = (139, 69, 19)
     PINK = (255, 192, 203)
 
+class Sounds:
+    # MUSIC
+    PLAY = "play"
+
+    # SOUND EFFECTS
+    GUN_SHOT = "gun shot"
+    LASER_SHOT = "laser shot"
+    LASER_BEAM = "laser beam"
+    CLICK = "click"
+    DEATH = "death"
 
 class Constants:
     # GENERAL

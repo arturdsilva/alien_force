@@ -1,7 +1,8 @@
 import pygame
 from abc import ABC, abstractmethod
-from config.Constants import Constants, Colors
+from config.Constants import Constants, Colors, Sounds
 from src.entities.Projectile import Projectile, ProjectileGenerator
+from src.utils.AudioManager import AudioManager
 
 
 class AbstractEnemy(pygame.sprite.Sprite, ABC):
@@ -22,6 +23,7 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
         self._speed = Constants.ENEMY_SPEED
         self._health_points = None
         self._initialize_sprite(x, y)
+        self._audio_manager = AudioManager()
 
     @abstractmethod
     def _initialize_sprite(self, x, y):
@@ -51,6 +53,7 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
 
         if self._health_points <= 0:
             self.kill()
+            self._audio_manager.play_sound(Sounds.DEATH)
 
     @abstractmethod
     def _move(self, dt, terrain=None):

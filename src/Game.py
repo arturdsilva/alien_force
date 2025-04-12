@@ -1,6 +1,7 @@
 import pygame
-from config.Constants import Constants
+from config.Constants import Constants, Sounds
 from src.states.Menu import Menu
+from src.utils.AudioManager import AudioManager
 from config.AvailableTerrains import AvailableTerrains
 from entities.players.AbstractPlayer import AbstractPlayer
 from entities.Terrain import Terrain
@@ -24,6 +25,8 @@ class Game:
         self.__is_running = True
         self.__current_state = Menu(self)
         self.__next_state = None
+        self.__audio_manager = AudioManager()
+        self.__audio_manager.play_music(Sounds.PLAY)
 
     def run(self):
         """

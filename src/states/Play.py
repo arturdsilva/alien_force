@@ -10,6 +10,7 @@ from src.entities.enemies.BouncingEnemy import BouncingEnemy
 from src.entities.enemies.TankEnemy import TankEnemy
 from src.states.Pause import Pause
 from src.ui.Hud import Hud
+from src.utils.AudioManager import AudioManager
 
 
 class Play(GameState):
@@ -26,6 +27,7 @@ class Play(GameState):
         """
         super().__init__(game)
         self.spawn_timer = 0
+        self.__audio_manager = AudioManager()
 
         # Terrain
         terrains = AvailableTerrains()
@@ -130,6 +132,7 @@ class Play(GameState):
             if event.type == pygame.KEYDOWN:
                 if event.key in [pygame.K_ESCAPE, pygame.K_p]:
                     self.next_state = Pause(self.game, self)
+                    self.__audio_manager.pause_music()
 
     def spawn_enemy(self):
         """
