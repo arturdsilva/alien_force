@@ -79,3 +79,28 @@ class WavyEnemy(AbstractEnemy):
         """
 
         self._projectile_generator.generate(target, dt, projectiles)
+
+    def to_dict(self):
+        """
+        Converts the enemy's state into a dictionary, including WavyEnemy-specific attributes.
+        """
+        data = super().to_dict()
+        data["timer"] = self.__timer
+        data["amplitude"] = self.__amplitude
+        data["angular_frequency"] = self.__angular_frequency
+        return data
+
+    @classmethod
+    def from_dict(cls, data):
+        """
+        Creates an instance of WavyEnemy from a dictionary.
+        """
+        instance = cls(data["centerx"], data["bottom"])
+        instance._health_points = data["health"]
+        instance._speed = data["speed"]
+        instance.__timer = data.get("timer", 0)
+        instance.__amplitude = data.get("amplitude",
+                                        Constants.WAVY_ENEMY_AMPLITUDE)
+        instance.__angular_frequency = data.get("angular_frequency",
+                                                Constants.WAVY_ENEMY_ANGULAR_FREQUENCY)
+        return instance

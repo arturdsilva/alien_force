@@ -128,3 +128,35 @@ class BouncingEnemy(AbstractEnemy):
 
     def _attack(self, dt, target, enemies_projectiles):
         pass
+
+    def to_dict(self):
+        """
+        Converts the enemy's state into a dictionary, including BouncingEnemy-specific attributes.
+        """
+        data = super().to_dict()
+        data["velocity_x"] = self._velocity_x
+        data["state"] = self._state
+        data["timer"] = self._timer
+        data["wait_timer"] = self._wait_timer
+        data["fall_time"] = self._fall_time
+        data["original_y"] = self._original_y
+        return data
+
+    @classmethod
+    def from_dict(cls, data):
+        """
+        Creates an instance of BouncingEnemy from a dictionary.
+        """
+        instance = cls(data["centerx"], data["bottom"])
+        instance._health_points = data["health"]
+        instance._speed = data["speed"]
+        instance._velocity_x = data.get("velocity_x",
+                                        -Constants.BOUNCING_ENEMY_HORIZONTAL_SPEED)
+        instance._state = data.get("state", cls.MOVING)
+        instance._timer = data.get("timer", 0)
+        instance._wait_timer = data.get("wait_timer", 0)
+        instance._fall_time = data.get("fall_time", random.uniform(
+            Constants.BOUNCING_ENEMY_MIN_TIME_BEFORE_FALL,
+            Constants.BOUNCING_ENEMY_MAX_TIME_BEFORE_FALL))
+        instance._original_y = data.get("original_y", instance.rect.centery)
+        return instance

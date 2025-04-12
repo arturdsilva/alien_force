@@ -134,6 +134,8 @@ class CharacterSelect(GameState):
         :param events: List of pygame events to process.
         """
         for event in events:
+            if event.type == pygame.QUIT:
+                self.is_running = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT and self.selected > 0:
                     self.selected -= 1
@@ -144,4 +146,5 @@ class CharacterSelect(GameState):
                     self.update_character_info()
                 elif event.key == pygame.K_SPACE:
                     selected_char = self.characters[self.selected]['class']()
-                    self.next_state = Play(self.game, selected_char)
+                    selected_char_name = selected_char.__class__.__name__
+                    self.next_state = Play(self.game, selected_char_name)

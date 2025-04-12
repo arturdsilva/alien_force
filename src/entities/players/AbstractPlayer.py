@@ -248,7 +248,6 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         """
         return {
             "type": self.__class__.__name__,
-            # Salvamos a posição baseada no retângulo
             "centerx": self.rect.centerx,
             "bottom": self.rect.bottom,
             "health": self._health_points,
