@@ -1,3 +1,4 @@
+from src.entities.projectiles.BombProjectile import BombProjectile
 import pygame
 
 from config.Constants import Constants, Colors
@@ -19,6 +20,7 @@ class TankEnemy(AbstractEnemy):
         super().__init__(x=x, y=y)
         self._health_points = Constants.TANK_ENEMY_MAX_HEALTH
         self._speed = Constants.TANK_ENEMY_SPEED
+        self._time_since_last_shot = 0
 
     def _initialize_sprite(self, x, y):
         """
@@ -27,9 +29,10 @@ class TankEnemy(AbstractEnemy):
         :param x: Initial x coordinate
         :param y: Initial y coordinate
         """
-        self.image = pygame.image.load("assets/sprites/enemies/TankEnemy.png").convert_alpha()
+        self.image = pygame.image.load(
+            "assets/sprites/enemies/TankEnemy.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (
-        Constants.TANK_ENEMY_WIDTH, Constants.TANK_ENEMY_HEIGHT))
+            Constants.TANK_ENEMY_WIDTH, Constants.TANK_ENEMY_HEIGHT))
         self._original_image = self.image.copy()
         self.rect = self.image.get_rect(center=(x, y))
 
@@ -70,4 +73,47 @@ class TankEnemy(AbstractEnemy):
         pass
 
     def _attack(self, dt, target, enemies_projectiles):
-        pass
+        """
+        Launches a bomb that falls vertically and explodes on impact.
+
+        :param dt: Time since last update
+        :param target: Target position (not used for bombs)
+        :param enemies_projectiles: Group of enemy projectiles
+        """
+        self._time_since_last_shot += dt
+
+        if self._time_since_last_shot >= Constants.TANK_ENEMY_SHOOT_FREQUENCY:
+            self._time_since_last_shot = 0
+
+            # Create bomb image
+            bomb_image = pygame.Surface(
+                (Constants.TANK_BOMB_WIDTH, Constants.TANK_BOMB_HEIGHT))
+            bomb_image.fill(Colors.PURPLE)
+
+            # Create bomb with vertical velocity
+            velocity = pygame.Vector2(0, Constants.TANK_BOMB_SPEED)
+            bomb = BombProjectile(
+                position=pygame.Vector2(self.rect.centerx, self.rect.bottom),
+                velocity=velocity,
+                image=bomb_image,
+                damage=Constants.TANK_BOMB_DAMAGE,
+                explosion_radius=Constants.TANK_BOMB_EXPLOSION_RADIUS
+            )
+
+            enemies_projectiles.add(bomb)
+
+    def to_dict(self):
+        """
+        Converts the enemy's state into a dictionary.
+        """
+        return super().to_dict()
+
+    @classmethod
+    def from_dict(cls, data):
+        """
+        Creates an instance of TankEnemy from a dictionary.
+        """
+        instance = cls(data["centerx"], data["bottom"])
+        instance._health_points = data["health"]
+        instance._speed = data["speed"]
+        return instance

@@ -105,16 +105,19 @@ class Jones(AbstractPlayer):
     def get_projectile_damage(self):
         return int(Constants.PROJECTILE_DEFAULT_DAMAGE * 2)
 
-    def choose_ability_generator(self, ability_image):
+    def choose_ability(self, ability_image):
         special_projectile_image = pygame.image.load("assets/sprites/projectiles/MissileLauncherProjectile.png").convert_alpha()
         special_projectile_image = pygame.transform.scale(
             special_projectile_image, (30, 30))
+
         return MissileBarrage(
             self,
             Constants.ABILITY_SPEED,
             special_projectile_image,
             Constants.ABILITY_DAMAGE,
-            Constants.MISSILE_SHOT_CAPACITY
+            Constants.MISSILE_SHOT_CAPACITY,
+            Constants.ANGLE_SPREAD_MISSILE,
+            Constants.EXPLOSION_RADIUS
         )
 
     def _compute_cooldown_ability(self, dt):
@@ -127,3 +130,27 @@ class Jones(AbstractPlayer):
     def _compute_duration_ability(self, dt):
         if pygame.mouse.get_pressed()[2]:
             self._ready_ability = False
+
+    # TODO: Implement area damage for grenades
+
+    def to_dict(self):
+        """
+        Converts the player's state into a dictionary.
+        """
+        return super().to_dict()
+
+    @classmethod
+    def from_dict(cls, data):
+        """
+        Creates an instance of Jones from a dictionary.
+        """
+        instance = cls()
+        instance.rect.centerx = data["centerx"]
+        instance.rect.bottom = data["bottom"]
+        instance._health_points = data["health"]
+        instance._is_jumping = data["is_jumping"]
+        instance._y_speed = data["y_speed"]
+        instance._ready_ability = data["ready_ability"]
+        instance._time_cooldown_ability = data["time_cooldown_ability"]
+        instance._time_duration_ability = data["time_duration_ability"]
+        return instance

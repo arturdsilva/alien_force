@@ -1,7 +1,6 @@
-import pygame
 from abc import ABC, abstractmethod
-from config.Constants import Constants, Colors
-from src.entities.Projectile import Projectile, ProjectileGenerator
+from config.Constants import Constants
+import pygame
 
 
 class AbstractEnemy(pygame.sprite.Sprite, ABC):
@@ -27,7 +26,8 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
     def _initialize_sprite(self, x, y):
         pass
 
-    def update(self, dt, player_projectiles, enemies_projectiles, player,
+    def update(self, dt, player_projectiles, ability_projectiles,
+               enemies_projectiles, player,
                terrain=None, speed_multiplier=1.0):
 
         """
@@ -40,21 +40,17 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
         :param terrain: Terrain sprite group (optional)
         :param speed_multiplier: increases the enemy speed.
         """
-
         dt *= speed_multiplier
 
         self._move(dt, terrain)
         self._limit_bounds()
-        self._compute_damage(player_projectiles)
+        self._compute_damage(player_projectiles, ability_projectiles)
         self._update_behavior(dt, terrain)
 
         if player:
             target = pygame.math.Vector2(player.sprite.rect.centerx,
                                          player.sprite.rect.centery)
             self._attack(dt, target, enemies_projectiles)
-
-        if self._health_points <= 0:
-            self.kill()
 
     @abstractmethod
     def _move(self, dt, terrain=None):
@@ -98,7 +94,7 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
             out_of_bounds = True
         return out_of_bounds
 
-    def _compute_damage(self, player_projectiles):
+    def _compute_damage(self, player_projectiles, ability_projectiles):
         """
         Computes projectile collision and damage taken.
 
@@ -109,6 +105,27 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
             if pygame.sprite.collide_rect(self, projectile):
                 self._health_points -= projectile.damage
                 projectile.kill()
+
+        for ability in ability_projectiles:
+            if hasattr(ability, 'radius'):
+                distance = pygame.math.Vector2(
+                    ability.rect.centerx - self.rect.centerx,
+                    ability.rect.centery - self.rect.centery
+                ).length()
+
+                if distance <= ability.radius:
+                    distance_factor = 1 - (distance / ability.radius)
+                    actual_damage = ability.damage * distance_factor
+                    self._health_points -= actual_damage
+
+            elif pygame.sprite.collide_rect(self, ability):
+                self._health_points -= ability.damage
+
+                if hasattr(ability,
+                           'create_explosion') and not ability.has_exploded:
+                    ability.create_explosion(ability, ability_projectiles)
+
+                ability.kill()
 
     @abstractmethod
     def _attack(self, dt, target, projectiles):
@@ -122,3 +139,15 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
         :return: Current health points
         """
         return self._health_points
+
+    def to_dict(self):
+        """
+        Converts the enemy's state into a dictionary.
+        """
+        return {
+            "type": self.__class__.__name__,
+            "centerx": self.rect.centerx,
+            "bottom": self.rect.bottom,
+            "health": self._health_points,
+            "speed": self._speed,
+        }

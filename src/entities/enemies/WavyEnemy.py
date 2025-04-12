@@ -2,7 +2,7 @@ import numpy as np
 import pygame
 
 from config.Constants import Constants, Colors
-from src.entities.Projectile import ProjectileGenerator
+from src.entities.projectiles.ProjectileGenerator import ProjectileGenerator
 from src.entities.enemies.AbstractEnemy import AbstractEnemy
 
 
@@ -30,7 +30,8 @@ class WavyEnemy(AbstractEnemy):
              Constants.PROJECTILE_DEFAULT_HEIGHT)
         )
         projectile_image.fill(Colors.GREEN)
-        self._projectile_generator = ProjectileGenerator(self, 200, 1, projectile_image, 5)
+        self._projectile_generator = ProjectileGenerator(self, 200, 1,
+                                                         projectile_image, 5)
 
     def _initialize_sprite(self, x, y):
         """
@@ -39,9 +40,11 @@ class WavyEnemy(AbstractEnemy):
         :param x: Initial x coordinate
         :param y: Initial y coordinate
         """
-        self.image = pygame.image.load("assets/sprites/enemies/WavyEnemy.png").convert_alpha()
+        self.image = pygame.image.load(
+            "assets/sprites/enemies/WavyEnemy.png").convert_alpha()
         self.image = pygame.transform.scale(
-            self.image, (Constants.WAVY_ENEMY_WIDTH, Constants.WAVY_ENEMY_HEIGHT)
+            self.image,
+            (Constants.WAVY_ENEMY_WIDTH, Constants.WAVY_ENEMY_HEIGHT)
         )
         self._original_image = self.image.copy()  # Guarda a imagem original para referência, se necessário
         self.rect = self.image.get_rect()
@@ -70,7 +73,8 @@ class WavyEnemy(AbstractEnemy):
         :param dt: Time since last update
         :param terrain: Terrain sprite group (not used by this enemy)
         """
-        self.__timer = (self.__timer + dt) % (2 * np.pi / self.__angular_frequency)
+        self.__timer = (self.__timer + dt) % (
+                    2 * np.pi / self.__angular_frequency)
 
     def _attack(self, dt, target, projectiles):
         """
@@ -82,3 +86,28 @@ class WavyEnemy(AbstractEnemy):
         """
         origin = pygame.math.Vector2(self.rect.center)
         self._projectile_generator.generate(origin, target, dt, projectiles)
+
+    def to_dict(self):
+        """
+        Converts the enemy's state into a dictionary, including WavyEnemy-specific attributes.
+        """
+        data = super().to_dict()
+        data["timer"] = self.__timer
+        data["amplitude"] = self.__amplitude
+        data["angular_frequency"] = self.__angular_frequency
+        return data
+
+    @classmethod
+    def from_dict(cls, data):
+        """
+        Creates an instance of WavyEnemy from a dictionary.
+        """
+        instance = cls(data["centerx"], data["bottom"])
+        instance._health_points = data["health"]
+        instance._speed = data["speed"]
+        instance.__timer = data.get("timer", 0)
+        instance.__amplitude = data.get("amplitude",
+                                        Constants.WAVY_ENEMY_AMPLITUDE)
+        instance.__angular_frequency = data.get("angular_frequency",
+                                                Constants.WAVY_ENEMY_ANGULAR_FREQUENCY)
+        return instance

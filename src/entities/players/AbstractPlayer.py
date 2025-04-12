@@ -1,7 +1,12 @@
-import pygame
 from abc import ABC, abstractmethod
-from config.Constants import Constants
-from src.entities.Projectile import ProjectileGenerator
+
+from config.Constants import Constants, Colors
+from entities.projectiles.ProjectileGenerator import ProjectileGenerator
+from entities.projectiles.BaseProjectile import BaseProjectile
+from src.entities.Ability import MissileBarrage
+from src.entities.Ability import LaserBeam
+from src.entities.Ability import CriticalShot
+import pygame
 
 
 class AbstractPlayer(pygame.sprite.Sprite, ABC):
@@ -47,13 +52,14 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
                                                         self.get_projectile_speed(),
                                                         self.get_projectile_frequency(),
                                                         projectile_image,
-                                                        self.get_projectile_damage())
+                                                        self.get_projectile_damage(),
+                                                        is_player_projectile=True)
 
         ability_image = pygame.Surface(
             (Constants.ABILITY_WIDTH, Constants.ABILITY_HEIGHT)
         )
         ability_image.fill(Constants.ABILITY_DEFAULT_COLOR)
-        self.ability_generator = self.choose_ability_generator(ability_image)
+        self.ability_generator = self.choose_ability(ability_image)
 
     @abstractmethod
     def get_player_color(self):
@@ -104,7 +110,7 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         pass
 
     @abstractmethod
-    def choose_ability_generator(self, ability_image):
+    def choose_ability(self, ability_image):
         """
         Returns the correct skill to the player.
         """
@@ -131,7 +137,8 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
 
     pass
 
-    def update(self, keys, terrain, dt, player_projectiles, enemies_projectiles, abilities):
+    def update(self, keys, terrain, dt, player_projectiles,
+               enemies_projectiles, abilities):
         self._handle_input(terrain, keys, dt, player_projectiles, abilities)
         self._limit_bounds()
         self._compute_damage(enemies_projectiles)
@@ -147,8 +154,11 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
                     self.walk_frame_timer += dt
                     if self.walk_frame_timer >= self.walk_frame_duration:
                         self.walk_frame_timer = 0
-                        self.walk_frame_index = (self.walk_frame_index + 1) % len(self.sprite_walk_frames)
-                    self.image = self.sprite_walk_frames[self.walk_frame_index]
+                        self.walk_frame_index = (
+                                                        self.walk_frame_index + 1) % len(
+                            self.sprite_walk_frames)
+                    self.image = self.sprite_walk_frames[
+                        self.walk_frame_index]
                 else:
                     self.image = self.sprite_walk
             except AttributeError:
@@ -172,14 +182,20 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
     def _handle_input(self, terrain, keys, dt, projectiles, abilities):
         self._compute_vertical_position(terrain, keys, dt)
         self._compute_horizontal_position(terrain, keys, dt)
-        if pygame.mouse.get_pressed()[0]:
-            target = pygame.math.Vector2(*pygame.mouse.get_pos())
+
+        if (pygame.mouse.get_pressed()[0] and not
+        (pygame.mouse.get_pressed()[2] and self._ready_ability)):
+            target = pygame.math.Vector2(pygame.mouse.get_pos()[0],
+                                         pygame.mouse.get_pos()[1])
             origin = (
                 self.get_projectile_origin()
                 if hasattr(self, "get_projectile_origin")
                 else pygame.math.Vector2(self.rect.center)
             )
-            self.projectile_generator.generate(origin, target, dt,projectiles)
+            self.projectile_generator.generate(origin, target, dt,
+                                               projectiles)
+        self._compute_cooldown_ability(dt)
+
         if pygame.mouse.get_pressed()[2]:
             target_ability = pygame.math.Vector2(pygame.mouse.get_pos()[0],
                                                  pygame.mouse.get_pos()[1])
@@ -255,8 +271,29 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         Computes projectile collision and damage taken.
         :param enemies_projectiles: Enemies projectiles on screen.
         """
-
         for projectile in enemies_projectiles:
             if pygame.sprite.collide_rect(self, projectile):
-                self._health_points -= projectile.damage
-                projectile.kill()
+                # Bomb only causes collision damage if it hasn't exploded yet.
+                if hasattr(projectile, '_exploded'):
+                    if not projectile._exploded:
+                        self._health_points -= projectile.damage
+                        projectile._explode(None, self)
+                else:
+                    self._health_points -= projectile.damage
+                    projectile.kill()
+
+    def to_dict(self):
+        """
+        Converts the player's state into a dictionary.
+        """
+        return {
+            "type": self.__class__.__name__,
+            "centerx": self.rect.centerx,
+            "bottom": self.rect.bottom,
+            "health": self._health_points,
+            "is_jumping": self._is_jumping,
+            "y_speed": self._y_speed,
+            "ready_ability": self._ready_ability,
+            "time_cooldown_ability": self._time_cooldown_ability,
+            "time_duration_ability": self._time_duration_ability
+        }

@@ -66,12 +66,13 @@ class Constants:
     BOUNCING_ENEMY_HEIGHT = 50.4
     BOUNCING_ENEMY_MAX_HEALTH = 60
     BOUNCING_ENEMY_HORIZONTAL_SPEED = 150
-    BOUNCING_ENEMY_FALL_SPEED = 500
+    BOUNCING_ENEMY_FALL_SPEED = 1000
     BOUNCING_ENEMY_RISE_SPEED = 100
     BOUNCING_ENEMY_BASE_HEIGHT = HEIGHT / 4  # Altura base para movimento horizontal
     BOUNCING_ENEMY_MIN_TIME_BEFORE_FALL = 2  # Tempo mínimo antes de cair
     BOUNCING_ENEMY_MAX_TIME_BEFORE_FALL = 5  # Tempo máximo antes de cair
     BOUNCING_ENEMY_WAIT_TIME = 1  # Tempo de espera após cair/subir
+    BOUNCING_ENEMY_FALL_DAMAGE = 2
 
     # Tank Enemy
     TANK_ENEMY_WIDTH = 188.8
@@ -79,6 +80,12 @@ class Constants:
     TANK_ENEMY_MAX_HEALTH = 200
     TANK_ENEMY_SPEED = 50
     TANK_ENEMY_Y = 80  # Posição Y fixa no topo da tela
+    TANK_ENEMY_SHOOT_FREQUENCY = 2  # Frequência de tiro em segundos
+    TANK_BOMB_WIDTH = 20
+    TANK_BOMB_HEIGHT = 20
+    TANK_BOMB_SPEED = 200  # Velocidade de queda da bomba
+    TANK_BOMB_DAMAGE = 30  # Dano da bomba
+    TANK_BOMB_EXPLOSION_RADIUS = 100  # Raio da explosão em pixels
 
     # PROJECTILE
     PROJECTILE_DEFAULT_SPEED = 800
@@ -97,6 +104,9 @@ class Constants:
     ABILITY_DAMAGE = 50
     ABILITY_SPEED = 500
     MISSILE_SHOT_CAPACITY = 5
+    ANGLE_SPREAD_MISSILE = 10
+    EXPLOSION_RADIUS = 100
+    COLOR_EXPLOSION = (255, 165, 0, 180)
     LASER_LIFETIME = 1 / 60
     LASER_DURATION = 8
     LASER_WIDTH = 5

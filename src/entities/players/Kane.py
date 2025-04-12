@@ -101,7 +101,7 @@ class Kane(AbstractPlayer):
     def get_projectile_damage(self):
         return int(Constants.PROJECTILE_DEFAULT_DAMAGE * 1.2)
 
-    def choose_ability_generator(self, ability_image):
+    def choose_ability(self, ability_image):
         return LaserBeam(
             self,
             Constants.ABILITY_DAMAGE,
@@ -124,3 +124,25 @@ class Kane(AbstractPlayer):
             if self._time_duration_ability >= Constants.ABILITY_DURATION:
                 self._time_duration_ability = 0
                 self._ready_ability = False
+
+    def to_dict(self):
+        """
+        Utilizes the method from the abstract class to obtain common data.
+        Add any specific attributes of Kane to the dictionary if necessary.
+        """
+        data = super().to_dict()
+        return data
+
+    @classmethod
+    def from_dict(cls, data):
+        """
+        Creates an instance of Kane from a dictionary.
+        """
+        instance = cls(data["centerx"], data["bottom"])
+        instance._health_points = data["health"]
+        instance._is_jumping = data["is_jumping"]
+        instance._y_speed = data["y_speed"]
+        instance._ready_ability = data["ready_ability"]
+        instance._time_cooldown_ability = data["time_cooldown_ability"]
+        instance._time_duration_ability = data["time_duration_ability"]
+        return instance
