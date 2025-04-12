@@ -3,9 +3,9 @@ from abc import ABC, abstractmethod
 from config.Constants import Constants, Colors
 from entities.projectiles.ProjectileGenerator import ProjectileGenerator
 from entities.projectiles.BaseProjectile import BaseProjectile
-from src.entities.Abilitiy import MissileBarrage
-from src.entities.Abilitiy import LaserBeam
-from src.entities.Abilitiy import CriticalShot
+from src.entities.Ability import MissileBarrage
+from src.entities.Ability import LaserBeam
+from src.entities.Ability import CriticalShot
 import pygame
 
 
