@@ -1,9 +1,13 @@
 from abc import ABC, abstractmethod
 
+from config.Constants import Constants, Colors
+from entities.projectiles.ProjectileGenerator import ProjectileGenerator
+from entities.projectiles.BaseProjectile import BaseProjectile
+from src.entities.Ability import MissileBarrage
+from src.entities.Ability import LaserBeam
+from src.entities.Ability import CriticalShot
 import pygame
 
-from config.Constants import Constants
-from src.entities.Projectile import ProjectileGenerator
 
 
 class AbstractPlayer(pygame.sprite.Sprite, ABC):
@@ -42,7 +46,8 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
                                                         self.get_projectile_speed(),
                                                         self.get_projectile_frequency(),
                                                         projectile_image,
-                                                        self.get_projectile_damage())
+                                                        self.get_projectile_damage(),
+                                                        is_player_projectile=True)
 
         ability_image = pygame.Surface(
             (Constants.ABILITY_WIDTH, Constants.ABILITY_HEIGHT)
@@ -169,8 +174,7 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
             target_ability = pygame.math.Vector2(pygame.mouse.get_pos()[0],
                                                  pygame.mouse.get_pos()[1])
             if self._ready_ability:
-                self.ability_generator.generate(target_ability, dt,
-                                                abilities)
+                self.ability_generator.generate(target_ability, dt, abilities)
         self._compute_duration_ability(dt)
 
     def _compute_vertical_position(self, terrain, keys, dt):
@@ -237,8 +241,29 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         Computes projectile collision and damage taken.
         :param enemies_projectiles: Enemies projectiles on screen.
         """
-
         for projectile in enemies_projectiles:
             if pygame.sprite.collide_rect(self, projectile):
-                self._health_points -= projectile.damage
-                projectile.kill()
+                # Se for uma bomba, só causa dano se ainda não explodiu
+                if hasattr(projectile, '_exploded'):
+                    if not projectile._exploded:
+                        self._health_points -= projectile.damage
+                        projectile._explode(None, self)
+                else:
+                    self._health_points -= projectile.damage
+                    projectile.kill()
+
+    def to_dict(self):
+        """
+        Converts the player's state into a dictionary.
+        """
+        return {
+            "type": self.__class__.__name__,
+            "centerx": self.rect.centerx,
+            "bottom": self.rect.bottom,
+            "health": self._health_points,
+            "is_jumping": self._is_jumping,
+            "y_speed": self._y_speed,
+            "ready_ability": self._ready_ability,
+            "time_cooldown_ability": self._time_cooldown_ability,
+            "time_duration_ability": self._time_duration_ability
+        }

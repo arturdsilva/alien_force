@@ -1,9 +1,8 @@
 from abc import ABC, abstractmethod
-
+from config.Constants import Constants, Colors
+from entities.projectiles.ProjectileGenerator import ProjectileGenerator
+from entities.projectiles.BaseProjectile import BaseProjectile
 import pygame
-
-from config.Constants import Constants
-
 
 class AbstractEnemy(pygame.sprite.Sprite, ABC):
     """
@@ -54,9 +53,6 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
                                          player.sprite.rect.centery)
             self._attack(dt, target, enemies_projectiles)
 
-        if self._health_points <= 0:
-            self.kill()
-
     @abstractmethod
     def _move(self, dt, terrain=None):
         """
@@ -98,7 +94,6 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
             self.rect.bottom = Constants.HEIGHT
             out_of_bounds = True
         return out_of_bounds
-
 
     def _compute_damage(self, player_projectiles, ability_projectiles):
         """
@@ -145,3 +140,15 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
         :return: Current health points
         """
         return self._health_points
+
+    def to_dict(self):
+        """
+        Converts the enemy's state into a dictionary.
+        """
+        return {
+            "type": self.__class__.__name__,
+            "centerx": self.rect.centerx,
+            "bottom": self.rect.bottom,
+            "health": self._health_points,
+            "speed": self._speed,
+        }
