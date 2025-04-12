@@ -5,7 +5,6 @@ import pygame
 from config.Constants import Constants
 from src.states import GameState
 from src.states.CharacterSelect import CharacterSelect
-from src.states.Play import Play
 
 
 class Menu(GameState):
@@ -94,4 +93,5 @@ class Menu(GameState):
             self.start_from_beginning()
             return
         player_name = "Jones"  # Default name
+        from src.states.Play import Play
         self.next_state = Play.from_dict(data, self.game, player_name)

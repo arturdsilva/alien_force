@@ -13,7 +13,6 @@ from src.entities.enemies.WavyEnemy import WavyEnemy
 from src.entities.players.PlayerClassMap import PlayerClassMap
 from src.states import GameState
 from src.states.Pause import Pause
-from src.states.SaveAndExit import SaveAndExit
 from src.ui.Hud import Hud
 
 
@@ -144,7 +143,8 @@ class Play(GameState):
                     self.next_state = Pause(self.game, self)
             if event.type == pygame.QUIT:
                 if self.__player.sprite is not None:
-                    self.next_state = SaveAndExit(self.game, self)
+                    from src.states.SaveConfirmation import SaveConfirmation
+                    self.next_state = SaveConfirmation(self.game, self, False)
                 else:
                     self.is_running = False
 
