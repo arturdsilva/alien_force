@@ -99,7 +99,6 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
             out_of_bounds = True
         return out_of_bounds
 
-
     def _compute_damage(self, player_projectiles, ability_projectiles):
         """
         Computes projectile collision and damage taken.

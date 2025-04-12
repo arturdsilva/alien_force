@@ -5,12 +5,12 @@ import pygame
 from config.AvailableTerrains import AvailableTerrains
 from config.Constants import Constants
 from src.entities.Terrain import Terrain
-from src.entities.enemies.EnemyClassMap import EnemyClassMap
-from src.entities.players.PlayerClassMap import PlayerClassMap
 from src.entities.enemies.BouncingEnemy import BouncingEnemy
+from src.entities.enemies.EnemyClassMap import EnemyClassMap
 from src.entities.enemies.LinearEnemy import LinearEnemy
 from src.entities.enemies.TankEnemy import TankEnemy
 from src.entities.enemies.WavyEnemy import WavyEnemy
+from src.entities.players.PlayerClassMap import PlayerClassMap
 from src.states import GameState
 from src.states.Pause import Pause
 from src.states.SaveAndExit import SaveAndExit

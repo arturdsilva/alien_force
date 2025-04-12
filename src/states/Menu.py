@@ -1,9 +1,11 @@
-import pygame
 import json
+
+import pygame
+
+from config.Constants import Constants
 from src.states import GameState
 from src.states.CharacterSelect import CharacterSelect
 from src.states.Play import Play
-from config.Constants import Constants
 
 
 class Menu(GameState):
@@ -27,7 +29,8 @@ class Menu(GameState):
         self.font_options = pygame.font.Font(None, 54)
 
         self.options = [
-            {'text': 'EPAÇO: Novo Jogo', 'action': self.start_from_beginning},
+            {'text': 'ESPAÇO: Novo Jogo', 'action':
+                self.start_from_beginning},
             {'text': 'C: Continuar Jogo Salvo',
              'action': self.start_from_save},
         ]

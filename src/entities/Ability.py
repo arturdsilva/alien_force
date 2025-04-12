@@ -300,7 +300,7 @@ class LaserBeam(Ability):
                 continue
             perpendicular = pygame.math.Vector2(-direction.y, direction.x)
             wave_offset = np.sin(time_factor + i * 0.2) * (
-                        self.__width_laser * 0.2)
+                    self.__width_laser * 0.2)
             segment_pos = segment_start + perpendicular * wave_offset
             segment_surface = self._create_segment_surface(segment_length)
             angle = np.arctan2(direction.y, direction.x)

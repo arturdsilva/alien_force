@@ -1,10 +1,11 @@
 import pygame
+
+from config.Constants import Constants
+from src.entities.players.Jones import Jones
+from src.entities.players.Kane import Kane
+from src.entities.players.Rain import Rain
 from src.states import GameState
 from src.states.Play import Play
-from src.entities.players.Kane import Kane
-from src.entities.players.Jones import Jones
-from src.entities.players.Rain import Rain
-from config.Constants import Constants
 
 
 class CharacterSelect(GameState):
