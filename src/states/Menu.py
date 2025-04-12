@@ -89,10 +89,9 @@ class Menu(GameState):
         try:
             with open("saves/save_game.json", "r") as f:
                 data = json.load(f)
-            # print("Data loaded successfully!")
-            # print(data)
         except FileNotFoundError:
-            print(
-                "Error: save file not found!")
+            print("Error: save file not found! Starting new game")
+            self.start_from_beginning()
+            return
         player_name = "Jones"  # Default name
         self.next_state = Play.from_dict(data, self.game, player_name)
