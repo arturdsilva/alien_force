@@ -16,16 +16,16 @@ class Hud:
         """
         self.player = player
         self.score = 0
-        self.font = pygame.font.Font(None, 24)  # Fonte menor (24 em vez de 36)
+        self.font = pygame.font.Font(None, 24)  # Smaller font (24 instead of 36)
         
         # Health bar dimensions
-        self.health_bar_width = 150  # Barra mais estreita
-        self.health_bar_height = 15  # Barra mais baixa
+        self.health_bar_width = 150  # Narrower bar
+        self.health_bar_height = 15  # Lower bar
         self.health_bar_x = 20
         self.health_bar_y = 20
         
         # Score position
-        self.score_x = Constants.WIDTH - 100  # Ajustado para a fonte menor
+        self.score_x = Constants.WIDTH - 100  # Adjusted for smaller font
         self.score_y = 20
         
         # Colors
@@ -85,4 +85,4 @@ class Hud:
         
         :param points: Points to add.
         """
-        self.score += points
+        self.score += points 

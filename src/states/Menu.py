@@ -51,3 +51,7 @@ class Menu(GameState):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     self.next_state = CharacterSelect(self.game)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:  # Left mouse button
+                    if self.start_rect.collidepoint(event.pos):
+                        self.next_state = CharacterSelect(self.game)

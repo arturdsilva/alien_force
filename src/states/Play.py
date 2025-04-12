@@ -9,7 +9,7 @@ from src.entities.enemies.LinearEnemy import LinearEnemy
 from src.entities.enemies.BouncingEnemy import BouncingEnemy
 from src.entities.enemies.TankEnemy import TankEnemy
 from src.states.Pause import Pause
-from src.ui.Hud import Hud
+from src.states.Hud import Hud
 
 
 class Play(GameState):
