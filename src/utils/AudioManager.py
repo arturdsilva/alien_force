@@ -31,7 +31,10 @@ class AudioManager:
             "gun shot": pygame.mixer.Sound("assets/sounds/gun_shot.wav"),
             "laser shot": pygame.mixer.Sound("assets/sounds/laser_shot.wav"),
             "laser beam": pygame.mixer.Sound("assets/sounds/laser_beam.wav"),
-            "death": pygame.mixer.Sound("assets/sounds/death.wav")
+            "death": pygame.mixer.Sound("assets/sounds/death.wav"),
+            "hit": pygame.mixer.Sound("assets/sounds/hit.wav"),
+            "explosion": pygame.mixer.Sound("assets/sounds/explosion.wav"),
+            "blast": pygame.mixer.Sound("assets/sounds/blast.wav")
         }
 
         # Base volume for each sound
@@ -39,8 +42,11 @@ class AudioManager:
             "click": 0.9,
             "gun shot": 0.2,
             "laser shot": 0.2,
-            "laser beam": 0.2,
-            "death": 0.1
+            "laser beam": 0.1,
+            "death": 0.1,
+            "hit": 0.5,
+            "explosion": 0.5,
+            "blast": 0.5
         }
 
         self.musics = {

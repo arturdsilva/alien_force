@@ -26,6 +26,9 @@ class Sounds:
     LASER_BEAM = "laser beam"
     CLICK = "click"
     DEATH = "death"
+    HIT = "hit"
+    EXPLOSION = "explosion"
+    BLAST = "blast"
 
 class Constants:
     # GENERAL
