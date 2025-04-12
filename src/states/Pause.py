@@ -82,6 +82,10 @@ class Pause(GameState):
         :param events: List of pygame events to process.
         """
         for event in events:
+            if event.type == pygame.QUIT:
+                from src.states.SaveConfirmation import SaveConfirmation
+                self.next_state = SaveConfirmation(self.game, self.play_state,
+                                                   False)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_p:
                     self.resume_game()
@@ -98,5 +102,5 @@ class Pause(GameState):
         """
         Returns to the main menu.
         """
-        from src.states.Menu import Menu
-        self.next_state = Menu(self.game)
+        from src.states.SaveConfirmation import SaveConfirmation
+        self.next_state = SaveConfirmation(self.game, self.play_state, True)

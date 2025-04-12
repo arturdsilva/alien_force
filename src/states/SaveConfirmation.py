@@ -1,18 +1,16 @@
-import json
-import os
-
 import pygame
 
 from config.Constants import Constants
 from src.states import GameState
+from src.states.Menu import Menu
 
 
-class SaveAndExit(GameState):
+class SaveConfirmation(GameState):
     """
     Save and exit menu state used to save progress and exit the game.
     """
 
-    def __init__(self, game, play_state):
+    def __init__(self, game, play_state, return_to_menu_after_saving):
         """
         Initializes the save and exit menu.
 
@@ -21,6 +19,7 @@ class SaveAndExit(GameState):
         """
         super().__init__(game)
         self.play_state = play_state  # Store the current play state for later use
+        self.return_to_menu_after_saving = return_to_menu_after_saving
         self.next_state = self
 
         # Font configuration for title and options
@@ -35,9 +34,9 @@ class SaveAndExit(GameState):
 
         # Define the menu options with associated actions
         self.options = [
-            {'text': 'Salvar e sair (ENTER)', 'action': self.save_and_exit},
+            {'text': 'Salvar (ENTER)', 'action': self.save_and_leave_session},
             {'text': 'Sair sem salvar (N)',
-             'action': self.exit_without_saving}
+             'action': self.leave_session}
         ]
 
         self.options_surfaces = []
@@ -90,36 +89,24 @@ class SaveAndExit(GameState):
         for event in events:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
-                    self.save_and_exit()
+                    self.save_and_leave_session()
                 elif event.key == pygame.K_n:
-                    self.exit_without_saving()
+                    self.leave_session()
             if event.type == pygame.QUIT:
                 self.is_running = False
 
-    def save_and_exit(self, file_name="saves/save_game.json"):
+    def save_and_leave_session(self):
         """
         Saves the current play state to a JSON file and exits the game.
-
-        :param file_name: The filename (with path) where the save data will be stored.
         """
-        try:
-            os.makedirs(os.path.dirname(file_name), exist_ok=True)
+        self.save(self.play_state)
+        self.leave_session()
 
-            data = self.play_state.to_dict()
-
-            with open(file_name, 'w') as file:
-                json.dump(data, file, indent=4)
-
-            self.is_running = False
-
-        except (IOError, OSError) as e:
-            print("Erro ao salvar o progresso: {}".format(e))
-            print("Saindo sem salvar")
-            self.exit_without_saving()
-
-    def exit_without_saving(self):
+    def leave_session(self):
         """
         Exits the game without saving the progress.
         """
-        # Simply set the state to not running to exit the game without saving
-        self.is_running = False
+        if self.return_to_menu_after_saving:
+            self.next_state = Menu(self.game)
+        else:
+            self.is_running = False
