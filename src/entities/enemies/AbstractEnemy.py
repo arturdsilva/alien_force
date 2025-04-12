@@ -1,9 +1,8 @@
 from abc import ABC, abstractmethod
-
+from config.Constants import Constants, Colors
+from entities.projectiles.ProjectileGenerator import ProjectileGenerator
+from entities.projectiles.BaseProjectile import BaseProjectile
 import pygame
-
-from config.Constants import Constants
-
 
 class AbstractEnemy(pygame.sprite.Sprite, ABC):
     """
@@ -53,9 +52,6 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
             target = pygame.math.Vector2(player.sprite.rect.centerx,
                                          player.sprite.rect.centery)
             self._attack(dt, target, enemies_projectiles)
-
-        if self._health_points <= 0:
-            self.kill()
 
     @abstractmethod
     def _move(self, dt, terrain=None):

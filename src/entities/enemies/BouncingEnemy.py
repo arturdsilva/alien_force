@@ -129,6 +129,38 @@ class BouncingEnemy(AbstractEnemy):
     def _attack(self, dt, target, enemies_projectiles):
         pass
 
+    def _compute_damage(self, player_projectiles):
+        """
+        Computes projectile collision and damage taken.
+
+        :param player_projectiles: Player projectiles on screen.
+        """
+        for projectile in player_projectiles:
+            if pygame.sprite.collide_rect(self, projectile):
+                self._health_points -= projectile.damage
+                projectile.kill()
+
+    def update(self, dt, player_projectiles, abilities, enemies_projectiles, player, terrain, speed_multiplier):
+        """
+        Updates enemy state and position.
+
+        :param dt: Time since last update
+        :param player_projectiles: Player projectiles on screen
+        :param abilities: Player abilities on screen
+        :param enemies_projectiles: Enemies projectiles on screen
+        :param player: Player sprite
+        :param terrain: Terrain sprite group
+        :param speed_multiplier: Speed multiplier for game difficulty
+        """
+        self._move(dt, terrain)
+        self._update_behavior(dt, terrain)
+        self._compute_damage(player_projectiles)
+        self._attack(dt, player, enemies_projectiles)
+        
+        # Verifica colisão com o player durante a queda
+        if self._state == self.FALLING and player and pygame.sprite.collide_rect(self, player.sprite):
+            player.sprite._health_points -= Constants.BOUNCING_ENEMY_FALL_DAMAGE
+
     def to_dict(self):
         """
         Converts the enemy's state into a dictionary, including BouncingEnemy-specific attributes.
@@ -160,3 +192,4 @@ class BouncingEnemy(AbstractEnemy):
             Constants.BOUNCING_ENEMY_MAX_TIME_BEFORE_FALL))
         instance._original_y = data.get("original_y", instance.rect.centery)
         return instance
+

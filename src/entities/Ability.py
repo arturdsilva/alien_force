@@ -67,6 +67,7 @@ class Ability(pygame.sprite.Sprite):
 
     def _handle_bounds(self):
         """
+
         Removes objects that go off screen
         """
         if (self.rect.right < 0 or
@@ -249,7 +250,6 @@ class LaserBeam(Ability):
         :param duration: duration of the laser in seconds
         :param width: width of the laser
         :param color: color of the laser (RGB)
-        :param color: color of the laser (RGBA)
         :param lifetime: lifetime of the laser
         """
         self.__agent = agent

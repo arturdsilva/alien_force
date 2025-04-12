@@ -32,8 +32,8 @@ class Pause(GameState):
 
         # Options
         self.options = [
-            {'text': 'Continuar (P)', 'action': self.resume_game},
-            {'text': 'Menu Principal (ESC)', 'action': self.return_to_menu}
+            {'text': 'Continuar (ESC)', 'action': self.resume_game},
+            {'text': 'Menu Principal (M)', 'action': self.return_to_menu}
         ]
 
         self.options_surfaces = []
@@ -87,10 +87,16 @@ class Pause(GameState):
                 self.next_state = SaveConfirmation(self.game, self.play_state,
                                                    False)
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_p:
+                if event.key == pygame.K_ESCAPE:
                     self.resume_game()
-                elif event.key == pygame.K_ESCAPE:
+                elif event.key == pygame.K_m:
                     self.return_to_menu()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:  # Left mouse button
+                    mouse_pos = event.pos
+                    for i, rect in enumerate(self.options_rects):
+                        if rect.collidepoint(mouse_pos):
+                            self.options[i]['action']()
 
     def resume_game(self):
         """

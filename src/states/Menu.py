@@ -75,9 +75,12 @@ class Menu(GameState):
                 self.is_running = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    self.start_from_beginning()
-                if event.key == pygame.K_c:
-                    self.start_from_save()
+                    self.next_state = CharacterSelect(self.game)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:  # Left mouse button
+                    for i, rect in enumerate(self.options_rects):
+                        if rect.collidepoint(event.pos):
+                            self.options[i]['action']()
 
     def start_from_beginning(self):
         self.load_from_save = False
