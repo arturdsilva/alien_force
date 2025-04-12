@@ -1,11 +1,8 @@
 import pygame
+
 from config.Constants import Constants, Sounds
 from src.states.Menu import Menu
 from src.utils.AudioManager import AudioManager
-from config.AvailableTerrains import AvailableTerrains
-from entities.players.AbstractPlayer import AbstractPlayer
-from entities.Terrain import Terrain
-from src.entities.enemies.WavyEnemy import WavyEnemy
 
 
 class Game:

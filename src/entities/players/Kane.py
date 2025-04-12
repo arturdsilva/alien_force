@@ -1,7 +1,8 @@
 import pygame
+
 from config.Constants import Constants, Sounds
-from src.entities.players.AbstractPlayer import AbstractPlayer
 from src.entities.Ability import LaserBeam
+from src.entities.players.AbstractPlayer import AbstractPlayer
 
 
 class Kane(AbstractPlayer):
@@ -15,16 +16,16 @@ class Kane(AbstractPlayer):
         return pygame.Color('steelblue')
 
     def get_initial_health(self):
-        return Constants.PLAYER_MAX_HEALTH 
+        return Constants.PLAYER_MAX_HEALTH
 
     def get_projectile_color(self):
-        return pygame.Color('yellow') 
+        return pygame.Color('yellow')
 
     def get_projectile_speed(self):
-        return Constants.PROJECTILE_DEFAULT_SPEED * 1.5 
+        return Constants.PROJECTILE_DEFAULT_SPEED * 1.5
 
     def get_projectile_frequency(self):
-        return Constants.PROJECTILE_DEFAULT_FREQUENCY * 1.5 
+        return Constants.PROJECTILE_DEFAULT_FREQUENCY * 1.5
 
     def get_projectile_damage(self):
         return int(Constants.PROJECTILE_DEFAULT_DAMAGE * 1.2)
@@ -32,7 +33,7 @@ class Kane(AbstractPlayer):
     def get_projectile_sound(self):
         return Sounds.GUN_SHOT
 
-    def choose_ability_generator(self, ability_image):
+    def choose_ability(self, ability_image):
         return LaserBeam(
             self,
             Constants.ABILITY_DAMAGE,

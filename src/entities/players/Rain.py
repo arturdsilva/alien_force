@@ -1,7 +1,7 @@
 import pygame
 from config.Constants import Constants, Sounds
-from src.entities.players.AbstractPlayer import AbstractPlayer
 from src.entities.Ability import CriticalShot
+from src.entities.players.AbstractPlayer import AbstractPlayer
 
 
 class Rain(AbstractPlayer):
@@ -10,6 +10,7 @@ class Rain(AbstractPlayer):
     Basic attack: Precision rifle with very slow reload
     Special ability: Survival Mode (speed and reload buff)
     """
+
     def __init__(self):
         super(Rain, self).__init__()
         self._charging_critical = 0
@@ -17,6 +18,7 @@ class Rain(AbstractPlayer):
 
     def get_player_color(self):
         return pygame.Color('darkgreen')
+
     def get_initial_health(self):
         return int(Constants.PLAYER_MAX_HEALTH * 0.9)
 
@@ -35,7 +37,7 @@ class Rain(AbstractPlayer):
     def get_projectile_sound(self):
         return Sounds.GUN_SHOT
 
-    def choose_ability_generator(self, ability_image):
+    def choose_ability(self, ability_image):
         return CriticalShot(
             self,
             Constants.ABILITY_SPEED * 3,

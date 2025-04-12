@@ -1,8 +1,10 @@
-from src.entities.enemies.AbstractEnemy import AbstractEnemy
-from config.Constants import Constants, Colors, Sounds
-from src.entities.Projectile import ProjectileGenerator
+from config.Constants import Sounds
 import numpy as np
 import pygame
+
+from config.Constants import Constants, Colors
+from src.entities.Projectile import ProjectileGenerator
+from src.entities.enemies.AbstractEnemy import AbstractEnemy
 
 
 class WavyEnemy(AbstractEnemy):
@@ -19,7 +21,7 @@ class WavyEnemy(AbstractEnemy):
         """
         super().__init__(x=x, y=y)
         self._health_points = Constants.WAVY_ENEMY_MAX_HEALTH
-        self._speed = 1.5 * Constants.ENEMY_SPEED
+        self._speed = Constants.WAVY_ENEMY_SPEED
         self.__timer = 0
         self.__amplitude = Constants.WAVY_ENEMY_AMPLITUDE
         self.__angular_frequency = Constants.WAVY_ENEMY_ANGULAR_FREQUENCY

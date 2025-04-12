@@ -1,7 +1,9 @@
-from src.entities.enemies.AbstractEnemy import AbstractEnemy
-from config.Constants import Constants, Colors
-import pygame
 import random
+
+import pygame
+
+from config.Constants import Constants, Colors
+from src.entities.enemies.AbstractEnemy import AbstractEnemy
 
 
 class BouncingEnemy(AbstractEnemy):
@@ -11,13 +13,14 @@ class BouncingEnemy(AbstractEnemy):
     """
 
     # Enemy states
-    MOVING = 'moving'      # Moving horizontally
+    MOVING = 'moving'  # Moving horizontally
     PREPARING = 'preparing'  # Preparing to drop
-    FALLING = 'falling'    # Falling
-    WAITING = 'waiting'    # Waiting after falling/rising
-    RISING = 'rising'      # Rising
+    FALLING = 'falling'  # Falling
+    WAITING = 'waiting'  # Waiting after falling/rising
+    RISING = 'rising'  # Rising
 
-    def __init__(self, x=Constants.WIDTH, y=Constants.BOUNCING_ENEMY_BASE_HEIGHT):
+    def __init__(self, x=Constants.WIDTH,
+                 y=Constants.BOUNCING_ENEMY_BASE_HEIGHT):
         """
         Initializes an enemy that alternates between horizontal and vertical movement.
 
@@ -44,7 +47,7 @@ class BouncingEnemy(AbstractEnemy):
         :param y: Initial y coordinate
         """
         self.image = pygame.Surface((Constants.BOUNCING_ENEMY_WIDTH,
-                                   Constants.BOUNCING_ENEMY_HEIGHT))
+                                     Constants.BOUNCING_ENEMY_HEIGHT))
         self.image.fill(Colors.ORANGE)
         self.rect = self.image.get_rect()
         self.rect.centerx = x
@@ -60,7 +63,7 @@ class BouncingEnemy(AbstractEnemy):
         if self._state == self.MOVING:
             # Constant horizontal movement
             self.rect.x += self._velocity_x * dt
-            
+
             # Reverse direction at edges
             if self.rect.left <= 0:
                 self.rect.left = 0
@@ -72,7 +75,7 @@ class BouncingEnemy(AbstractEnemy):
         elif self._state == self.FALLING:
             # Fast falling movement
             self.rect.y += Constants.BOUNCING_ENEMY_FALL_SPEED * dt
-            
+
             # Check terrain collision
             if terrain:
                 hits = pygame.sprite.spritecollide(self, terrain, False)
