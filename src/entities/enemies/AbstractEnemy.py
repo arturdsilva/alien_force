@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
 from config.Constants import Constants, Colors
-from entities.projectiles.ProjectileGenerator import ProjectileGenerator
-from entities.projectiles.BaseProjectile import BaseProjectile
+from src.entities.projectiles.ProjectileGenerator import ProjectileGenerator
+from src.entities.projectiles.BaseProjectile import BaseProjectile
 import pygame
+
 
 class AbstractEnemy(pygame.sprite.Sprite, ABC):
     """
@@ -125,6 +126,9 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
                 if hasattr(ability,
                            'create_explosion') and not ability.has_exploded:
                     ability.create_explosion(ability, ability_projectiles)
+                elif hasattr(ability,
+                             'create_hit_effect') and not ability.has_hit:
+                    ability.create_hit_effect(ability, ability_projectiles)
 
                 ability.kill()
 

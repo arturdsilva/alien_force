@@ -1,7 +1,7 @@
 import pygame
 
 from config.Constants import Constants
-from src.entities.AbstractAbility import LaserBeam
+from src.entities.Ability import LaserBeam
 from src.entities.players.AbstractPlayer import AbstractPlayer
 
 
@@ -33,11 +33,9 @@ class Kane(AbstractPlayer):
     def choose_ability(self, ability_image):
         return LaserBeam(
             self,
-            Constants.ABILITY_DAMAGE,
             Constants.LASER_DURATION,
             Constants.LASER_WIDTH,
-            Constants.COLOR_LASER,
-            Constants.LASER_LIFETIME
+            Constants.COLOR_LASER
         )
 
     def _compute_cooldown_ability(self, dt):

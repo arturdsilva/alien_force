@@ -1,7 +1,7 @@
 import pygame
 
 from config.Constants import Constants
-from src.entities.AbstractAbility import MissileBarrage
+from src.entities.Ability import MissileBarrage
 from src.entities.players.AbstractPlayer import AbstractPlayer
 
 
@@ -33,9 +33,7 @@ class Jones(AbstractPlayer):
     def choose_ability(self, ability_image):
         return MissileBarrage(
             self,
-            Constants.ABILITY_SPEED,
             ability_image,
-            Constants.ABILITY_DAMAGE,
             Constants.MISSILE_SHOT_CAPACITY,
             Constants.ANGLE_SPREAD_MISSILE,
             Constants.EXPLOSION_RADIUS

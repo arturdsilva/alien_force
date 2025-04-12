@@ -1,7 +1,7 @@
 import pygame
 
 from config.Constants import Constants
-from src.entities.AbstractAbility import CriticalShot
+from src.entities.Ability import CriticalShot
 from src.entities.players.AbstractPlayer import AbstractPlayer
 
 
@@ -38,9 +38,7 @@ class Rain(AbstractPlayer):
     def choose_ability(self, ability_image):
         return CriticalShot(
             self,
-            Constants.ABILITY_SPEED * 3,
-            ability_image,
-            Constants.ABILITY_DAMAGE
+            ability_image
         )
 
     def _compute_cooldown_ability(self, dt):
