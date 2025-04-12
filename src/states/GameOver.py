@@ -22,6 +22,32 @@ class GameOver(GameState):
         self.font_medium = pygame.font.Font(None, 36)
         self.font_small = pygame.font.Font(None, 24)
 
+        # Opções do menu
+        self.options = [
+            {'text': 'Reiniciar (R)', 'action': self.restart_game},
+            {'text': 'Voltar ao Menu (ESC)', 'action': self.return_to_menu}
+        ]
+
+        self.options_surfaces = []
+        self.options_rects = []
+
+        # Cria as superfícies e retângulos para cada opção
+        for i, option in enumerate(self.options):
+            surface = self.font_small.render(option['text'], True, Colors.WHITE)
+            rect = surface.get_rect(center=(Constants.WIDTH/2, Constants.HEIGHT*2/3 + i * 30))
+            self.options_surfaces.append(surface)
+            self.options_rects.append(rect)
+
+    def restart_game(self):
+        """Reinicia o jogo."""
+        from src.states.CharacterSelect import CharacterSelect
+        self.next_state = CharacterSelect(self.game)
+
+    def return_to_menu(self):
+        """Volta para o menu principal."""
+        from src.states.Menu import Menu
+        self.next_state = Menu(self.game)
+
     def update(self, dt):
         """
         Updates the game over state.
@@ -51,15 +77,9 @@ class GameOver(GameState):
         score_rect = score_text.get_rect(center=(Constants.WIDTH/2, Constants.HEIGHT/2))
         screen.blit(score_text, score_rect)
 
-
-        restart_text = self.font_small.render("Pressione R para reiniciar", True, Colors.WHITE)
-        menu_text = self.font_small.render("Pressione M para voltar ao menu", True, Colors.WHITE)
-        
-        restart_rect = restart_text.get_rect(center=(Constants.WIDTH/2, Constants.HEIGHT*2/3))
-        menu_rect = menu_text.get_rect(center=(Constants.WIDTH/2, Constants.HEIGHT*2/3 + 30))
-        
-        screen.blit(restart_text, restart_rect)
-        screen.blit(menu_text, menu_rect)
+        # Desenha as opções
+        for surface, rect in zip(self.options_surfaces, self.options_rects):
+            screen.blit(surface, rect)
 
     def handle_events(self, events):
         """
@@ -68,10 +88,15 @@ class GameOver(GameState):
         :param events: List of pygame events to process.
         """
         for event in events:
-            if event.type == pygame.KEYDOWN:
+            if event.type == pygame.QUIT:
+                self.is_running = False
+            elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_r:  # Reiniciar
-                    from src.states.CharacterSelect import CharacterSelect
-                    self.next_state = CharacterSelect(self.game)
-                elif event.key == pygame.K_m:  # Voltar ao menu
-                    from src.states.Menu import Menu
-                    self.next_state = Menu(self.game) 
+                    self.restart_game()
+                elif event.key == pygame.K_ESCAPE:  # Voltar ao menu
+                    self.return_to_menu()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:  # Left mouse button
+                    for i, rect in enumerate(self.options_rects):
+                        if rect.collidepoint(event.pos):
+                            self.options[i]['action']() 

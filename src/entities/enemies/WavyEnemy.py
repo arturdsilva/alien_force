@@ -5,7 +5,7 @@ import numpy as np
 import pygame
 
 from config.Constants import Constants, Colors
-from src.entities.Projectile import ProjectileGenerator
+from entities.projectiles.ProjectileGenerator import ProjectileGenerator
 from src.entities.enemies.AbstractEnemy import AbstractEnemy
 
 

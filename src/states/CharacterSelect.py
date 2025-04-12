@@ -146,13 +146,14 @@ class CharacterSelect(GameState):
                     self.update_character_info()
                 elif event.key == pygame.K_SPACE:
                     selected_char = self.characters[self.selected]['class']()
-                    self.next_state = Play(self.game, selected_char)
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1:  # Left mouse button
-                        mouse_pos = event.pos
-                        # Check if clicked on navigation arrows
-                        preview_rect = pygame.Rect(0, 0, self.preview_size, self.preview_size)
-                        preview_rect.center = (Constants.WIDTH/2, Constants.HEIGHT/2)
+                    selected_char_name = selected_char.__class__.__name__
+                    self.next_state = Play(self.game, selected_char_name)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:  # Left mouse button
+                    mouse_pos = event.pos
+                    # Check if clicked on navigation arrows
+                    preview_rect = pygame.Rect(0, 0, self.preview_size, self.preview_size)
+                    preview_rect.center = (Constants.WIDTH/2, Constants.HEIGHT/2)
                     
                     if self.selected > 0:
                         left_arrow = self.font_chars.render('<', True, pygame.Color('white'))
@@ -171,4 +172,5 @@ class CharacterSelect(GameState):
                     # Check if clicked on character preview
                     if preview_rect.collidepoint(mouse_pos):
                         selected_char = self.characters[self.selected]['class']()
-                        self.next_state = Play(self.game, selected_char) 
+                        selected_char_name = selected_char.__class__.__name__
+                        self.next_state = Play(self.game, selected_char_name) 

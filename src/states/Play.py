@@ -79,7 +79,7 @@ class Play(GameState):
 
         player = self.__player.sprite
         self.__player_projectiles.update(dt, self.__terrain, player)
-        self.__enemies_projectiles.update(dt, self.__terrain, player, self.__speed_multiplier)
+        self.__enemies_projectiles.update(dt, self.__terrain, player)
         self.__abilities.update(dt, self.__speed_multiplier)
 
         self.__player.update(keys, self.__terrain, dt,

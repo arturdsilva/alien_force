@@ -78,9 +78,9 @@ class Menu(GameState):
                     self.next_state = CharacterSelect(self.game)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:  # Left mouse button
-                    if self.start_rect.collidepoint(event.pos):
-                        self.next_state = CharacterSelect(self.game)
-
+                    for i, rect in enumerate(self.options_rects):
+                        if rect.collidepoint(event.pos):
+                            self.options[i]['action']()
 
     def start_from_beginning(self):
         self.load_from_save = False

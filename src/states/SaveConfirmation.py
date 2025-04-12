@@ -94,6 +94,11 @@ class SaveConfirmation(GameState):
                     self.save_and_leave_session()
                 elif event.key == pygame.K_n:
                     self.leave_session()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:  # Left mouse button
+                    for i, rect in enumerate(self.options_rects):
+                        if rect.collidepoint(event.pos):
+                            self.options[i]['action']()
             if event.type == pygame.QUIT:
                 self.is_running = False
 

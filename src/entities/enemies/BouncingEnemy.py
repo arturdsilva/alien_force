@@ -140,15 +140,17 @@ class BouncingEnemy(AbstractEnemy):
                 self._health_points -= projectile.damage
                 projectile.kill()
 
-    def update(self, dt, player_projectiles, enemies_projectiles, player, terrain):
+    def update(self, dt, player_projectiles, abilities, enemies_projectiles, player, terrain, speed_multiplier):
         """
         Updates enemy state and position.
 
         :param dt: Time since last update
         :param player_projectiles: Player projectiles on screen
-        :param enemies_projectiles: Enemies projectiles on screen.
+        :param abilities: Player abilities on screen
+        :param enemies_projectiles: Enemies projectiles on screen
         :param player: Player sprite
         :param terrain: Terrain sprite group
+        :param speed_multiplier: Speed multiplier for game difficulty
         """
         self._move(dt, terrain)
         self._update_behavior(dt, terrain)
