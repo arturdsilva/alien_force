@@ -1,4 +1,6 @@
 import pygame
+import json
+import os
 
 from config.Constants import Constants
 from src.states import GameState
@@ -95,11 +97,23 @@ class SaveConfirmation(GameState):
             if event.type == pygame.QUIT:
                 self.is_running = False
 
-    def save_and_leave_session(self):
+    def save_and_leave_session(self, file_name="saves/save_game.json"):
         """
-        Saves the current play state to a JSON file and exits the game.
+        Saves the current game progress to a file and leaves the session.
+
+        :param file_name: The path to the save file.
         """
-        self.save(self.play_state)
+        try:
+            os.makedirs(os.path.dirname(file_name), exist_ok=True)
+
+            data = self.play_state.to_dict()
+
+            with open(file_name, 'w') as file:
+                json.dump(data, file, indent=4)
+
+        except (IOError, OSError) as e:
+            print("Erro ao salvar o progresso: {}".format(e))
+
         self.leave_session()
 
     def leave_session(self):
