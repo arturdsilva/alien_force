@@ -18,7 +18,7 @@ class SaveConfirmation(GameState):
         :param play_state: The game state that is currently active.
         """
         super().__init__(game)
-        self.play_state = play_state  # Store the current play state for later use
+        self.play_state = play_state
         self.return_to_menu_after_saving = return_to_menu_after_saving
         self.next_state = self
 
@@ -26,7 +26,7 @@ class SaveConfirmation(GameState):
         self.font_title = pygame.font.Font(None, 74)
         self.font_options = pygame.font.Font(None, 48)
 
-        # Render the title text (the string remains in Portuguese intentionally)
+        # Render the title text
         self.title = self.font_title.render('Salvar o progresso?', True,
                                             pygame.Color('white'))
         self.title_rect = self.title.get_rect(
