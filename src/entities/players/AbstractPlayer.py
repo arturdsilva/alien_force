@@ -1,5 +1,7 @@
-import pygame
 from abc import ABC, abstractmethod
+
+import pygame
+
 from config.Constants import Constants
 from src.entities.Projectile import ProjectileGenerator
 
@@ -157,7 +159,8 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
 
         self._compute_vertical_position(terrain, keys, dt)
         self._compute_horizontal_position(terrain, keys, dt)
-        if pygame.mouse.get_pressed()[0]:
+        if (pygame.mouse.get_pressed()[0] and not
+        (pygame.mouse.get_pressed()[2] and self._ready_ability)):
             target = pygame.math.Vector2(pygame.mouse.get_pos()[0],
                                          pygame.mouse.get_pos()[1])
             self.projectile_generator.generate(target, dt, projectiles)
