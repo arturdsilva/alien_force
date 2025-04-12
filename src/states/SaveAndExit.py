@@ -1,4 +1,5 @@
 import json
+import os
 
 import pygame
 
@@ -101,13 +102,20 @@ class SaveAndExit(GameState):
 
         :param file_name: The filename (with path) where the save data will be stored.
         """
-        # Convert the play state to a dictionary
-        data = self.play_state.to_dict()
-        # Write the dictionary to a JSON file with indentation for readability
-        with open(file_name, 'w') as file:
-            json.dump(data, file, indent=4)
-        # Set the state to not running to exit the game
-        self.is_running = False
+        try:
+            os.makedirs(os.path.dirname(file_name), exist_ok=True)
+
+            data = self.play_state.to_dict()
+
+            with open(file_name, 'w') as file:
+                json.dump(data, file, indent=4)
+
+            self.is_running = False
+
+        except (IOError, OSError) as e:
+            print("Erro ao salvar o progresso: {}".format(e))
+            print("Saindo sem salvar")
+            self.exit_without_saving()
 
     def exit_without_saving(self):
         """
