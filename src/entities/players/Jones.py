@@ -1,7 +1,8 @@
 import pygame
+
 from config.Constants import Constants
-from src.entities.players.AbstractPlayer import AbstractPlayer
 from src.entities.Ability import MissileBarrage
+from src.entities.players.AbstractPlayer import AbstractPlayer
 
 
 class Jones(AbstractPlayer):
@@ -15,16 +16,16 @@ class Jones(AbstractPlayer):
         return pygame.Color('olive')
 
     def get_initial_health(self):
-        return int(Constants.PLAYER_MAX_HEALTH * 1.2)  
+        return int(Constants.PLAYER_MAX_HEALTH * 1.2)
 
     def get_projectile_color(self):
-        return pygame.Color('orange') 
+        return pygame.Color('orange')
 
     def get_projectile_speed(self):
-        return Constants.PROJECTILE_DEFAULT_SPEED * 0.7 
+        return Constants.PROJECTILE_DEFAULT_SPEED * 0.7
 
     def get_projectile_frequency(self):
-        return Constants.PROJECTILE_DEFAULT_FREQUENCY * 0.5 
+        return Constants.PROJECTILE_DEFAULT_FREQUENCY * 0.5
 
     def get_projectile_damage(self):
         return int(Constants.PROJECTILE_DEFAULT_DAMAGE * 2)

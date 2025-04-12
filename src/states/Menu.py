@@ -8,6 +8,7 @@ class Menu(GameState):
     """
     Main menu game state.
     """
+
     def __init__(self, game):
         """
         Initializes the main menu.
@@ -16,12 +17,16 @@ class Menu(GameState):
         """
         super().__init__(game)
         self.font = pygame.font.Font(None, 74)
-        self.title = self.font.render('Alien Force', True, pygame.Color('white'))
-        self.title_rect = self.title.get_rect(center=(Constants.WIDTH/2, Constants.HEIGHT/4))
-        
+        self.title = self.font.render('Alien Force', True,
+                                      pygame.Color('white'))
+        self.title_rect = self.title.get_rect(
+            center=(Constants.WIDTH / 2, Constants.HEIGHT / 4))
+
         self.font_options = pygame.font.Font(None, 54)
-        self.start_text = self.font_options.render('Pressione ESPAÇO para iniciar', True, pygame.Color('white'))
-        self.start_rect = self.start_text.get_rect(center=(Constants.WIDTH/2, Constants.HEIGHT*3/4))
+        self.start_text = self.font_options.render(
+            'Pressione ESPAÇO para iniciar', True, pygame.Color('white'))
+        self.start_rect = self.start_text.get_rect(
+            center=(Constants.WIDTH / 2, Constants.HEIGHT * 3 / 4))
 
     def update(self, dt):
         """

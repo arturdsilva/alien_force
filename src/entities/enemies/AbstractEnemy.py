@@ -1,8 +1,8 @@
-import pygame
 from abc import ABC, abstractmethod
-from config.Constants import Constants, Colors
-from src.entities.Projectile import Projectile, ProjectileGenerator
-from src.entities.Ability import MissileBarrage, LaserBeam, CriticalShot
+
+import pygame
+
+from config.Constants import Constants
 
 
 class AbstractEnemy(pygame.sprite.Sprite, ABC):
@@ -28,8 +28,9 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
     def _initialize_sprite(self, x, y):
         pass
 
-    def update(self, dt, player_projectiles, ability_projectiles, enemies_projectiles, player,
-               terrain=None):
+    def update(self, dt, player_projectiles, ability_projectiles,
+               enemies_projectiles, player,
+               terrain=None, speed_multiplier=1.0):
 
         """
         Updates the enemy state.
@@ -39,7 +40,10 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
         :param enemies_projectiles: Enemies projectiles on screen.
         :param player: The player to be targeted.
         :param terrain: Terrain sprite group (optional)
+        :param speed_multiplier: increases the enemy speed.
         """
+        dt *= speed_multiplier
+
         self._move(dt, terrain)
         self._limit_bounds()
         self._compute_damage(player_projectiles, ability_projectiles)
@@ -65,7 +69,6 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
 
         pass
 
-
     @abstractmethod
     def _update_behavior(self, dt, terrain=None):
         """
@@ -76,7 +79,6 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
         :param terrain: Terrain sprite group (optional)
         """
         pass
-
 
     def _limit_bounds(self):
         """
