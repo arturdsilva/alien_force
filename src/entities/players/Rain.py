@@ -1,7 +1,7 @@
 import pygame
 
 from config.Constants import Constants
-from src.entities.Ability import CriticalShot
+from src.entities.AbstractAbility import CriticalShot
 from src.entities.players.AbstractPlayer import AbstractPlayer
 
 

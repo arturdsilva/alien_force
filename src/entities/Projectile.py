@@ -107,7 +107,7 @@ class ProjectileGenerator:
         origin = pygame.math.Vector2(self.__agent.rect.centerx,
                                      self.__agent.rect.centery)
 
-        angle = self.__compute_shot_angle(origin, target)
+        angle = self.compute_shot_angle(origin, target)
 
         velocity = pygame.Vector2()
         velocity.x = self.__projectile_speed * np.cos(angle)
@@ -129,7 +129,7 @@ class ProjectileGenerator:
                     self_collision = False
 
     @staticmethod
-    def __compute_shot_angle(origin, target):
+    def compute_shot_angle(origin, target):
         """
         Calculates angle between x-axis and shot trajectory.
         :param origin: The shot origin point.
