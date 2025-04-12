@@ -46,7 +46,7 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
             (Constants.ABILITY_WIDTH, Constants.ABILITY_HEIGHT)
         )
         ability_image.fill(Constants.ABILITY_DEFAULT_COLOR)
-        self.ability_generator = self.choose_ability_generator(ability_image)
+        self.ability_generator = self.choose_ability(ability_image)
 
     @abstractmethod
     def get_player_color(self):
@@ -97,7 +97,7 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         pass
 
     @abstractmethod
-    def choose_ability_generator(self, ability_image):
+    def choose_ability(self, ability_image):
         """
         Returns the correct skill to the player.
         """

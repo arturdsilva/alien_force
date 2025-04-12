@@ -1,3 +1,5 @@
+from abc import abstractmethod
+
 import pygame
 import numpy as np
 from config.Constants import Constants
@@ -34,6 +36,16 @@ class Ability(pygame.sprite.Sprite):
         self.__lifetime = lifetime
         self._time_alive = 0
 
+
+    @property
+    def damage(self):
+        """
+        Returns the damage value of the ability.
+
+        :return: The damage value
+        """
+        return self.__damage
+
     def update(self, dt):
         """
         Updates the skill's position and lifetime.
@@ -61,7 +73,6 @@ class Ability(pygame.sprite.Sprite):
                 self.rect.bottom < 0 or
                 self.rect.top > Constants.HEIGHT):
             self.kill()
-
 
     @staticmethod
     def compute_shot_angle(origin, target):
@@ -97,13 +108,14 @@ class Ability(pygame.sprite.Sprite):
 
 class MissileBarrage(Ability):
     """
-    Represents an Abilitiy Missile Barrage
+    Represents an Ability Missile Barrage
     """
 
     def __init__(self, agent, missile_speed, missile_image,
-                 missile_damage, num_missiles, angle_spread=10):
+                 missile_damage, num_missiles, angle_spread,
+                 explosion_radius):
         """
-        Initializes an Abilitiy Missile Barrage
+        Initializes an Ability Missile Barrage
 
         :param agent: agent of the missile barrage
         :param missile_speed: speed of the missile
@@ -111,6 +123,7 @@ class MissileBarrage(Ability):
         :param missile_damage: damage to the missile
         :param num_missiles: quantity of the missiles
         :param angle_spread: spread of the angle
+        :param explosion_radius: radius of the explosion when missile hits
         """
         self.__agent = agent
         self.__missile_speed = missile_speed
@@ -118,6 +131,7 @@ class MissileBarrage(Ability):
         self.__missile_damage = missile_damage
         self.__num_missiles = num_missiles
         self.__angle_spread = angle_spread * (np.pi / 180)
+        self.__explosion_radius = explosion_radius
 
     def generate(self, missile_target, dt, missiles):
         """
@@ -152,10 +166,18 @@ class MissileBarrage(Ability):
                 temp_position.x += velocity.x * dt
                 temp_position.y += velocity.y * dt
 
-                missile = Ability(pygame.math.Vector2(temp_position),
-                                  missile_angle, velocity,
-                                  self.missile_image,
-                                  self.__missile_damage)
+                missile = Ability(
+                    pygame.math.Vector2(temp_position),
+                    missile_angle,
+                    velocity,
+                    self.missile_image,
+                    self.__missile_damage
+                )
+
+                missile.explosion_radius = self.__explosion_radius
+                missile.explosion_damage = self.__missile_damage * 0.8
+                missile.create_explosion = self.create_explosion
+                missile.has_exploded = False
 
                 if pygame.sprite.collide_rect(self.__agent, missile):
                     missile.kill()
@@ -165,10 +187,55 @@ class MissileBarrage(Ability):
 
         return True
 
+    def _draw_explosion(self, radius, color):
+        """
+        Creates an explosion effect with area of effect damage
+
+        :param radius: Radius of the explosion
+        :param color: Color of the explosion (RGBA)
+        """
+
+        surface_size = radius * 2
+        image_explosion = pygame.Surface((surface_size, surface_size),
+                                         pygame.SRCALPHA)
+        pygame.draw.circle(image_explosion,
+                           (color[0], color[1], color[2], 80),
+                           (radius, radius), radius)
+        pygame.draw.circle(image_explosion, color,
+                           (radius, radius), radius * 0.7)
+        pygame.draw.circle(image_explosion, (255, 255, 255, 200),
+                           (radius, radius), radius * 0.3)
+        return image_explosion
+
+    def create_explosion(self, missile, ability_projectiles):
+        """
+        Creates an explosion effect when a missile is hit
+
+        :param missile: The missile that was hit
+        :param ability_projectiles: Group to add the explosion effect to
+        """
+        if not missile.has_exploded:
+            image_explosion = self._draw_explosion(missile.explosion_radius,
+                                                   Constants.COLOR_EXPLOSION)
+
+            explosion = Ability(
+                pygame.math.Vector2(missile.rect.center),
+                0,
+                pygame.math.Vector2(0, 0),
+                image_explosion,
+                missile.explosion_damage,
+                0.5
+            )
+            explosion.radius = missile.explosion_radius
+            ability_projectiles.add(explosion)
+            missile.has_exploded = True
+            return explosion
+        return None
+
 
 class LaserBeam(Ability):
     """
-    Representa um feixe de laser fluido e contínuo
+    Represents a continuous, fluid laser beam
     """
 
     def __init__(self, agent, damage, duration, width,
@@ -220,7 +287,7 @@ class LaserBeam(Ability):
         :param beams: Sprite group to add the segments to
         """
 
-        max_length = Constants.WIDTH * 10
+        max_length = Constants.WIDTH * 9
         segment_length = Constants.SEGMENT_LASER_LENGTH
         num_segments = int(max_length / segment_length)
         time_factor = pygame.time.get_ticks() / 500.0
@@ -231,12 +298,13 @@ class LaserBeam(Ability):
                     0 <= segment_start.x <= Constants.WIDTH and 0 <= segment_start.y <= Constants.HEIGHT):
                 continue
             perpendicular = pygame.math.Vector2(-direction.y, direction.x)
-            wave_offset = np.sin(time_factor + i * 0.2) * (self.__width_laser * 0.2)
+            wave_offset = np.sin(time_factor + i * 0.2) * (
+                    self.__width_laser * 0.2)
             segment_pos = segment_start + perpendicular * wave_offset
             segment_surface = self._create_segment_surface(segment_length)
             angle = np.arctan2(direction.y, direction.x)
 
-            segment = Ability(
+            projectile_ability = Ability(
                 segment_pos,
                 angle,
                 direction,
@@ -244,8 +312,12 @@ class LaserBeam(Ability):
                 self.__damage / num_segments,
                 self.__lifetime
             )
+            projectile_ability.explosion_radius = Constants.EXPLOSION_RADIUS
+            projectile_ability.explosion_damage = Constants.ABILITY_DAMAGE * 0
+            projectile_ability.create_explosion = self.create_explosion
+            projectile_ability.has_exploded = False
 
-            beams.add(segment)
+            beams.add(projectile_ability)
 
     def _create_segment_surface(self, length):
         """
@@ -280,6 +352,46 @@ class LaserBeam(Ability):
             )
 
         return surface
+
+    def _draw_explosion(self, radius, color):
+        """
+        Creates an explosion effect
+
+        :param radius: Radius of the explosion
+        :param color: Color of the explosion (RGBA)
+        """
+
+        surface_size = radius * 2
+        image_explosion = pygame.Surface((surface_size, surface_size),
+                                         pygame.SRCALPHA)
+        pygame.draw.circle(image_explosion, (255, 0, 0, 10),
+                           (radius, radius), radius * 0.3)
+        return image_explosion
+
+    def create_explosion(self, laser, ability_projectiles):
+        """
+        Creates an explosion effect when a laser is hit
+
+        :param laser: The laser that was hit
+        :param ability_projectiles: Group to add the explosion effect to
+        """
+        if not laser.has_exploded:
+            image_explosion = self._draw_explosion(laser.explosion_radius,
+                                                   Constants.COLOR_EXPLOSION)
+
+            explosion = Ability(
+                pygame.math.Vector2(laser.rect.center),
+                0,
+                pygame.math.Vector2(0, 0),
+                image_explosion,
+                laser.explosion_damage,
+                0.5
+            )
+            explosion.radio = laser.explosion_radius
+            ability_projectiles.add(explosion)
+            laser.has_exploded = True
+            return explosion
+        return None
 
 
 class CriticalShot(Ability):
@@ -322,7 +434,7 @@ class CriticalShot(Ability):
         position = pygame.math.Vector2(origin)
         final_image = self._apply_glow_effect(self.__critical_image)
         self.__critical_image = final_image
-        critical_shot = Ability(
+        projectile_ability = Ability(
             position,
             angle,
             velocity,
@@ -330,7 +442,7 @@ class CriticalShot(Ability):
             self.__critical_damage
         )
         self.__damage = self.__critical_damage * 1.5
-        projectiles.add(critical_shot)
+        projectiles.add(projectile_ability)
 
         return True
 

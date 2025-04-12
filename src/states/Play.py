@@ -76,7 +76,7 @@ class Play(GameState):
                              self.__player_projectiles,
                              self.__enemies_projectiles, self.__abilities)
 
-        self.__enemies.update(dt, self.__player_projectiles,
+        self.__enemies.update(dt, self.__player_projectiles, self.__abilities,
                               self.__enemies_projectiles,
                               self.__player, self.__terrain)
 
