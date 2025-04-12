@@ -1,6 +1,6 @@
 import pygame
 
-from config.Constants import Constants
+from config.Constants import Constants, Sounds
 from src.states import GameState
 from src.utils.AudioManager import AudioManager
 
@@ -88,9 +88,11 @@ class Pause(GameState):
                 if event.key == pygame.K_p:
                     self.resume_game()
                     self.__audio_manager.unpause_music()
+                    self.__audio_manager.play_sound(Sounds.CLICK)
                 elif event.key == pygame.K_ESCAPE:
                     self.return_to_menu()
                     self.__audio_manager.unpause_music()
+                    self.__audio_manager.play_sound(Sounds.CLICK)
 
     def resume_game(self):
         """

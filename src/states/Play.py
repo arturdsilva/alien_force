@@ -3,7 +3,7 @@ import random
 import pygame
 
 from config.AvailableTerrains import AvailableTerrains
-from config.Constants import Constants
+from config.Constants import Constants, Sounds
 from src.entities.Terrain import Terrain
 from src.entities.enemies.BouncingEnemy import BouncingEnemy
 from src.entities.enemies.LinearEnemy import LinearEnemy
@@ -140,6 +140,7 @@ class Play(GameState):
                 if event.key in [pygame.K_ESCAPE, pygame.K_p]:
                     self.next_state = Pause(self.game, self)
                     self.__audio_manager.pause_music()
+                    self.__audio_manager.play_sound(Sounds.CLICK)
 
     def spawn_enemy(self):
         """
