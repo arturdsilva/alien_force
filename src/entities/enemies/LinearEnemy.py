@@ -3,6 +3,9 @@ from config.Constants import Constants, Colors
 from entities.projectiles.ProjectileGenerator import ProjectileGenerator
 import pygame
 
+from config.Constants import Constants, Colors
+from src.entities.enemies.AbstractEnemy import AbstractEnemy
+
 
 class LinearEnemy(AbstractEnemy):
     """
@@ -34,7 +37,7 @@ class LinearEnemy(AbstractEnemy):
         :param y: Initial y coordinate
         """
         self.image = pygame.Surface((Constants.LINEAR_ENEMY_WIDTH,
-                                   Constants.LINEAR_ENEMY_HEIGHT))
+                                     Constants.LINEAR_ENEMY_HEIGHT))
         self.image.fill(Colors.RED)
         self.rect = self.image.get_rect()
         self.rect.centerx = x
@@ -48,7 +51,7 @@ class LinearEnemy(AbstractEnemy):
         :param terrain: Terrain sprite group (not used by this enemy)
         """
         self.rect.x += self._speed * dt
-        
+
         if self._limit_bounds():
             self._speed = -self._speed
 
@@ -72,3 +75,19 @@ class LinearEnemy(AbstractEnemy):
         """
 
         self._projectile_generator.generate(target, dt, projectiles)
+
+    def to_dict(self):
+        """
+        Converts the enemy's state into a dictionary.
+        """
+        return super().to_dict()
+
+    @classmethod
+    def from_dict(cls, data):
+        """
+        Creates an instance of LinearEnemy from a dictionary.
+        """
+        instance = cls(data["centerx"], data["bottom"])
+        instance._health_points = data["health"]
+        instance._speed = data["speed"]
+        return instance

@@ -4,6 +4,10 @@ from entities.projectiles.ProjectileGenerator import ProjectileGenerator
 import numpy as np
 import pygame
 
+from config.Constants import Constants, Colors
+from src.entities.Projectile import ProjectileGenerator
+from src.entities.enemies.AbstractEnemy import AbstractEnemy
+
 
 class WavyEnemy(AbstractEnemy):
     """
@@ -19,7 +23,7 @@ class WavyEnemy(AbstractEnemy):
         """
         super().__init__(x=x, y=y)
         self._health_points = Constants.WAVY_ENEMY_MAX_HEALTH
-        self._speed = 1.5 * Constants.ENEMY_SPEED
+        self._speed = Constants.WAVY_ENEMY_SPEED
         self.__timer = 0
         self.__amplitude = Constants.WAVY_ENEMY_AMPLITUDE
         self.__angular_frequency = Constants.WAVY_ENEMY_ANGULAR_FREQUENCY
@@ -27,7 +31,7 @@ class WavyEnemy(AbstractEnemy):
             (Constants.PROJECTILE_DEFAULT_WIDTH,
              Constants.PROJECTILE_DEFAULT_HEIGHT))
         projectile_image.fill(Colors.GREEN)
-        self._projectile_generator = ProjectileGenerator(self, 300, 1,
+        self._projectile_generator = ProjectileGenerator(self, 200, 1,
                                                          projectile_image, 5)
 
     def _initialize_sprite(self, x, y):
@@ -54,7 +58,7 @@ class WavyEnemy(AbstractEnemy):
         self.rect.x += self._speed * dt
         self.rect.y = Constants.WAVY_ENEMY_Y + self.__amplitude * np.sin(
             self.__angular_frequency * self.__timer)
-        
+
         if self._limit_bounds():
             self._speed = -self._speed
 
@@ -78,3 +82,28 @@ class WavyEnemy(AbstractEnemy):
         """
 
         self._projectile_generator.generate(target, dt, projectiles)
+
+    def to_dict(self):
+        """
+        Converts the enemy's state into a dictionary, including WavyEnemy-specific attributes.
+        """
+        data = super().to_dict()
+        data["timer"] = self.__timer
+        data["amplitude"] = self.__amplitude
+        data["angular_frequency"] = self.__angular_frequency
+        return data
+
+    @classmethod
+    def from_dict(cls, data):
+        """
+        Creates an instance of WavyEnemy from a dictionary.
+        """
+        instance = cls(data["centerx"], data["bottom"])
+        instance._health_points = data["health"]
+        instance._speed = data["speed"]
+        instance.__timer = data.get("timer", 0)
+        instance.__amplitude = data.get("amplitude",
+                                        Constants.WAVY_ENEMY_AMPLITUDE)
+        instance.__angular_frequency = data.get("angular_frequency",
+                                                Constants.WAVY_ENEMY_ANGULAR_FREQUENCY)
+        return instance

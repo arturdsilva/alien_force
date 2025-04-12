@@ -1,7 +1,9 @@
-from src.entities.enemies.AbstractEnemy import AbstractEnemy
-from config.Constants import Constants, Colors
-import pygame
 import random
+
+import pygame
+
+from config.Constants import Constants, Colors
+from src.entities.enemies.AbstractEnemy import AbstractEnemy
 
 
 class BouncingEnemy(AbstractEnemy):
@@ -11,13 +13,14 @@ class BouncingEnemy(AbstractEnemy):
     """
 
     # Enemy states
-    MOVING = 'moving'      # Moving horizontally
+    MOVING = 'moving'  # Moving horizontally
     PREPARING = 'preparing'  # Preparing to drop
-    FALLING = 'falling'    # Falling
-    WAITING = 'waiting'    # Waiting after falling/rising
-    RISING = 'rising'      # Rising
+    FALLING = 'falling'  # Falling
+    WAITING = 'waiting'  # Waiting after falling/rising
+    RISING = 'rising'  # Rising
 
-    def __init__(self, x=Constants.WIDTH, y=Constants.BOUNCING_ENEMY_BASE_HEIGHT):
+    def __init__(self, x=Constants.WIDTH,
+                 y=Constants.BOUNCING_ENEMY_BASE_HEIGHT):
         """
         Initializes an enemy that alternates between horizontal and vertical movement.
 
@@ -44,7 +47,7 @@ class BouncingEnemy(AbstractEnemy):
         :param y: Initial y coordinate
         """
         self.image = pygame.Surface((Constants.BOUNCING_ENEMY_WIDTH,
-                                   Constants.BOUNCING_ENEMY_HEIGHT))
+                                     Constants.BOUNCING_ENEMY_HEIGHT))
         self.image.fill(Colors.ORANGE)
         self.rect = self.image.get_rect()
         self.rect.centerx = x
@@ -60,7 +63,7 @@ class BouncingEnemy(AbstractEnemy):
         if self._state == self.MOVING:
             # Constant horizontal movement
             self.rect.x += self._velocity_x * dt
-            
+
             # Reverse direction at edges
             if self.rect.left <= 0:
                 self.rect.left = 0
@@ -72,7 +75,7 @@ class BouncingEnemy(AbstractEnemy):
         elif self._state == self.FALLING:
             # Fast falling movement
             self.rect.y += Constants.BOUNCING_ENEMY_FALL_SPEED * dt
-            
+
             # Check terrain collision
             if terrain:
                 hits = pygame.sprite.spritecollide(self, terrain, False)
@@ -155,3 +158,36 @@ class BouncingEnemy(AbstractEnemy):
         # Verifica colisão com o player durante a queda
         if self._state == self.FALLING and player and pygame.sprite.collide_rect(self, player.sprite):
             player.sprite._health_points -= Constants.BOUNCING_ENEMY_FALL_DAMAGE
+
+    def to_dict(self):
+        """
+        Converts the enemy's state into a dictionary, including BouncingEnemy-specific attributes.
+        """
+        data = super().to_dict()
+        data["velocity_x"] = self._velocity_x
+        data["state"] = self._state
+        data["timer"] = self._timer
+        data["wait_timer"] = self._wait_timer
+        data["fall_time"] = self._fall_time
+        data["original_y"] = self._original_y
+        return data
+
+    @classmethod
+    def from_dict(cls, data):
+        """
+        Creates an instance of BouncingEnemy from a dictionary.
+        """
+        instance = cls(data["centerx"], data["bottom"])
+        instance._health_points = data["health"]
+        instance._speed = data["speed"]
+        instance._velocity_x = data.get("velocity_x",
+                                        -Constants.BOUNCING_ENEMY_HORIZONTAL_SPEED)
+        instance._state = data.get("state", cls.MOVING)
+        instance._timer = data.get("timer", 0)
+        instance._wait_timer = data.get("wait_timer", 0)
+        instance._fall_time = data.get("fall_time", random.uniform(
+            Constants.BOUNCING_ENEMY_MIN_TIME_BEFORE_FALL,
+            Constants.BOUNCING_ENEMY_MAX_TIME_BEFORE_FALL))
+        instance._original_y = data.get("original_y", instance.rect.centery)
+        return instance
+

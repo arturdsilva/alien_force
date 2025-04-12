@@ -23,4 +23,4 @@ class DefaultPlayer(AbstractPlayer):
         return Constants.PROJECTILE_DEFAULT_FREQUENCY
 
     def get_projectile_damage(self):
-        return Constants.PROJECTILE_DEFAULT_DAMAGE 
+        return Constants.PROJECTILE_DEFAULT_DAMAGE

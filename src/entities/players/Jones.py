@@ -1,5 +1,7 @@
 import pygame
+
 from config.Constants import Constants
+from src.entities.Ability import MissileBarrage
 from src.entities.players.AbstractPlayer import AbstractPlayer
 
 
@@ -14,19 +16,72 @@ class Jones(AbstractPlayer):
         return pygame.Color('olive')
 
     def get_initial_health(self):
-        return int(Constants.PLAYER_MAX_HEALTH * 1.2)  
+        return int(Constants.PLAYER_MAX_HEALTH * 1.2)
 
     def get_projectile_color(self):
-        return pygame.Color('orange') 
+        return pygame.Color('orange')
 
     def get_projectile_speed(self):
-        return Constants.PROJECTILE_DEFAULT_SPEED * 0.7 
+        return Constants.PROJECTILE_DEFAULT_SPEED * 0.7
 
     def get_projectile_frequency(self):
-        return Constants.PROJECTILE_DEFAULT_FREQUENCY * 0.5 
+        return Constants.PROJECTILE_DEFAULT_FREQUENCY * 0.5
 
     def get_projectile_damage(self):
-        return int(Constants.PROJECTILE_DEFAULT_DAMAGE * 2) 
+        return int(Constants.PROJECTILE_DEFAULT_DAMAGE * 2)
+
+    def choose_ability(self, ability_image):
+        return MissileBarrage(
+            self,
+            Constants.ABILITY_SPEED,
+            ability_image,
+            Constants.ABILITY_DAMAGE,
+            Constants.MISSILE_SHOT_CAPACITY,
+            Constants.ANGLE_SPREAD_MISSILE,
+            Constants.EXPLOSION_RADIUS
+        )
+
+    def _compute_cooldown_ability(self, dt):
+        """
+        Updates the cooldown timer for the character's special ability.
+
+        :param dt: The duration of one iteration.
+        """
+        if not self._ready_ability:
+            self._time_cooldown_ability += dt
+            if self._time_cooldown_ability >= Constants.ABILITY_COOLDOWN:
+                self._ready_ability = True
+                self._time_cooldown_ability = 0
+
+    def _compute_duration_ability(self, dt):
+        """
+        Updates the duration logic for the character's ability based on character type.
+
+        :param dt: The duration of one iteration.
+        """
+        if pygame.mouse.get_pressed()[2]:
+            self._ready_ability = False
 
     # TODO: Implement area damage for grenades
-    # TODO: Implement special ability - Missile Barrage (multiple simultaneous projectiles)
+
+    def to_dict(self):
+        """
+        Converts the player's state into a dictionary.
+        """
+        return super().to_dict()
+
+    @classmethod
+    def from_dict(cls, data):
+        """
+        Creates an instance of Jones from a dictionary.
+        """
+        instance = cls()
+        instance.rect.centerx = data["centerx"]
+        instance.rect.bottom = data["bottom"]
+        instance._health_points = data["health"]
+        instance._is_jumping = data["is_jumping"]
+        instance._y_speed = data["y_speed"]
+        instance._ready_ability = data["ready_ability"]
+        instance._time_cooldown_ability = data["time_cooldown_ability"]
+        instance._time_duration_ability = data["time_duration_ability"]
+        return instance

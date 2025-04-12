@@ -1,12 +1,14 @@
 import pygame
-from src.states import GameState
+
 from config.Constants import Constants
+from src.states import GameState
 
 
 class Pause(GameState):
     """
     Game pause state.
     """
+
     def __init__(self, game, play_state):
         """
         Initializes the pause menu.
@@ -16,28 +18,32 @@ class Pause(GameState):
         """
         super().__init__(game)
         self.play_state = play_state  # Stores the game state to return to
-        self.next_state = self 
-        
+        self.next_state = self
+
         # Font configuration
         self.font_title = pygame.font.Font(None, 74)
         self.font_options = pygame.font.Font(None, 48)
-        
+
         # Título
-        self.title = self.font_title.render('PAUSADO', True, pygame.Color('white'))
-        self.title_rect = self.title.get_rect(center=(Constants.WIDTH/2, Constants.HEIGHT/3))
-        
+        self.title = self.font_title.render('PAUSADO', True,
+                                            pygame.Color('white'))
+        self.title_rect = self.title.get_rect(
+            center=(Constants.WIDTH / 2, Constants.HEIGHT / 3))
+
         # Options
         self.options = [
             {'text': 'Continuar (ESC)', 'action': self.resume_game},
             {'text': 'Menu Principal (M)', 'action': self.return_to_menu}
         ]
-        
+
         self.options_surfaces = []
         self.options_rects = []
-        
+
         for i, option in enumerate(self.options):
-            surface = self.font_options.render(option['text'], True, pygame.Color('white'))
-            rect = surface.get_rect(center=(Constants.WIDTH/2, Constants.HEIGHT/2 + i * 60))
+            surface = self.font_options.render(option['text'], True,
+                                               pygame.Color('white'))
+            rect = surface.get_rect(
+                center=(Constants.WIDTH / 2, Constants.HEIGHT / 2 + i * 60))
             self.options_surfaces.append(surface)
             self.options_rects.append(rect)
 
@@ -57,13 +63,13 @@ class Pause(GameState):
         """
         # Draw current game state (frozen)
         self.play_state.draw(screen)
-        
+
         # Create semi-transparent surface to darken the game
         overlay = pygame.Surface((Constants.WIDTH, Constants.HEIGHT))
         overlay.fill(pygame.Color('black'))
         overlay.set_alpha(128)  # 128 is 50% opacity
         screen.blit(overlay, (0, 0))
-        
+
         # Draw pause menu
         screen.blit(self.title, self.title_rect)
         for surface, rect in zip(self.options_surfaces, self.options_rects):
@@ -76,6 +82,10 @@ class Pause(GameState):
         :param events: List of pygame events to process.
         """
         for event in events:
+            if event.type == pygame.QUIT:
+                from src.states.SaveConfirmation import SaveConfirmation
+                self.next_state = SaveConfirmation(self.game, self.play_state,
+                                                   False)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.resume_game()
@@ -98,5 +108,5 @@ class Pause(GameState):
         """
         Returns to the main menu.
         """
-        from src.states.Menu import Menu
-        self.next_state = Menu(self.game)
+        from src.states.SaveConfirmation import SaveConfirmation
+        self.next_state = SaveConfirmation(self.game, self.play_state, True)
