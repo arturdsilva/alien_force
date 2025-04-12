@@ -1,5 +1,7 @@
-import pygame
 from abc import ABC, abstractmethod
+
+import pygame
+
 from config.Constants import Constants
 from src.entities.Projectile import ProjectileGenerator
 
@@ -46,7 +48,7 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
             (Constants.ABILITY_WIDTH, Constants.ABILITY_HEIGHT)
         )
         ability_image.fill(Constants.ABILITY_DEFAULT_COLOR)
-        self.ability_generator = self.choose_ability_generator(ability_image)
+        self.ability_generator = self.choose_ability(ability_image)
 
     @abstractmethod
     def get_player_color(self):
@@ -97,7 +99,7 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         pass
 
     @abstractmethod
-    def choose_ability_generator(self, ability_image):
+    def choose_ability(self, ability_image):
         """
         Returns the correct skill to the player.
         """
@@ -157,7 +159,8 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
 
         self._compute_vertical_position(terrain, keys, dt)
         self._compute_horizontal_position(terrain, keys, dt)
-        if pygame.mouse.get_pressed()[0]:
+        if (pygame.mouse.get_pressed()[0] and not
+        (pygame.mouse.get_pressed()[2] and self._ready_ability)):
             target = pygame.math.Vector2(pygame.mouse.get_pos()[0],
                                          pygame.mouse.get_pos()[1])
             self.projectile_generator.generate(target, dt, projectiles)

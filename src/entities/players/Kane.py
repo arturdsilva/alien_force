@@ -30,7 +30,7 @@ class Kane(AbstractPlayer):
     def get_projectile_damage(self):
         return int(Constants.PROJECTILE_DEFAULT_DAMAGE * 1.2)
 
-    def choose_ability_generator(self, ability_image):
+    def choose_ability(self, ability_image):
         return LaserBeam(
             self,
             Constants.ABILITY_DAMAGE,
