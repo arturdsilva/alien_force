@@ -46,12 +46,11 @@ class BouncingEnemy(AbstractEnemy):
         :param x: Initial x coordinate
         :param y: Initial y coordinate
         """
-        self.image = pygame.Surface((Constants.BOUNCING_ENEMY_WIDTH,
-                                     Constants.BOUNCING_ENEMY_HEIGHT))
-        self.image.fill(Colors.ORANGE)
-        self.rect = self.image.get_rect()
-        self.rect.centerx = x
-        self.rect.centery = y
+        self.image = pygame.image.load(
+            "assets/sprites/enemies/BouncingEnemy.png").convert_alpha()
+        self.image = pygame.transform.scale(self.image, (
+            Constants.BOUNCING_ENEMY_WIDTH, Constants.BOUNCING_ENEMY_HEIGHT))
+        self.rect = self.image.get_rect(center=(x, y))
 
     def _move(self, dt, terrain=None):
         """
@@ -65,12 +64,15 @@ class BouncingEnemy(AbstractEnemy):
             self.rect.x += self._velocity_x * dt
 
             # Reverse direction at edges
-            if self.rect.left <= 0:
-                self.rect.left = 0
-                self._velocity_x = Constants.BOUNCING_ENEMY_HORIZONTAL_SPEED
-            elif self.rect.right >= Constants.WIDTH:
-                self.rect.right = Constants.WIDTH
-                self._velocity_x = -Constants.BOUNCING_ENEMY_HORIZONTAL_SPEED
+        if self.rect.left <= 0:
+            self.rect.left = 0
+            self._velocity_x = Constants.BOUNCING_ENEMY_HORIZONTAL_SPEED
+            self.image = pygame.transform.flip(self.image, True, False)
+        elif self.rect.right >= Constants.WIDTH:
+            self.rect.right = Constants.WIDTH
+            self._velocity_x = -Constants.BOUNCING_ENEMY_HORIZONTAL_SPEED
+            self.image = pygame.transform.flip(self.image, True, False)
+
 
         elif self._state == self.FALLING:
             # Fast falling movement

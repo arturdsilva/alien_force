@@ -27,12 +27,10 @@ class LinearEnemy(AbstractEnemy):
         :param x: Initial x coordinate
         :param y: Initial y coordinate
         """
-        self.image = pygame.Surface((Constants.LINEAR_ENEMY_WIDTH,
-                                     Constants.LINEAR_ENEMY_HEIGHT))
-        self.image.fill(Colors.RED)
-        self.rect = self.image.get_rect()
-        self.rect.centerx = x
-        self.rect.centery = y
+        self.image = pygame.image.load("assets/sprites/enemies/LinearEnemy.png").convert_alpha()
+        self.image = pygame.transform.scale(self.image, (
+            Constants.LINEAR_ENEMY_WIDTH, Constants.LINEAR_ENEMY_HEIGHT))
+        self.rect = self.image.get_rect(center=(x, y))
 
     def _move(self, dt, terrain=None):
         """
@@ -45,6 +43,7 @@ class LinearEnemy(AbstractEnemy):
 
         if self._limit_bounds():
             self._speed = -self._speed
+            self.image = pygame.transform.flip(self.image, True, False)
 
     def _update_behavior(self, dt, terrain=None):
         """

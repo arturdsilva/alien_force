@@ -27,12 +27,11 @@ class TankEnemy(AbstractEnemy):
         :param x: Initial x coordinate
         :param y: Initial y coordinate
         """
-        self.image = pygame.Surface((Constants.TANK_ENEMY_WIDTH,
-                                     Constants.TANK_ENEMY_HEIGHT))
-        self.image.fill(Colors.PURPLE)
-        self.rect = self.image.get_rect()
-        self.rect.centerx = x
-        self.rect.centery = y
+        self.image = pygame.image.load("assets/sprites/enemies/TankEnemy.png").convert_alpha()
+        self.image = pygame.transform.scale(self.image, (
+        Constants.TANK_ENEMY_WIDTH, Constants.TANK_ENEMY_HEIGHT))
+        self._original_image = self.image.copy()
+        self.rect = self.image.get_rect(center=(x, y))
 
     def _move(self, dt, terrain=None):
         """
@@ -47,13 +46,18 @@ class TankEnemy(AbstractEnemy):
         # Keep Y fixed at top
         self.rect.centery = Constants.TANK_ENEMY_Y
 
-        # Reverse direction at edges
+        # Reverse direction at edges e ajustar a orientação da imagem
         if self.rect.left <= 0:
             self.rect.left = 0
             self._speed = abs(self._speed)
+            # Para mover à direita, usa a imagem original
+            self.image = self._original_image
         elif self.rect.right >= Constants.WIDTH:
             self.rect.right = Constants.WIDTH
             self._speed = -abs(self._speed)
+            # Para mover à esquerda, inverte horizontalmente a imagem original
+            self.image = pygame.transform.flip(self._original_image, True,
+                                               False)
 
     def _update_behavior(self, dt, terrain=None):
         """

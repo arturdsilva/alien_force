@@ -31,11 +31,18 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         self._time_cooldown_ability = 0
         self._time_duration_ability = 0
         self._prev_mouse_pressed = False
+        self.walk_frame_index = 0
+        self.walk_frame_timer = 0
+        self.walk_frame_duration = 0.3
+        self._facing_left = False
 
-        projectile_image = pygame.Surface((
-            Constants.PROJECTILE_DEFAULT_WIDTH,
-            Constants.PROJECTILE_DEFAULT_HEIGHT))
-        projectile_image.fill(Constants.PROJECTILE_DEFAULT_COLOR)
+        if hasattr(self, "get_projectile_image"):
+            projectile_image = self.get_projectile_image()
+        else:
+            projectile_image = pygame.Surface((
+                Constants.PROJECTILE_DEFAULT_WIDTH,
+                Constants.PROJECTILE_DEFAULT_HEIGHT))
+            projectile_image.fill(Constants.PROJECTILE_DEFAULT_COLOR)
         self.projectile_generator = ProjectileGenerator(self,
                                                         self.get_projectile_speed(),
                                                         self.get_projectile_frequency(),
@@ -124,51 +131,65 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
 
     pass
 
-    def update(self, terrain, keys, dt, player_projectiles,
-               enemies_projectiles, abilities):
-        """
-        Updates the player.
-
-        :param terrain: The terrain.
-        :param keys: Keys being input by the player.
-        :param dt: The duration of one iteration.
-        :param player_projectiles: Player projectiles on screen.
-        :param enemies_projectiles: Enemies projectiles on screen.
-        :param abilities: Abilities on screen.
-        """
-
-        self._handle_input(keys, terrain, dt, player_projectiles, abilities)
+    def update(self, keys, terrain, dt, player_projectiles, enemies_projectiles, abilities):
+        self._handle_input(terrain, keys, dt, player_projectiles, abilities)
         self._limit_bounds()
         self._compute_damage(enemies_projectiles)
+
+        if self._is_jumping:
+            try:
+                self.image = self.sprite_jump
+            except AttributeError:
+                pass
+        elif keys[pygame.K_a] or keys[pygame.K_d]:
+            try:
+                if hasattr(self, 'sprite_walk_frames'):
+                    self.walk_frame_timer += dt
+                    if self.walk_frame_timer >= self.walk_frame_duration:
+                        self.walk_frame_timer = 0
+                        self.walk_frame_index = (self.walk_frame_index + 1) % len(self.sprite_walk_frames)
+                    self.image = self.sprite_walk_frames[self.walk_frame_index]
+                else:
+                    self.image = self.sprite_walk
+            except AttributeError:
+                pass
+        else:
+            try:
+                self.image = self.sprite_idle
+            except AttributeError:
+                pass
+
+        if self._facing_left:
+            self.image = pygame.transform.flip(self.image, True, False)
+
+        center = self.rect.center
+        self.rect = self.image.get_rect()
+        self.rect.center = center
 
         if self._health_points <= 0:
             self.kill()
 
     def _handle_input(self, terrain, keys, dt, projectiles, abilities):
-        """
-        Handles player input.
-
-        :param terrain: The terrain.
-        :param keys: Keys being input by the player.
-        :param dt: The duration of one iteration.
-        :param projectiles: Projectiles on screen.
-        :param abilities: Abilities on screen.
-        """
-
         self._compute_vertical_position(terrain, keys, dt)
         self._compute_horizontal_position(terrain, keys, dt)
         if pygame.mouse.get_pressed()[0]:
-            target = pygame.math.Vector2(pygame.mouse.get_pos()[0],
-                                         pygame.mouse.get_pos()[1])
-            self.projectile_generator.generate(target, dt, projectiles)
-        self._compute_cooldown_ability(dt)
+            target = pygame.math.Vector2(*pygame.mouse.get_pos())
+            origin = (
+                self.get_projectile_origin()
+                if hasattr(self, "get_projectile_origin")
+                else pygame.math.Vector2(self.rect.center)
+            )
+            self.projectile_generator.generate(origin, target, dt,projectiles)
         if pygame.mouse.get_pressed()[2]:
             target_ability = pygame.math.Vector2(pygame.mouse.get_pos()[0],
                                                  pygame.mouse.get_pos()[1])
             if self._ready_ability:
-                self.ability_generator.generate(target_ability, dt,
-                                                abilities)
+                self.ability_generator.generate(target_ability, dt, abilities)
         self._compute_duration_ability(dt)
+        if keys[pygame.K_a]:
+            self._facing_left = True
+        elif keys[pygame.K_d]:
+            self._facing_left = False
 
     def _compute_vertical_position(self, terrain, keys, dt):
         """

@@ -130,15 +130,17 @@ class MissileBarrage(Ability):
         :param dt: The duration of one iteration.
         :param missiles: Missiles sprite group.
         """
-        origin = pygame.math.Vector2(self.__agent.rect.centerx,
-                                     self.__agent.rect.centery)
+        if hasattr(self.__agent, "get_projectile_origin"):
+            origin = self.__agent.get_projectile_origin()
+        else:
+            origin = pygame.math.Vector2(self.__agent.rect.centerx,
+                                         self.__agent.rect.centery)
         center_angle = Ability.compute_shot_angle(origin, missile_target)
         start_angle = center_angle - (
                 (self.__num_missiles - 1) / 2) * self.__angle_spread
 
         for i in range(self.__num_missiles):
             missile_angle = start_angle + (i * self.__angle_spread)
-
             while missile_angle < 0:
                 missile_angle += 2 * np.pi
             while missile_angle > 2 * np.pi:
@@ -167,7 +169,6 @@ class MissileBarrage(Ability):
                     self_collision = False
 
         return True
-
 
 class LaserBeam(Ability):
     """
@@ -204,8 +205,11 @@ class LaserBeam(Ability):
         :param beams: Sprite group to add the segments to
         """
 
-        origin = pygame.math.Vector2(self.__agent.rect.centerx,
-                                     self.__agent.rect.centery)
+        if hasattr(self.__agent, "get_projectile_origin"):
+            origin = self.__agent.get_projectile_origin()
+        else:
+            origin = pygame.math.Vector2(self.__agent.rect.centerx,
+                                         self.__agent.rect.centery)
         angle = Ability.compute_shot_angle(origin, target)
         direction = pygame.math.Vector2(np.cos(angle), np.sin(angle))
         safe_distance = self.__agent.rect.width / 2
@@ -308,20 +312,16 @@ class CriticalShot(Ability):
         self.__critical_damage = critical_damage
 
     def generate(self, target, dt, projectiles):
-        """
-        Fires the charged critical shot.
-
-        :param target: Point where the shot is aimed
-        :param dt: Duration of one iteration (delta time)
-        :param projectiles: Sprite group to add the projectile to
-        """
-
-        origin = pygame.math.Vector2(self.__agent.rect.centerx,
-                                     self.__agent.rect.centery)
+        import math
+        if hasattr(self.__agent, "get_projectile_origin"):
+            origin = self.__agent.get_projectile_origin()
+        else:
+            origin = pygame.math.Vector2(self.__agent.rect.centerx,
+                                         self.__agent.rect.centery)
         angle = Ability.compute_shot_angle(origin, target)
         velocity = pygame.math.Vector2(
-            self.__shot_speed * np.cos(angle),
-            self.__shot_speed * np.sin(angle)
+            self.__shot_speed * math.cos(angle),
+            self.__shot_speed * math.sin(angle)
         )
         position = pygame.math.Vector2(origin)
         final_image = self._apply_glow_effect(self.__critical_image)
@@ -335,7 +335,6 @@ class CriticalShot(Ability):
         )
         self.__damage = self.__critical_damage * 1.5
         projectiles.add(critical_shot)
-
         return True
 
     def _apply_glow_effect(self, base_image):
@@ -343,18 +342,4 @@ class CriticalShot(Ability):
         Applies a glow effect to the base image without heavy processing.
         """
 
-        glow_width = Constants.CRITICAL_SHOT_WIDTH_BORDER
-        glow_height = Constants.CRITICAL_SHOT_HEIGHT_BORDER
-        glow = pygame.Surface((glow_width, glow_height), pygame.SRCALPHA)
-        rect = glow.get_rect()
-        pygame.draw.rect(glow, Constants.COLOR_GLOW_CRITICAL_SHOT,
-                         rect.inflate(-2, -2), width=8, border_radius=12)
-        combined = pygame.Surface((glow_width, glow_height), pygame.SRCALPHA)
-        image_pos = (
-            (glow_width - base_image.get_width()) // 2,
-            (glow_height - base_image.get_height()) // 2
-        )
-        combined.blit(glow, (0, 0))
-        combined.blit(base_image, image_pos)
-
-        return combined
+        return base_image
