@@ -15,7 +15,7 @@ class Rain(AbstractPlayer):
     def __init__(self):
         super(Rain, self).__init__()
         self._charging_critical = 0
-        self.time_projectile_geration = 0
+        self.time_projectile_generation = 0
 
     def get_player_color(self):
         return pygame.Color('darkgreen')
@@ -52,8 +52,8 @@ class Rain(AbstractPlayer):
 
         mouse_buttons = pygame.mouse.get_pressed()
         if mouse_buttons[0]:
-            self.time_projectile_geration += dt
-            if self.time_projectile_geration >= 1 / (
+            self.time_projectile_generation += dt
+            if self.time_projectile_generation >= 1 / (
                     Constants.PROJECTILE_DEFAULT_FREQUENCY * 0.1):
                 self._charging_critical += 1
             if self._charging_critical >= Constants.NORMAL_SHOTS_REQUIRED:
@@ -70,6 +70,35 @@ class Rain(AbstractPlayer):
             self._ready_ability = False
             if self._charging_critical >= Constants.NORMAL_SHOTS_REQUIRED:
                 self._charging_critical = 0
-                self.time_projectile_geration = 0
+                self.time_projectile_generation = 0
 
     # TODO: Implement special ability - Survival Mode (speed and reload buff)
+
+    def to_dict(self):
+        """
+        Converts the player's state into a dictionary, including Rain-specific attributes.
+        """
+        data = super().to_dict()
+        data["charging_critical"] = self._charging_critical
+        data["time_projectile_geration"] = self.time_projectile_generation
+        return data
+
+    # TODO: Implement special ability - Survival Mode (speed and reload buff)
+    @classmethod
+    def from_dict(cls, data):
+        """
+        Creates an instance of Rain from a dictionary.
+        """
+        instance = cls()
+        instance.rect.centerx = data["centerx"]
+        instance.rect.bottom = data["bottom"]
+        instance._health_points = data["health"]
+        instance._is_jumping = data["is_jumping"]
+        instance._y_speed = data["y_speed"]
+        instance._ready_ability = data["ready_ability"]
+        instance._time_cooldown_ability = data["time_cooldown_ability"]
+        instance._time_duration_ability = data["time_duration_ability"]
+        instance._charging_critical = data.get("charging_critical", 0)
+        instance.time_projectile_generation = data.get(
+            "time_projectile_geration", 0)
+        return instance

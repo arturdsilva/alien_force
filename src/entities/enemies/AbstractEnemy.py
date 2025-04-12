@@ -99,7 +99,6 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
             out_of_bounds = True
         return out_of_bounds
 
-
     def _compute_damage(self, player_projectiles, ability_projectiles):
         """
         Computes projectile collision and damage taken.
@@ -145,3 +144,15 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
         :return: Current health points
         """
         return self._health_points
+
+    def to_dict(self):
+        """
+        Converts the enemy's state into a dictionary.
+        """
+        return {
+            "type": self.__class__.__name__,
+            "centerx": self.rect.centerx,
+            "bottom": self.rect.bottom,
+            "health": self._health_points,
+            "speed": self._speed,
+        }

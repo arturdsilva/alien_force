@@ -67,3 +67,19 @@ class TankEnemy(AbstractEnemy):
 
     def _attack(self, dt, target, enemies_projectiles):
         pass
+
+    def to_dict(self):
+        """
+        Converts the enemy's state into a dictionary.
+        """
+        return super().to_dict()
+
+    @classmethod
+    def from_dict(cls, data):
+        """
+        Creates an instance of TankEnemy from a dictionary.
+        """
+        instance = cls(data["centerx"], data["bottom"])
+        instance._health_points = data["health"]
+        instance._speed = data["speed"]
+        return instance

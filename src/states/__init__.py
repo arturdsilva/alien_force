@@ -1,11 +1,11 @@
 from abc import ABC, abstractmethod
-import pygame
 
 
 class GameState(ABC):
     """
     Abstract base class for game states.
     """
+
     def __init__(self, game):
         """
         Initializes a game state.
@@ -14,6 +14,8 @@ class GameState(ABC):
         """
         self.game = game
         self.next_state = self
+        self.is_running = True
+        self.load_from_save = False
 
     @abstractmethod
     def update(self, dt):
