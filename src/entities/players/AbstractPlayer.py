@@ -2,8 +2,9 @@ from abc import ABC, abstractmethod
 
 import pygame
 
-from config.Constants import Constants
+from config.Constants import Constants, Sounds
 from src.entities.Projectile import ProjectileGenerator
+from src.utils.AudioManager import AudioManager
 
 
 class AbstractPlayer(pygame.sprite.Sprite, ABC):
@@ -33,6 +34,7 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         self._time_cooldown_ability = 0
         self._time_duration_ability = 0
         self._prev_mouse_pressed = False
+        self._audio_manager = AudioManager()
 
         projectile_image = pygame.Surface((
             Constants.PROJECTILE_DEFAULT_WIDTH,
@@ -248,5 +250,6 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
 
         for projectile in enemies_projectiles:
             if pygame.sprite.collide_rect(self, projectile):
+                self._audio_manager.play_sound(Sounds.HIT)
                 self._health_points -= projectile.damage
                 projectile.kill()
