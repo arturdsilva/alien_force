@@ -334,8 +334,8 @@ class CriticalShot(AbstractAbility):
             self.__critical_damage,
             self.__lifetime
         )
-        projectiles.add(projectile)
 
+        projectiles.add(projectile)
         return True
 
     def _apply_glow_effect(self, base_image):

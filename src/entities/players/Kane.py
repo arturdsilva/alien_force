@@ -30,6 +30,12 @@ class Kane(AbstractPlayer):
     def get_projectile_damage(self):
         return int(Constants.PROJECTILE_DEFAULT_DAMAGE * 1.2)
 
+    def get_time_cooldown_ability(self):
+        return self._time_cooldown_ability
+
+    def get_ready_ability(self):
+        return self._ready_ability
+
     def choose_ability(self):
         return LaserBeam(self)
 
