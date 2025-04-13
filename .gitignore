@@ -175,3 +175,5 @@ cython_debug/
 
 # Run configuration
 pyproject.toml
+
+/saves/

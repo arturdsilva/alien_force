@@ -46,12 +46,11 @@ class BouncingEnemy(AbstractEnemy):
         :param x: Initial x coordinate
         :param y: Initial y coordinate
         """
-        self.image = pygame.Surface((Constants.BOUNCING_ENEMY_WIDTH,
-                                     Constants.BOUNCING_ENEMY_HEIGHT))
-        self.image.fill(Colors.ORANGE)
-        self.rect = self.image.get_rect()
-        self.rect.centerx = x
-        self.rect.centery = y
+        self.image = pygame.image.load(
+            "assets/sprites/enemies/BouncingEnemy.png").convert_alpha()
+        self.image = pygame.transform.scale(self.image, (
+            Constants.BOUNCING_ENEMY_WIDTH, Constants.BOUNCING_ENEMY_HEIGHT))
+        self.rect = self.image.get_rect(center=(x, y))
 
     def _move(self, dt, terrain=None):
         """
@@ -65,12 +64,15 @@ class BouncingEnemy(AbstractEnemy):
             self.rect.x += self._velocity_x * dt
 
             # Reverse direction at edges
-            if self.rect.left <= 0:
-                self.rect.left = 0
-                self._velocity_x = Constants.BOUNCING_ENEMY_HORIZONTAL_SPEED
-            elif self.rect.right >= Constants.WIDTH:
-                self.rect.right = Constants.WIDTH
-                self._velocity_x = -Constants.BOUNCING_ENEMY_HORIZONTAL_SPEED
+        if self.rect.left <= 0:
+            self.rect.left = 0
+            self._velocity_x = Constants.BOUNCING_ENEMY_HORIZONTAL_SPEED
+            self.image = pygame.transform.flip(self.image, True, False)
+        elif self.rect.right >= Constants.WIDTH:
+            self.rect.right = Constants.WIDTH
+            self._velocity_x = -Constants.BOUNCING_ENEMY_HORIZONTAL_SPEED
+            self.image = pygame.transform.flip(self.image, True, False)
+
 
         elif self._state == self.FALLING:
             # Fast falling movement
@@ -128,3 +130,68 @@ class BouncingEnemy(AbstractEnemy):
 
     def _attack(self, dt, target, enemies_projectiles):
         pass
+
+    def _compute_damage(self, player_projectiles):
+        """
+        Computes projectile collision and damage taken.
+
+        :param player_projectiles: Player projectiles on screen.
+        """
+        for projectile in player_projectiles:
+            if pygame.sprite.collide_rect(self, projectile):
+                self._health_points -= projectile.damage
+                projectile.kill()
+
+    def update(self, dt, player_projectiles, abilities, enemies_projectiles, player, terrain, speed_multiplier):
+        """
+        Updates enemy state and position.
+
+        :param dt: Time since last update
+        :param player_projectiles: Player projectiles on screen
+        :param abilities: Player abilities on screen
+        :param enemies_projectiles: Enemies projectiles on screen
+        :param player: Player sprite
+        :param terrain: Terrain sprite group
+        :param speed_multiplier: Speed multiplier for game difficulty
+        """
+        self._move(dt, terrain)
+        self._update_behavior(dt, terrain)
+        self._compute_damage(player_projectiles)
+        self._attack(dt, player, enemies_projectiles)
+        
+        # Verifica colisão com o player durante a queda
+        if self._state == self.FALLING and player and pygame.sprite.collide_rect(self, player.sprite):
+            player.sprite._health_points -= Constants.BOUNCING_ENEMY_FALL_DAMAGE
+
+    def to_dict(self):
+        """
+        Converts the enemy's state into a dictionary, including BouncingEnemy-specific attributes.
+        """
+        data = super().to_dict()
+        data["velocity_x"] = self._velocity_x
+        data["state"] = self._state
+        data["timer"] = self._timer
+        data["wait_timer"] = self._wait_timer
+        data["fall_time"] = self._fall_time
+        data["original_y"] = self._original_y
+        return data
+
+    @classmethod
+    def from_dict(cls, data):
+        """
+        Creates an instance of BouncingEnemy from a dictionary.
+        """
+        instance = cls(data["centerx"], data["bottom"])
+        instance._health_points = data["health"]
+        instance._speed = data["speed"]
+        instance._velocity_x = data.get("velocity_x",
+                                        -Constants.BOUNCING_ENEMY_HORIZONTAL_SPEED)
+        instance._state = data.get("state", cls.MOVING)
+        instance._timer = data.get("timer", 0)
+        instance._wait_timer = data.get("wait_timer", 0)
+        instance._fall_time = data.get("fall_time", random.uniform(
+            Constants.BOUNCING_ENEMY_MIN_TIME_BEFORE_FALL,
+            Constants.BOUNCING_ENEMY_MAX_TIME_BEFORE_FALL))
+        instance._original_y = data.get("original_y", instance.rect.centery)
+        return instance
+

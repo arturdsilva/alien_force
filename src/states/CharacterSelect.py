@@ -2,9 +2,9 @@ import pygame
 
 from config.Constants import Constants, Sounds
 from src.entities.players.Jones import Jones
-from src.entities.players.Kane import Kane
+from src.entities.players.Cyborg import Cyborg
 from src.entities.players.Rain import Rain
-from src.states import GameState
+from src.states.GameState import GameState
 from src.states.Play import Play
 from src.utils.AudioManager import AudioManager
 
@@ -35,8 +35,8 @@ class CharacterSelect(GameState):
         # Available characters
         self.characters = [
             {
-                'name': 'Capitão Kane',
-                'class': Kane,
+                'name': 'Captain Cyborg',
+                'class': Cyborg,
                 'desc': 'Especialista em armas de assalto',
                 'color': pygame.Color('steelblue')
             },
@@ -137,17 +137,48 @@ class CharacterSelect(GameState):
         :param events: List of pygame events to process.
         """
         for event in events:
+            if event.type == pygame.QUIT:
+                self.is_running = False
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT and self.selected > 0:
+                if (event.key == pygame.K_LEFT or event.key == pygame.K_a) and self.selected > 0:
                     self.selected -= 1
                     self.update_character_info()
                     self.__audio_manager.play_sound(Sounds.CLICK)
-                elif event.key == pygame.K_RIGHT and self.selected < len(
-                        self.characters) - 1:
+                elif (event.key == pygame.K_RIGHT or event.key == pygame.K_d) and self.selected < len(self.characters) - 1:
                     self.selected += 1
                     self.update_character_info()
                     self.__audio_manager.play_sound(Sounds.CLICK)
                 elif event.key == pygame.K_SPACE:
                     selected_char = self.characters[self.selected]['class']()
-                    self.next_state = Play(self.game, selected_char)
+                    selected_char_name = selected_char.__class__.__name__
+                    self.next_state = Play(self.game, selected_char_name)
                     self.__audio_manager.play_sound(Sounds.CLICK)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:  # Left mouse button
+                    mouse_pos = event.pos
+                    # Check if clicked on navigation arrows
+                    preview_rect = pygame.Rect(0, 0, self.preview_size, self.preview_size)
+                    preview_rect.center = (Constants.WIDTH/2, Constants.HEIGHT/2)
+                    
+                    if self.selected > 0:
+                        left_arrow = self.font_chars.render('<', True, pygame.Color('white'))
+                        left_rect = left_arrow.get_rect(midright=(preview_rect.left - 30, Constants.HEIGHT/2))
+                        if left_rect.collidepoint(mouse_pos):
+                            self.selected -= 1
+                            self.update_character_info()
+                            self.__audio_manager.play_sound(Sounds.CLICK)
+
+                    if self.selected < len(self.characters) - 1:
+                        right_arrow = self.font_chars.render('>', True, pygame.Color('white'))
+                        right_rect = right_arrow.get_rect(midleft=(preview_rect.right + 30, Constants.HEIGHT/2))
+                        if right_rect.collidepoint(mouse_pos):
+                            self.selected += 1
+                            self.update_character_info()
+                            self.__audio_manager.play_sound(Sounds.CLICK)
+
+                    # Check if clicked on character preview
+                    if preview_rect.collidepoint(mouse_pos):
+                        selected_char = self.characters[self.selected]['class']()
+                        selected_char_name = selected_char.__class__.__name__
+                        self.next_state = Play(self.game, selected_char_name)
+                        self.__audio_manager.play_sound(Sounds.CLICK)
