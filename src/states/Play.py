@@ -1,7 +1,5 @@
 import random
-
 import pygame
-
 from config.AvailableTerrains import AvailableTerrains
 from config.Constants import Constants
 from src.entities.Terrain import Terrain
@@ -26,34 +24,31 @@ class Play(GameState):
         Initializes the game state.
 
         :param game: The main game instance.
-        :param player: The character selected by the player.
+        :param player_name: The character selected by the player.
         """
         super().__init__(game)
         self.spawn_timer = 0
         self.__speed_multiplier = 1.0
 
-        # Terrain
         terrains = AvailableTerrains()
         random_terrain = terrains.get_random_terrain()
         self.__terrain = Terrain(random_terrain)
 
         player = PlayerClassMap[player_name]()
-
-        # Posiciona o player no centro-x e acima do terreno
         player.rect.centerx = Constants.WIDTH / 2
-        player.rect.bottom = 0  # Começa no topo
+        player.rect.bottom = 0
 
-        # Sprite Groups
         self.__player = pygame.sprite.GroupSingle(player)
         self.__enemies = pygame.sprite.Group()
         self.__player_projectiles = pygame.sprite.Group()
         self.__enemies_projectiles = pygame.sprite.Group()
         self.__abilities = pygame.sprite.Group()
 
-        # Initialize HUD
         self.hud = Hud(player)
 
-        # Ajusta a posição inicial do player para ficar sobre o terreno
+        self.bg_image = pygame.image.load("assets/sprites/Background.png").convert()
+        self.bg_image = pygame.transform.scale(self.bg_image, (Constants.WIDTH, Constants.HEIGHT))
+
         self._adjust_player_initial_position()
 
     def _adjust_player_initial_position(self):
@@ -61,7 +56,6 @@ class Play(GameState):
         Adjusts the initial player position to be on terrain.
         """
         player = self.__player.sprite
-        # Move o player para baixo até encontrar o terreno
         while player.rect.bottom < Constants.HEIGHT:
             player.rect.y += 1
             hits = pygame.sprite.spritecollide(player, self.__terrain, False)
@@ -91,13 +85,10 @@ class Play(GameState):
                               self.__player, self.__terrain,
                               self.__speed_multiplier)
 
-        # Update HUD
         self.hud.update(dt)
 
-        # Check for enemy destruction to update score
         for enemy in self.__enemies.sprites():
             if enemy.health <= 0:
-                # Add points based on enemy type
                 if isinstance(enemy, TankEnemy):
                     self.hud.add_score(100)
                 elif isinstance(enemy, WavyEnemy):
@@ -106,7 +97,6 @@ class Play(GameState):
                     self.hud.add_score(30)
                 elif isinstance(enemy, BouncingEnemy):
                     self.hud.add_score(40)
-                # Mata o inimigo após atualizar a pontuação
                 enemy.kill()
 
         # Verifica se o jogador morreu
@@ -128,22 +118,21 @@ class Play(GameState):
 
         :param screen: The screen surface to draw on.
         """
-        screen.fill(Constants.BACKGROUND_COLOR)
+        screen.blit(self.bg_image, (0, 0))
+
         self.__terrain.draw(screen)
-        self.__player.draw(screen)
+        for player in self.__player:
+            player.draw(screen)
         self.__enemies.draw(screen)
-        
-        # Desenha os projéteis do jogador
+
         for projectile in self.__player_projectiles:
             projectile.draw(screen)
-            
-        # Desenha os projéteis dos inimigos
+
         for projectile in self.__enemies_projectiles:
             projectile.draw(screen)
             
         self.__abilities.draw(screen)
 
-        # Draw HUD on top of everything
         self.hud.draw(screen)
 
     def handle_events(self, events):
@@ -170,21 +159,16 @@ class Play(GameState):
         with different probabilities based on difficulty.
         """
         if len(self.__enemies) < Constants.MAX_ENEMIES:
-            # Lista de tipos de inimigos com seus pesos (probabilidades)
             enemy_types = [
-                (WavyEnemy, 30),  # 30% de chance
-                (LinearEnemy, 30),  # 30% de chance
-                (BouncingEnemy, 25),  # 25% de chance
-                (TankEnemy, 15)  # 15% de chance
+                (WavyEnemy, 30),
+                (LinearEnemy, 30),
+                (BouncingEnemy, 25),
+                (TankEnemy, 15)
             ]
-
-            # Escolhe um inimigo baseado nos pesos
             enemy_class = random.choices(
-                [enemy[0] for enemy in enemy_types],
-                weights=[enemy[1] for enemy in enemy_types]
+                [et[0] for et in enemy_types],
+                weights=[et[1] for et in enemy_types]
             )[0]
-
-            # Cria e adiciona o inimigo ao grupo
             self.__enemies.add(enemy_class())
 
     def to_dict(self):

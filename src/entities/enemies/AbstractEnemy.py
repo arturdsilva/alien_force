@@ -1,8 +1,7 @@
 from abc import ABC, abstractmethod
-from config.Constants import Constants, Colors
-from entities.projectiles.ProjectileGenerator import ProjectileGenerator
-from entities.projectiles.BaseProjectile import BaseProjectile
+from config.Constants import Constants
 import pygame
+
 
 class AbstractEnemy(pygame.sprite.Sprite, ABC):
     """
