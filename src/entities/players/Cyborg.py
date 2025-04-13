@@ -4,18 +4,20 @@ from src.entities.players.AbstractPlayer import AbstractPlayer
 from src.entities.Ability import LaserBeam
 import math
 
-class Kane(AbstractPlayer):
+class Cyborg(AbstractPlayer):
     def __init__(self, x=Constants.WIDTH / 2, y=Constants.HEIGHT / 2):
 
         super().__init__(x, y)
         old_center = self.rect.center
 
-        self.sprite_idle = pygame.image.load("assets/sprites/players/KaneIdle.png").convert_alpha()
+        self.sprite_idle = pygame.image.load(
+            "assets/sprites/players/CyborgIdle.png").convert_alpha()
         self.sprite_idle = pygame.transform.scale(
             self.sprite_idle, (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT)
         )
 
-        walk_sheet = pygame.image.load("assets/sprites/players/KaneWalk.png").convert_alpha()
+        walk_sheet = pygame.image.load(
+            "assets/sprites/players/CyborgWalk.png").convert_alpha()
         sheet_width, sheet_height = walk_sheet.get_size()
         frame_width = sheet_width // 2
         frame_height = sheet_height
@@ -25,7 +27,8 @@ class Kane(AbstractPlayer):
         frame2 = pygame.transform.scale(frame2, (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT))
         self.sprite_walk_frames = [frame1, frame2]
 
-        self.sprite_jump = pygame.image.load("assets/sprites/players/KaneJump.png").convert_alpha()
+        self.sprite_jump = pygame.image.load(
+            "assets/sprites/players/CyborgJump.png").convert_alpha()
         self.sprite_jump = pygame.transform.scale(
             self.sprite_jump, (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT)
         )
@@ -128,7 +131,7 @@ class Kane(AbstractPlayer):
     def to_dict(self):
         """
         Utilizes the method from the abstract class to obtain common data.
-        Add any specific attributes of Kane to the dictionary if necessary.
+        Add any specific attributes of Cyborg to the dictionary if necessary.
         """
         data = super().to_dict()
         return data
@@ -136,7 +139,7 @@ class Kane(AbstractPlayer):
     @classmethod
     def from_dict(cls, data):
         """
-        Creates an instance of Kane from a dictionary.
+        Creates an instance of Cyborg from a dictionary.
         """
         instance = cls(data["centerx"], data["bottom"])
         instance._health_points = data["health"]
