@@ -26,7 +26,7 @@ class Pause(GameState):
         self.font_title = pygame.font.Font(None, 74)
         self.font_options = pygame.font.Font(None, 48)
 
-        # Título
+        # Title
         self.title = self.font_title.render('PAUSADO', True,
                                             pygame.Color('white'))
         self.title_rect = self.title.get_rect(
@@ -91,12 +91,8 @@ class Pause(GameState):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.resume_game()
-                    self.__audio_manager.unpause_music()
-                    self.__audio_manager.play_sound(Sounds.CLICK)
                 elif event.key == pygame.K_m:
                     self.return_to_menu()
-                    self.__audio_manager.unpause_music()
-                    self.__audio_manager.play_sound(Sounds.CLICK)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:  # Left mouse button
                     mouse_pos = event.pos
@@ -110,9 +106,13 @@ class Pause(GameState):
         """
         self.next_state = self.play_state
 
+        self.__audio_manager.unpause_music()
+        self.__audio_manager.play_sound(Sounds.CLICK)
+
     def return_to_menu(self):
         """
         Returns to the main menu.
         """
         from src.states.SaveConfirmation import SaveConfirmation
         self.next_state = SaveConfirmation(self.game, self.play_state, True)
+        self.__audio_manager.play_sound(Sounds.CLICK)

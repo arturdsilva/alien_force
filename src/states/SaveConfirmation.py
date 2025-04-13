@@ -2,9 +2,10 @@ import pygame
 import json
 import os
 
-from config.Constants import Constants
+from config.Constants import Constants, Sounds
 from src.states.GameState import GameState
 from src.states.Menu import Menu
+from src.utils.AudioManager import AudioManager
 
 
 class SaveConfirmation(GameState):
@@ -23,6 +24,7 @@ class SaveConfirmation(GameState):
         self.play_state = play_state
         self.return_to_menu_after_saving = return_to_menu_after_saving
         self.next_state = self
+        self.__audio_manager = AudioManager()
 
         # Font configuration for title and options
         self.font_title = pygame.font.Font(None, 74)
@@ -108,6 +110,7 @@ class SaveConfirmation(GameState):
 
         :param file_name: The path to the save file.
         """
+        self.__audio_manager.play_sound(Sounds.CLICK)
         try:
             os.makedirs(os.path.dirname(file_name), exist_ok=True)
 
@@ -125,7 +128,9 @@ class SaveConfirmation(GameState):
         """
         Exits the game without saving the progress.
         """
+        self.__audio_manager.play_sound(Sounds.CLICK)
         if self.return_to_menu_after_saving:
             self.next_state = Menu(self.game)
+            self.__audio_manager.unpause_music()
         else:
             self.is_running = False
