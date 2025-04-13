@@ -9,9 +9,9 @@ from src.entities.enemies.LinearEnemy import LinearEnemy
 from src.entities.enemies.TankEnemy import TankEnemy
 from src.entities.enemies.WavyEnemy import WavyEnemy
 from src.entities.players.PlayerClassMap import PlayerClassMap
-from src.states import GameState
+from src.states.GameState import GameState
 from src.states.Pause import Pause
-from src.states.Hud import Hud
+from src.ui.Hud import Hud
 
 
 class Play(GameState):
