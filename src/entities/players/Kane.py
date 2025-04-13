@@ -37,7 +37,6 @@ class Kane(AbstractPlayer):
         return self._ready_ability
 
     def choose_ability(self, ability_image):
-        return LaserBeam(
             self,
             Constants.ABILITY_DAMAGE,
             Constants.LASER_DURATION,

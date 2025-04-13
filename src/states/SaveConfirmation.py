@@ -3,7 +3,7 @@ import json
 import os
 
 from config.Constants import Constants
-from src.states import GameState
+from src.states.GameState import GameState
 from src.states.Menu import Menu
 
 

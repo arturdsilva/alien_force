@@ -2,9 +2,9 @@ import pygame
 
 from config.Constants import Constants
 from src.entities.players.Jones import Jones
-from src.entities.players.Kane import Kane
+from src.entities.players.Cyborg import Cyborg
 from src.entities.players.Rain import Rain
-from src.states import GameState
+from src.states.GameState import GameState
 from src.states.Play import Play
 
 
@@ -35,7 +35,7 @@ class CharacterSelect(GameState):
         self.characters = [
             {
                 'name': 'Captain Cyborg',
-                'class': Kane,
+                'class': Cyborg,
                 'desc': 'Especialista em armas de assalto',
                 'color': pygame.Color('steelblue')
             },

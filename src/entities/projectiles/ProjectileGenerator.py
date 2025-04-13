@@ -31,10 +31,11 @@ class ProjectileGenerator:
         self._is_player_projectile = is_player_projectile
         self._time_without_generation = 0
 
-    def generate(self, target, dt, projectiles):
+    def generate(self, origin, target, dt, projectiles):
         """
         Generates a projectile if the time between shots allows.
 
+        :param origin: Origin of the projectile
         :param target: Point where the projectile will be directed
         :param dt: Time since last update
         :param projectiles: Projectile sprite group
@@ -43,8 +44,7 @@ class ProjectileGenerator:
         
         if self._time_without_generation >= 1 / self._frequency:
             self._time_without_generation = 0
-            
-            origin = pygame.Vector2(self._agent.rect.centerx, self._agent.rect.centery)
+
             angle = self._compute_shot_angle(origin, target)
             
             velocity = pygame.Vector2()
