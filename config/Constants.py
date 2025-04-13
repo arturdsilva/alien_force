@@ -32,6 +32,7 @@ class Sounds:
     BOOM = "boom"
     PLASMA = "plasma"
     STOMP = "stomp"
+    GAME_OVER = "game over"
 
 class Constants:
     # GENERAL

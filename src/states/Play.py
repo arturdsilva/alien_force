@@ -106,6 +106,7 @@ class Play(GameState):
             from src.states.GameOver import GameOver
             self.next_state = GameOver(self.game, self.hud.score)
             self.__audio_manager.pause_music()
+            self.__audio_manager.play_sound(Sounds.GAME_OVER)
 
         self.spawn_timer += dt
         if self.spawn_timer >= Constants.SPAWN_TIMER:

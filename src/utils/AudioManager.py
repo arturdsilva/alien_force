@@ -37,7 +37,8 @@ class AudioManager:
             "blast": pygame.mixer.Sound("assets/sounds/blast.wav"),
             "boom": pygame.mixer.Sound("assets/sounds/boom.wav"),
             "plasma": pygame.mixer.Sound("assets/sounds/plasma.wav"),
-            "stomp": pygame.mixer.Sound("assets/sounds/stomp.wav")
+            "stomp": pygame.mixer.Sound("assets/sounds/stomp.wav"),
+            "game over": pygame.mixer.Sound("assets/sounds/game_over.wav")
         }
 
         # Base volume for each sound
@@ -52,7 +53,8 @@ class AudioManager:
             "blast": 0.5,
             "bomb": 1,
             "plasma": 0.5,
-            "stomp": 0.3
+            "stomp": 0.3,
+            "game over": 0.5
         }
 
         self.musics = {
