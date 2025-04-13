@@ -78,8 +78,8 @@ class BombProjectile(BaseProjectile):
                          self._explosion_radius)
         
         # Aplica dano ao jogador se estiver no raio da explosão
-        # if player and self._explosion_rect.colliderect(player.rect):
-        #     player._health_points -= self._damage
+        if player and self._explosion_rect.colliderect(player.rect):
+            player._health_points -= self._damage #Todo: encapsulate
 
     def draw(self, screen):
         """

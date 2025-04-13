@@ -320,6 +320,6 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
             "is_jumping": self._is_jumping,
             "y_speed": self._y_speed,
             "ready_ability": self._ready_ability,
-            "time_cooldown_ability": self.time_cooldown_ability,
+            "time_cooldown_ability": self._time_cooldown_ability,
             "time_duration_ability": self._time_duration_ability
         }
