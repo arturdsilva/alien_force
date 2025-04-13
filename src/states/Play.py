@@ -1,7 +1,7 @@
 import random
 import pygame
 from config.AvailableTerrains import AvailableTerrains
-from config.Constants import Constants
+from config.Constants import Constants, Sounds
 from src.entities.Terrain import Terrain
 from src.entities.enemies.BouncingEnemy import BouncingEnemy
 from src.entities.enemies.EnemyClassMap import EnemyClassMap
@@ -12,6 +12,7 @@ from src.entities.players.PlayerClassMap import PlayerClassMap
 from src.states.GameState import GameState
 from src.states.Pause import Pause
 from src.ui.Hud import Hud
+from src.utils.AudioManager import AudioManager
 
 
 class Play(GameState):
@@ -28,6 +29,7 @@ class Play(GameState):
         """
         super().__init__(game)
         self.spawn_timer = 0
+        self.__audio_manager = AudioManager()
         self.__speed_multiplier = 1.0
 
         terrains = AvailableTerrains()
@@ -98,11 +100,13 @@ class Play(GameState):
                 elif isinstance(enemy, BouncingEnemy):
                     self.hud.add_score(40)
                 enemy.kill()
+                self.__audio_manager.play_sound(Sounds.DEATH)
 
-        # Verifica se o jogador morreu
         if player._health_points <= 0:
             from src.states.GameOver import GameOver
             self.next_state = GameOver(self.game, self.hud.score)
+            self.__audio_manager.pause_music()
+            self.__audio_manager.play_sound(Sounds.GAME_OVER)
 
         self.spawn_timer += dt
         if self.spawn_timer >= Constants.SPAWN_TIMER:
@@ -144,7 +148,11 @@ class Play(GameState):
             if event.type == pygame.KEYDOWN:
                 if event.key in [pygame.K_ESCAPE, pygame.K_p]:
                     self.next_state = Pause(self.game, self)
+                    self.__audio_manager.pause_music()
+                    self.__audio_manager.play_sound(Sounds.CLICK)
             if event.type == pygame.QUIT:
+                self.__audio_manager.pause_music()
+                self.__audio_manager.play_sound(Sounds.CLICK)
                 if self.__player.sprite is not None:
                     from src.states.SaveConfirmation import SaveConfirmation
                     self.next_state = SaveConfirmation(self.game, self, False)

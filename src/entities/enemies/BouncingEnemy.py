@@ -2,8 +2,9 @@ import random
 
 import pygame
 
-from config.Constants import Constants, Colors
+from config.Constants import Constants, Sounds
 from src.entities.enemies.AbstractEnemy import AbstractEnemy
+from src.utils.AudioManager import AudioManager
 
 
 class BouncingEnemy(AbstractEnemy):
@@ -38,6 +39,7 @@ class BouncingEnemy(AbstractEnemy):
             Constants.BOUNCING_ENEMY_MAX_TIME_BEFORE_FALL
         )
         self._original_y = y
+        self.__audio_manager = AudioManager()
 
     def _initialize_sprite(self, x, y):
         """
@@ -82,6 +84,7 @@ class BouncingEnemy(AbstractEnemy):
             if terrain:
                 hits = pygame.sprite.spritecollide(self, terrain, False)
                 if hits:
+                    self._audio_manager.play_sound(Sounds.STOMP)
                     self.rect.bottom = hits[0].rect.top
                     self._state = self.WAITING
                     self._timer = 0

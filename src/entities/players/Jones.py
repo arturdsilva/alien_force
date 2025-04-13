@@ -1,5 +1,5 @@
 import pygame
-from config.Constants import Constants
+from config.Constants import Constants, Sounds
 from src.entities.players.AbstractPlayer import AbstractPlayer
 from src.entities.Ability import MissileBarrage
 
@@ -104,6 +104,9 @@ class Jones(AbstractPlayer):
 
     def get_projectile_damage(self):
         return int(Constants.PROJECTILE_DEFAULT_DAMAGE * 2)
+
+    def get_projectile_sound(self):
+        return Sounds.GUN_SHOT
 
     def get_time_cooldown_ability(self):
         return self._time_cooldown_ability

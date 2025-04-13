@@ -1,7 +1,8 @@
 import pygame
 
-from config.Constants import Constants
+from config.Constants import Constants, Sounds
 from src.states.Menu import Menu
+from src.utils.AudioManager import AudioManager
 
 
 class Game:
@@ -20,6 +21,8 @@ class Game:
             (Constants.WIDTH, Constants.HEIGHT))
         self.__current_state = Menu(self)
         self.__next_state = None
+        self.__audio_manager = AudioManager()
+        self.__audio_manager.play_music(Sounds.PLAY)
         self.load_from_save = False
 
     def run(self):

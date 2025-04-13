@@ -3,6 +3,7 @@ import numpy as np
 from config.Constants import Constants
 from .BombProjectile import BombProjectile
 from .NormalProjectile import NormalProjectile
+from src.utils.AudioManager import AudioManager
 
 
 class ProjectileGenerator:
@@ -10,7 +11,9 @@ class ProjectileGenerator:
     Projectile generator that controls projectile creation and behavior.
     """
     
-    def __init__(self, agent, projectile_speed, frequency, projectile_image, projectile_damage, projectile_type="normal", is_player_projectile=False):
+    def __init__(self, agent, projectile_speed, frequency,
+                 projectile_image, projectile_damage,
+                 sound, projectile_type="normal", is_player_projectile=False):
         """
         Initializes a projectile generator.
 
@@ -27,6 +30,8 @@ class ProjectileGenerator:
         self._frequency = frequency
         self._projectile_image = projectile_image
         self._projectile_damage = projectile_damage
+        self._sound = sound
+        self.__audio_manager = AudioManager()
         self._projectile_type = projectile_type
         self._is_player_projectile = is_player_projectile
         self._time_without_generation = 0
@@ -72,6 +77,7 @@ class ProjectileGenerator:
                 )
             
             projectiles.add(projectile)
+            self.__audio_manager.play_sound(self._sound)
 
     @staticmethod
     def _compute_shot_angle(origin, target):

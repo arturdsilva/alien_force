@@ -2,6 +2,8 @@ import pygame
 
 from config.Constants import Constants
 from .BaseProjectile import BaseProjectile
+from config.Constants import Sounds
+from src.utils.AudioManager import AudioManager
 
 
 class BombProjectile(BaseProjectile):
@@ -23,9 +25,10 @@ class BombProjectile(BaseProjectile):
         self._explosion_radius = explosion_radius
         self._exploded = False
         self._explosion_time = 0
-        self._explosion_duration = 1.0  # 1 segundo de duração
+        self._explosion_duration = 1.0
         self._explosion_surface = None
         self._explosion_rect = None
+        self.__audio_manager = AudioManager()
 
     def update(self, dt, terrain=None, player=None):
         """
@@ -62,7 +65,8 @@ class BombProjectile(BaseProjectile):
         :param player: Player sprite
         """
         self._exploded = True
-        
+        self.__audio_manager.play_sound(Sounds.BOOM)
+
         # Cria área da explosão
         self._explosion_rect = pygame.Rect(0, 0, self._explosion_radius * 2, self._explosion_radius * 2)
         self._explosion_rect.center = self.rect.center
@@ -75,7 +79,7 @@ class BombProjectile(BaseProjectile):
         
         # Aplica dano ao jogador se estiver no raio da explosão
         if player and self._explosion_rect.colliderect(player.rect):
-            player._health_points -= self._damage
+            player._health_points -= self._damage #Todo: encapsulate
 
     def draw(self, screen):
         """

@@ -1,6 +1,7 @@
 import pygame
 
-from config.Constants import Constants
+from config.Constants import Constants, Sounds
+from src.utils.AudioManager import AudioManager
 from src.states.GameState import GameState
 
 
@@ -19,12 +20,13 @@ class Pause(GameState):
         super().__init__(game)
         self.play_state = play_state  # Stores the game state to return to
         self.next_state = self
+        self.__audio_manager = AudioManager()
 
         # Font configuration
         self.font_title = pygame.font.Font(None, 74)
         self.font_options = pygame.font.Font(None, 48)
 
-        # Título
+        # Title
         self.title = self.font_title.render('PAUSADO', True,
                                             pygame.Color('white'))
         self.title_rect = self.title.get_rect(
@@ -104,9 +106,13 @@ class Pause(GameState):
         """
         self.next_state = self.play_state
 
+        self.__audio_manager.unpause_music()
+        self.__audio_manager.play_sound(Sounds.CLICK)
+
     def return_to_menu(self):
         """
         Returns to the main menu.
         """
         from src.states.SaveConfirmation import SaveConfirmation
         self.next_state = SaveConfirmation(self.game, self.play_state, True)
+        self.__audio_manager.play_sound(Sounds.CLICK)

@@ -2,9 +2,10 @@ import json
 
 import pygame
 
-from config.Constants import Constants
+from config.Constants import Constants, Sounds
 from src.states.GameState import GameState
 from src.states.CharacterSelect import CharacterSelect
+from src.utils.AudioManager import AudioManager
 
 
 class Menu(GameState):
@@ -28,6 +29,8 @@ class Menu(GameState):
             center=(Constants.WIDTH / 2, Constants.HEIGHT / 4))
 
         self.font_options = pygame.font.Font(None, 54)
+
+        self.__audio_manager = AudioManager()
 
         self.options = [
             {'text': 'ESPAÇO: Novo Jogo', 'action':
@@ -78,11 +81,13 @@ class Menu(GameState):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     self.next_state = CharacterSelect(self.game)
+                    self.__audio_manager.play_sound(Sounds.CLICK)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:  # Left mouse button
                     for i, rect in enumerate(self.options_rects):
                         if rect.collidepoint(event.pos):
                             self.options[i]['action']()
+                            self.__audio_manager.play_sound(Sounds.CLICK)
 
     def start_from_beginning(self):
         self.load_from_save = False

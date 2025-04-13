@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
-from config.Constants import Constants
+
+from config.Constants import Constants, Sounds
+from src.utils.AudioManager import AudioManager
 import pygame
 
 
@@ -21,6 +23,7 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
         self._speed = Constants.ENEMY_SPEED
         self._health_points = None
         self._initialize_sprite(x, y)
+        self._audio_manager = AudioManager()
 
     @abstractmethod
     def _initialize_sprite(self, x, y):
@@ -51,6 +54,7 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
             target = pygame.math.Vector2(player.sprite.rect.centerx,
                                          player.sprite.rect.centery)
             self._attack(dt, target, enemies_projectiles)
+
 
     @abstractmethod
     def _move(self, dt, terrain=None):

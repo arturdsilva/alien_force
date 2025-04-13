@@ -1,7 +1,7 @@
 from src.entities.projectiles.ProjectileGenerator import ProjectileGenerator
 import pygame
 
-from config.Constants import Constants, Colors
+from config.Constants import Constants, Colors, Sounds
 from src.entities.enemies.AbstractEnemy import AbstractEnemy
 
 
@@ -26,7 +26,8 @@ class LinearEnemy(AbstractEnemy):
             Constants.LINEAR_ENEMY_PROJECTILE_HEIGHT))
 
         self._projectile_generator = ProjectileGenerator(self, 150, 1,
-                                                         projectile_image, 10)
+                                                         projectile_image,
+                                                         10, Sounds.PLASMA)
 
     def _initialize_sprite(self, x, y):
         """

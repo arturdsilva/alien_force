@@ -1,9 +1,12 @@
 from abc import ABC, abstractmethod
 
-from config.Constants import Constants, Colors
+
+from config.Constants import Constants, Sounds
 from src.entities.projectiles.ProjectileGenerator import ProjectileGenerator
 from src.entities.projectiles.BaseProjectile import BaseProjectile
+from src.utils.AudioManager import AudioManager
 import pygame
+
 
 
 class AbstractPlayer(pygame.sprite.Sprite, ABC):
@@ -33,6 +36,7 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         self._time_cooldown_ability = Constants.ABILITY_COOLDOWN
         self._time_duration_ability = 0
         self._prev_mouse_pressed = False
+        self._audio_manager = AudioManager()
         self.walk_frame_index = 0
         self.walk_frame_timer = 0
         self.walk_frame_duration = 0.3
@@ -50,7 +54,9 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
                                                         self.get_projectile_frequency(),
                                                         projectile_image,
                                                         self.get_projectile_damage(),
-                                                        is_player_projectile=True)
+                                                        self.get_projectile_sound(),
+                                                        is_player_projectile=True
+                                                        )
         self.ability_generator = self.choose_ability()
 
     @abstractmethod
@@ -97,6 +103,14 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
     def get_projectile_damage(self):
         """
         Returns the damage of the projectiles.
+        """
+
+        pass
+
+    @abstractmethod
+    def get_projectile_sound(self):
+        """
+        Returns the sound of the projectile.
         """
 
         pass
@@ -210,6 +224,7 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
             if self._ready_ability:
                 self.ability_generator.generate(target_ability, dt, abilities)
         self._compute_duration_ability(dt)
+
         if keys[pygame.K_a]:
             self._facing_left = True
         elif keys[pygame.K_d]:
@@ -281,12 +296,15 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         """
         for projectile in enemies_projectiles:
             if pygame.sprite.collide_rect(self, projectile):
+
                 # Bomb only causes collision damage if it hasn't exploded yet.
-                if hasattr(projectile, '_exploded'):
+                if hasattr(projectile, '_exploded'): #Todo: encapsulate
                     if not projectile._exploded:
+                        self._audio_manager.play_sound(Sounds.HIT)
                         self._health_points -= projectile.damage
                         projectile._explode(None, self)
                 else:
+                    self._audio_manager.play_sound(Sounds.HIT)
                     self._health_points -= projectile.damage
                     projectile.kill()
 
@@ -302,6 +320,6 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
             "is_jumping": self._is_jumping,
             "y_speed": self._y_speed,
             "ready_ability": self._ready_ability,
-            "time_cooldown_ability": self.time_cooldown_ability,
+            "time_cooldown_ability": self._time_cooldown_ability,
             "time_duration_ability": self._time_duration_ability
         }
