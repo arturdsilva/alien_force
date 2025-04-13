@@ -42,9 +42,9 @@ class NormalProjectile(BaseProjectile):
                 self.kill()
         
         # Verifica colisão com o jogador apenas se não for um projétil do jogador
-        if not self._is_player_projectile and player and pygame.sprite.collide_rect(self, player):
-            player._health_points -= self._damage
-            self.kill()
+        # if not self._is_player_projectile and player and pygame.sprite.collide_rect(self, player):
+        #     player._health_points -= self._damage
+        #     self.kill()
 
     def draw(self, screen):
         """
