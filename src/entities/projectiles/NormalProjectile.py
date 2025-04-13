@@ -52,4 +52,4 @@ class NormalProjectile(BaseProjectile):
 
         :param screen: Screen surface
         """
-        screen.blit(self.image, self.rect) 
+        screen.blit(self.image, self.rect)

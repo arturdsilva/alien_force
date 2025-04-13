@@ -1,11 +1,9 @@
 from abc import ABC, abstractmethod
 
+
 from config.Constants import Constants, Sounds
 from src.entities.projectiles.ProjectileGenerator import ProjectileGenerator
 from src.entities.projectiles.BaseProjectile import BaseProjectile
-from src.entities.Ability import MissileBarrage
-from src.entities.Ability import LaserBeam
-from src.entities.Ability import CriticalShot
 from src.utils.AudioManager import AudioManager
 import pygame
 
@@ -35,7 +33,7 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         self._y_speed = 0
         self._health_points = self.get_initial_health()
         self._ready_ability = True
-        self._time_cooldown_ability = 0
+        self._time_cooldown_ability = Constants.ABILITY_COOLDOWN
         self._time_duration_ability = 0
         self._prev_mouse_pressed = False
         self._audio_manager = AudioManager()
@@ -59,12 +57,7 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
                                                         self.get_projectile_sound(),
                                                         is_player_projectile=True
                                                         )
-
-        ability_image = pygame.Surface(
-            (Constants.ABILITY_WIDTH, Constants.ABILITY_HEIGHT)
-        )
-        ability_image.fill(Constants.ABILITY_DEFAULT_COLOR)
-        self.ability_generator = self.choose_ability(ability_image)
+        self.ability_generator = self.choose_ability()
 
     @abstractmethod
     def get_player_color(self):
@@ -123,7 +116,23 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         pass
 
     @abstractmethod
-    def choose_ability(self, ability_image):
+    def get_time_cooldown_ability(self):
+        """
+        Returns the time cooldown ability of the player.
+        """
+
+        pass
+
+    @abstractmethod
+    def get_ready_ability(self):
+        """
+        Returns the ready ability of the player.
+        """
+
+        pass
+
+    @abstractmethod
+    def choose_ability(self):
         """
         Returns the correct skill to the player.
         """
@@ -311,6 +320,6 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
             "is_jumping": self._is_jumping,
             "y_speed": self._y_speed,
             "ready_ability": self._ready_ability,
-            "time_cooldown_ability": self._time_cooldown_ability,
+            "time_cooldown_ability": self.time_cooldown_ability,
             "time_duration_ability": self._time_duration_ability
         }

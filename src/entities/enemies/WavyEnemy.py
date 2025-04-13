@@ -1,10 +1,10 @@
-from config.Constants import Sounds
 import numpy as np
 import pygame
 
-from config.Constants import Constants, Colors
-from src.entities.projectiles.ProjectileGenerator import ProjectileGenerator
+from config.Constants import Constants
+from config.Constants import Sounds
 from src.entities.enemies.AbstractEnemy import AbstractEnemy
+from src.entities.projectiles.ProjectileGenerator import ProjectileGenerator
 
 
 class WavyEnemy(AbstractEnemy):
@@ -26,12 +26,12 @@ class WavyEnemy(AbstractEnemy):
         self.__amplitude = Constants.WAVY_ENEMY_AMPLITUDE
         self.__angular_frequency = Constants.WAVY_ENEMY_ANGULAR_FREQUENCY
 
-        projectile_image = pygame.Surface(
-            (Constants.PROJECTILE_DEFAULT_WIDTH,
-             Constants.PROJECTILE_DEFAULT_HEIGHT)
-        )
-        projectile_image.fill(Colors.GREEN)
-        self._projectile_generator = ProjectileGenerator(self, 300, 1,
+        projectile_image = pygame.image.load(
+            "assets/sprites/projectiles/WavyEnemyProjectile.png").convert_alpha()
+        projectile_image = pygame.transform.scale(projectile_image, (
+            Constants.WAVY_ENEMY_PROJECTILE_WIDTH,
+            Constants.WAVY_ENEMY_PROJECTILE_HEIGHT))
+        self._projectile_generator = ProjectileGenerator(self, 200, 1,
                                                          projectile_image,
                                                          5, Sounds.LASER_SHOT)
 
@@ -76,7 +76,7 @@ class WavyEnemy(AbstractEnemy):
         :param terrain: Terrain sprite group (not used by this enemy)
         """
         self.__timer = (self.__timer + dt) % (
-                    2 * np.pi / self.__angular_frequency)
+                2 * np.pi / self.__angular_frequency)
 
     def _attack(self, dt, target, projectiles):
         """

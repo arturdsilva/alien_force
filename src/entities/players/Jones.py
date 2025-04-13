@@ -108,31 +108,25 @@ class Jones(AbstractPlayer):
     def get_projectile_sound(self):
         return Sounds.GUN_SHOT
 
-    def choose_ability(self, ability_image):
-        special_projectile_image = pygame.image.load("assets/sprites/projectiles/MissileLauncherProjectile.png").convert_alpha()
-        special_projectile_image = pygame.transform.scale(
-            special_projectile_image, (30, 30))
+    def get_time_cooldown_ability(self):
+        return self._time_cooldown_ability
 
-        return MissileBarrage(
-            self,
-            Constants.ABILITY_SPEED,
-            special_projectile_image,
-            Constants.ABILITY_DAMAGE,
-            Constants.MISSILE_SHOT_CAPACITY,
-            Constants.ANGLE_SPREAD_MISSILE,
-            Constants.EXPLOSION_RADIUS
-        )
+    def get_ready_ability(self):
+        return self._ready_ability
+
+    def choose_ability(self):
+        return MissileBarrage(self)
 
     def _compute_cooldown_ability(self, dt):
         if not self._ready_ability:
             self._time_cooldown_ability += dt
             if self._time_cooldown_ability >= Constants.ABILITY_COOLDOWN:
                 self._ready_ability = True
-                self._time_cooldown_ability = 0
 
     def _compute_duration_ability(self, dt):
-        if pygame.mouse.get_pressed()[2]:
+        if pygame.mouse.get_pressed()[2] and self._ready_ability:
             self._ready_ability = False
+            self._time_cooldown_ability = 0
 
     # TODO: Implement area damage for grenades
 
@@ -154,6 +148,6 @@ class Jones(AbstractPlayer):
         instance._is_jumping = data["is_jumping"]
         instance._y_speed = data["y_speed"]
         instance._ready_ability = data["ready_ability"]
-        instance._time_cooldown_ability = data["time_cooldown_ability"]
+        instance.time_cooldown_ability = data["time_cooldown_ability"]
         instance._time_duration_ability = data["time_duration_ability"]
         return instance

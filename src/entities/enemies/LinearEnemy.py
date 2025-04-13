@@ -20,10 +20,11 @@ class LinearEnemy(AbstractEnemy):
         super().__init__(x=x, y=y)
         self._health_points = Constants.LINEAR_ENEMY_MAX_HEALTH
         self._speed = Constants.LINEAR_ENEMY_SPEED
-        projectile_image = pygame.Surface(
-            (Constants.PROJECTILE_DEFAULT_WIDTH,
-             Constants.PROJECTILE_DEFAULT_HEIGHT))
-        projectile_image.fill(Colors.RED)
+        projectile_image = pygame.image.load("assets/sprites/projectiles/LinearEnemyProjectile.png").convert_alpha()
+        projectile_image = pygame.transform.scale(projectile_image, (
+            Constants.LINEAR_ENEMY_PROJECTILE_WIDTH,
+            Constants.LINEAR_ENEMY_PROJECTILE_HEIGHT))
+
         self._projectile_generator = ProjectileGenerator(self, 150, 1,
                                                          projectile_image,
                                                          10, Sounds.PLASMA)

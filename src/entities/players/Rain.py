@@ -1,5 +1,6 @@
 import pygame
 from config.Constants import Constants, Sounds
+from numpy.testing.print_coercion_tables import print_cancast_table
 from src.entities.Ability import CriticalShot
 from src.entities.players.AbstractPlayer import AbstractPlayer
 import math
@@ -46,9 +47,8 @@ class Rain(AbstractPlayer):
         self.image = self.sprite_idle
         self.rect = self.image.get_rect()
         self.rect.center = old_center
-
-        self._charging_critical = 0
         self.time_projectile_generation = 0
+        self._charging_critical = Constants.NORMAL_SHOTS_REQUIRED
 
         weapon_width = 70
         weapon_height = 70
@@ -123,27 +123,27 @@ class Rain(AbstractPlayer):
     def get_projectile_sound(self):
         return Sounds.GUN_SHOT
 
-    # TODO: probably remove ability parameter
-    def choose_ability(self, ability_image):
-        special_projectile_image = pygame.image.load(
-            "assets/sprites/projectiles/SpecialPrecisionRifleProjectile.png").convert_alpha()
-        special_projectile_image = pygame.transform.scale(
-            special_projectile_image, (25, 25))
-        return CriticalShot(
-            self,
-            Constants.ABILITY_SPEED * 3,
-            special_projectile_image,
-            Constants.ABILITY_DAMAGE
-        )
+    def get_time_cooldown_ability(self):
+        return self._time_cooldown_ability
+
+    def get_ready_ability(self):
+        return self._ready_ability
+
+    def choose_ability(self):
+        return CriticalShot(self)
 
     def _compute_cooldown_ability(self, dt):
         mouse_buttons = pygame.mouse.get_pressed()
-        if mouse_buttons[0]:
+        if mouse_buttons[0] and not self._ready_ability:
 
             self.time_projectile_generation += dt
             if self.time_projectile_generation >= 1 / (
-                    Constants.PROJECTILE_DEFAULT_FREQUENCY * 0.1):
+                    Constants.PROJECTILE_DEFAULT_FREQUENCY):
                 self._charging_critical += 1
+                self.time_projectile_generation = 0
+                if self._charging_critical <= Constants.NORMAL_SHOTS_REQUIRED:
+                    self._time_cooldown_ability = self._charging_critical * Constants.ABILITY_COOLDOWN / Constants.NORMAL_SHOTS_REQUIRED
+
             if self._charging_critical >= Constants.NORMAL_SHOTS_REQUIRED:
                 self._ready_ability = True
 
@@ -153,6 +153,8 @@ class Rain(AbstractPlayer):
             if self._charging_critical >= Constants.NORMAL_SHOTS_REQUIRED:
                 self._charging_critical = 0
                 self.time_projectile_generation = 0
+                self._time_cooldown_ability = 0
+
 
     # TODO: Implement special ability - Survival Mode (speed and reload buff)
 
@@ -178,7 +180,7 @@ class Rain(AbstractPlayer):
         instance._is_jumping = data["is_jumping"]
         instance._y_speed = data["y_speed"]
         instance._ready_ability = data["ready_ability"]
-        instance._time_cooldown_ability = data["time_cooldown_ability"]
+        instance.time_cooldown_ability = data["time_cooldown_ability"]
         instance._time_duration_ability = data["time_duration_ability"]
         instance._charging_critical = data.get("charging_critical", 0)
         instance.time_projectile_generation = data.get(

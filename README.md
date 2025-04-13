@@ -93,7 +93,7 @@ increases over time.
 
 ### Playable characters
 
-#### Captain "Cyborg" Kane
+#### Captain "Cyborg" Cyborg
 
 - Primary Weapon: Assault rifle with rapid-fire capabilities.
 

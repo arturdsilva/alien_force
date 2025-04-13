@@ -20,6 +20,8 @@ class Menu(GameState):
         :param game: The main game instance.
         """
         super().__init__(game)
+        self.bg_image = pygame.image.load("assets/sprites/Menu.png").convert()
+        self.bg_image = pygame.transform.scale(self.bg_image, (Constants.WIDTH, Constants.HEIGHT))
         self.font = pygame.font.Font(None, 74)
         self.title = self.font.render('Alien Force', True,
                                       pygame.Color('white'))
@@ -62,7 +64,7 @@ class Menu(GameState):
 
         :param screen: The screen surface to draw on.
         """
-        screen.fill(pygame.Color('black'))
+        screen.blit(self.bg_image, (0, 0))
         screen.blit(self.title, self.title_rect)
         for surface, rect in zip(self.options_surfaces, self.options_rects):
             screen.blit(surface, rect)

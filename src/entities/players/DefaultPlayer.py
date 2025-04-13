@@ -24,3 +24,6 @@ class DefaultPlayer(AbstractPlayer):
 
     def get_projectile_damage(self):
         return Constants.PROJECTILE_DEFAULT_DAMAGE
+
+    def get_time_cooldown_ability(self):
+        return int(self.time_cooldown_ability)

@@ -21,12 +21,14 @@ class CharacterSelect(GameState):
         :param game: The main game instance.
         """
         super().__init__(game)
+
+        self.bg_image = pygame.image.load("assets/sprites/Menu.png").convert()
+        self.bg_image = pygame.transform.scale(self.bg_image, (Constants.WIDTH, Constants.HEIGHT))
         # Font configuration
         self.font_title = pygame.font.Font(None, 74)
         self.font_chars = pygame.font.Font(None, 54)
         self.font_desc = pygame.font.Font(None, 36)
 
-        # Título
         self.title = self.font_title.render('Selecione seu Personagem', True,
                                             pygame.Color('white'))
         self.title_rect = self.title.get_rect(
@@ -38,19 +40,19 @@ class CharacterSelect(GameState):
                 'name': 'Captain Cyborg',
                 'class': Cyborg,
                 'desc': 'Especialista em armas de assalto',
-                'color': pygame.Color('steelblue')
+                'image': pygame.image.load("assets/sprites/players/CyborgIdle.png").convert_alpha()
             },
             {
-                'name': 'Sargento Jones',
+                'name': 'Sergeant Jones',
                 'class': Jones,
                 'desc': 'Especialista em explosivos',
-                'color': pygame.Color('olive')
+                'image': pygame.image.load("assets/sprites/players/JonesIdle.png").convert_alpha()
             },
             {
-                'name': 'Tenente Rain',
+                'name': 'Lieutenant Rain',
                 'class': Rain,
                 'desc': 'Especialista em precisão',
-                'color': pygame.Color('darkgreen')
+                'image': pygame.image.load("assets/sprites/players/RainIdle.png").convert_alpha()
             }
         ]
 
@@ -67,7 +69,7 @@ class CharacterSelect(GameState):
 
         # Character name
         self.char_name = self.font_chars.render(char['name'], True,
-                                                char['color'])
+                                                pygame.Color('white'))
         self.char_name_rect = self.char_name.get_rect(
             center=(Constants.WIDTH / 2, Constants.HEIGHT / 2 - 100))
 
@@ -77,7 +79,6 @@ class CharacterSelect(GameState):
         self.char_desc_rect = self.char_desc.get_rect(
             center=(Constants.WIDTH / 2, Constants.HEIGHT / 2 + 100))
 
-        # Controles
         self.controls = self.font_desc.render('ESPAÇO para confirmar', True,
                                               pygame.Color('white'))
         self.controls_rect = self.controls.get_rect(
@@ -97,18 +98,20 @@ class CharacterSelect(GameState):
 
         :param screen: The screen surface to draw on.
         """
-        screen.fill(pygame.Color('black'))
+        screen.blit(self.bg_image, (0, 0))
 
         # Draw title
         screen.blit(self.title, self.title_rect)
 
         # Draw character preview
         char = self.characters[self.selected]
-        preview = pygame.Surface((self.preview_size, self.preview_size))
-        preview.fill(char['color'])
-        preview_rect = preview.get_rect(
-            center=(Constants.WIDTH / 2, Constants.HEIGHT / 2))
-        screen.blit(preview, preview_rect)
+        orig_width, orig_height = char['image'].get_size()
+        new_height = 150
+        new_width = int((orig_width / orig_height) * new_height)
+        image = pygame.transform.scale(char['image'], (new_width, new_height))
+        preview_rect = image.get_rect(
+            center=(Constants.WIDTH // 2, Constants.HEIGHT // 2))
+        screen.blit(image, preview_rect)
 
         # Draw navigation arrows
         if self.selected > 0:
