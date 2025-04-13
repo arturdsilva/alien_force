@@ -33,7 +33,7 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         self._y_speed = 0
         self._health_points = self.get_initial_health()
         self._ready_ability = True
-        self.time_cooldown_ability = 0
+        self._time_cooldown_ability = Constants.ABILITY_COOLDOWN
         self._time_duration_ability = 0
         self._prev_mouse_pressed = False
         self.walk_frame_index = 0

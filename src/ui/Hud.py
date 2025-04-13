@@ -33,7 +33,7 @@ class Hud:
         self.time_cooldown_bar_width = 150  # Narrower bar
         self.time_cooldown_bar_height = 15  # Lower bar
         self.time_cooldown_bar_x = 20
-        self.time_cooldown_bar_y = 50
+        self.time_cooldown_bar_y = 60
 
         # Score position
         self.score_x = Constants.WIDTH - 100  # Adjusted for smaller font
@@ -99,7 +99,7 @@ class Hud:
                          (self.time_cooldown_bar_x, self.time_cooldown_bar_y,
                           self.time_cooldown_bar_width,
                           self.time_cooldown_bar_height))
-        if self.player.get_ready_ability():
+        if self.player.get_ready_ability() and self.player.get_time_cooldown_ability() >= Constants.ABILITY_COOLDOWN:
             pygame.draw.rect(screen, self.time_cooldown_bar_ready_color,
                              (self.time_cooldown_bar_x, self.time_cooldown_bar_y,
                               self.time_cooldown_bar_width, self.time_cooldown_bar_height))
@@ -115,7 +115,7 @@ class Hud:
 
         # Draw time cooldown text
         time_cooldown_text = self.font.render(
-            f"Time cooldown: {int(self.player.get_time_cooldown_ability())}",
+            f"Ability: {int(time_cooldown_percentage * 100)} %",
             True, self.text_color)
         screen.blit(time_cooldown_text, (self.time_cooldown_bar_x, self.time_cooldown_bar_y - 15))
 

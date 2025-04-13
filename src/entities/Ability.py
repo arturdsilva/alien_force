@@ -443,7 +443,6 @@ class CriticalShot(Ability):
             self.__critical_image,
             self.__critical_damage
         )
-        self.__damage = self.__critical_damage * 1.5
         projectiles.add(projectile_ability)
         return True
 

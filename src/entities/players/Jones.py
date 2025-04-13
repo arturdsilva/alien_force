@@ -106,7 +106,7 @@ class Jones(AbstractPlayer):
         return int(Constants.PROJECTILE_DEFAULT_DAMAGE * 2)
 
     def get_time_cooldown_ability(self):
-        return self.time_cooldown_ability
+        return self._time_cooldown_ability
 
     def get_ready_ability(self):
         return self._ready_ability
@@ -128,14 +128,15 @@ class Jones(AbstractPlayer):
 
     def _compute_cooldown_ability(self, dt):
         if not self._ready_ability:
-            self.time_cooldown_ability += dt
-            if self.time_cooldown_ability >= Constants.ABILITY_COOLDOWN:
+            self._time_cooldown_ability += dt
+            if self._time_cooldown_ability >= Constants.ABILITY_COOLDOWN:
+                print(self._time_cooldown_ability)
                 self._ready_ability = True
-                self.time_cooldown_ability = 0
 
     def _compute_duration_ability(self, dt):
-        if pygame.mouse.get_pressed()[2]:
+        if pygame.mouse.get_pressed()[2] and self._ready_ability:
             self._ready_ability = False
+            self._time_cooldown_ability = 0
 
     # TODO: Implement area damage for grenades
 
