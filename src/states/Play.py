@@ -121,13 +121,12 @@ class Play(GameState):
         screen.blit(self.bg_image, (0, 0))
 
         self.__terrain.draw(screen)
-        for player in self.__player:
-            player.draw(screen)
-        self.__enemies.draw(screen)
 
         for projectile in self.__player_projectiles:
             projectile.draw(screen)
-
+        for player in self.__player:
+            player.draw(screen)
+        self.__enemies.draw(screen)
         for projectile in self.__enemies_projectiles:
             projectile.draw(screen)
             

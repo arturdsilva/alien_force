@@ -108,7 +108,7 @@ class Jones(AbstractPlayer):
     def choose_ability(self, ability_image):
         special_projectile_image = pygame.image.load("assets/sprites/projectiles/MissileLauncherProjectile.png").convert_alpha()
         special_projectile_image = pygame.transform.scale(
-            special_projectile_image, (30, 30))
+            special_projectile_image, (40, 40))
 
         return MissileBarrage(
             self,
