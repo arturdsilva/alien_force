@@ -1,6 +1,7 @@
 import pygame
 from src.states.GameState import GameState
-from config.Constants import Constants, Colors
+from config.Constants import Constants, Colors, Sounds
+from src.utils.AudioManager import AudioManager
 
 
 class GameOver(GameState):
@@ -21,6 +22,7 @@ class GameOver(GameState):
         self.font_large = pygame.font.Font(None, 72)
         self.font_medium = pygame.font.Font(None, 36)
         self.font_small = pygame.font.Font(None, 24)
+        self.__audio_manager = AudioManager()
 
         # Opções do menu
         self.options = [
@@ -42,11 +44,13 @@ class GameOver(GameState):
         """Reinicia o jogo."""
         from src.states.CharacterSelect import CharacterSelect
         self.next_state = CharacterSelect(self.game)
+        self.__audio_manager.unpause_music()
 
     def return_to_menu(self):
         """Volta para o menu principal."""
         from src.states.Menu import Menu
         self.next_state = Menu(self.game)
+        self.__audio_manager.unpause_music()
 
     def update(self, dt):
         """
