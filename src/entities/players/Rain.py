@@ -35,6 +35,12 @@ class Rain(AbstractPlayer):
     def get_projectile_damage(self):
         return int(Constants.PROJECTILE_DEFAULT_DAMAGE * 1.8)
 
+    def get_time_cooldown_ability(self):
+        return int(self.time_cooldown_ability)
+
+    def get_ready_ability(self):
+        return self._ready_ability
+
     def choose_ability(self, ability_image):
         return CriticalShot(
             self,
@@ -56,6 +62,8 @@ class Rain(AbstractPlayer):
             if self.time_projectile_generation >= 1 / (
                     Constants.PROJECTILE_DEFAULT_FREQUENCY * 0.1):
                 self._charging_critical += 1
+                if self._charging_critical <= Constants.NORMAL_SHOTS_REQUIRED:
+                    self.time_cooldown_ability = self._charging_critical * Constants.ABILITY_COOLDOWN / Constants.NORMAL_SHOTS_REQUIRED
             if self._charging_critical >= Constants.NORMAL_SHOTS_REQUIRED:
                 self._ready_ability = True
 
@@ -71,6 +79,7 @@ class Rain(AbstractPlayer):
             if self._charging_critical >= Constants.NORMAL_SHOTS_REQUIRED:
                 self._charging_critical = 0
                 self.time_projectile_generation = 0
+                self.time_cooldown_ability = 0
 
     # TODO: Implement special ability - Survival Mode (speed and reload buff)
 
@@ -96,7 +105,7 @@ class Rain(AbstractPlayer):
         instance._is_jumping = data["is_jumping"]
         instance._y_speed = data["y_speed"]
         instance._ready_ability = data["ready_ability"]
-        instance._time_cooldown_ability = data["time_cooldown_ability"]
+        instance.time_cooldown_ability = data["time_cooldown_ability"]
         instance._time_duration_ability = data["time_duration_ability"]
         instance._charging_critical = data.get("charging_critical", 0)
         instance.time_projectile_generation = data.get(

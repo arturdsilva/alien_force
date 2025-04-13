@@ -4,6 +4,7 @@ class Colors:
     RED = (255, 0, 0)
     GREEN = (0, 255, 0)
     BLUE = (0, 0, 255)
+    LIGHT_BLUE = (125, 249, 255)
     YELLOW = (255, 255, 0)
     CYAN = (0, 255, 255)
     MAGENTA = (255, 0, 255)
@@ -20,8 +21,8 @@ class Colors:
 class Constants:
     # GENERAL
     FPS = 60
-    WIDTH = 800
-    HEIGHT = 600
+    WIDTH = 1280
+    HEIGHT = 720
     GRAVITY = 3000
     EPSILON = 1.0e-9
     BACKGROUND_COLOR = Colors.LIGHT_PURPLE
@@ -36,7 +37,7 @@ class Constants:
     # PLAYER
     PLAYER_WIDTH = 50
     PLAYER_HEIGHT = 100
-    PLAYER_SPEED = 100
+    PLAYER_SPEED = 200
     PLAYER_DEFAULT_COLOR = Colors.DARK_GRAY
     JUMP_SPEED = 700
     PLAYER_MAX_HEALTH = 100
@@ -114,7 +115,7 @@ class Constants:
     COLOR_LASER = (255, 10, 60)
     COLOR_LASER_CORE = (255, 255, 255)
     GLOW_COLOR_LASER = (*COLOR_LASER, 150)
-    NORMAL_SHOTS_REQUIRED = 5
+    NORMAL_SHOTS_REQUIRED = 50
     COLOR_GLOW_CRITICAL_SHOT = (255, 255, 180, 160)
     CRITICAL_SHOT_WIDTH_BORDER = 24
     CRITICAL_SHOT_HEIGHT_BORDER = 24

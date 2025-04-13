@@ -30,6 +30,12 @@ class Jones(AbstractPlayer):
     def get_projectile_damage(self):
         return int(Constants.PROJECTILE_DEFAULT_DAMAGE * 2)
 
+    def get_time_cooldown_ability(self):
+        return self.time_cooldown_ability
+
+    def get_ready_ability(self):
+        return self._ready_ability
+
     def choose_ability(self, ability_image):
         return MissileBarrage(
             self,
@@ -48,10 +54,10 @@ class Jones(AbstractPlayer):
         :param dt: The duration of one iteration.
         """
         if not self._ready_ability:
-            self._time_cooldown_ability += dt
-            if self._time_cooldown_ability >= Constants.ABILITY_COOLDOWN:
+            self.time_cooldown_ability += dt
+            if self.time_cooldown_ability >= Constants.ABILITY_COOLDOWN:
                 self._ready_ability = True
-                self._time_cooldown_ability = 0
+                self.time_cooldown_ability = 0
 
     def _compute_duration_ability(self, dt):
         """
@@ -82,6 +88,6 @@ class Jones(AbstractPlayer):
         instance._is_jumping = data["is_jumping"]
         instance._y_speed = data["y_speed"]
         instance._ready_ability = data["ready_ability"]
-        instance._time_cooldown_ability = data["time_cooldown_ability"]
+        instance.time_cooldown_ability = data["time_cooldown_ability"]
         instance._time_duration_ability = data["time_duration_ability"]
         return instance
