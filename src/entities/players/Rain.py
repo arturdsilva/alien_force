@@ -35,11 +35,8 @@ class Rain(AbstractPlayer):
     def get_projectile_damage(self):
         return int(Constants.PROJECTILE_DEFAULT_DAMAGE * 1.8)
 
-    def choose_ability(self, ability_image):
-        return CriticalShot(
-            self,
-            ability_image
-        )
+    def choose_ability(self):
+        return CriticalShot(self)
 
     def _compute_cooldown_ability(self, dt):
         """

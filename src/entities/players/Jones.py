@@ -30,14 +30,8 @@ class Jones(AbstractPlayer):
     def get_projectile_damage(self):
         return int(Constants.PROJECTILE_DEFAULT_DAMAGE * 2)
 
-    def choose_ability(self, ability_image):
-        return MissileBarrage(
-            self,
-            ability_image,
-            Constants.MISSILE_SHOT_CAPACITY,
-            Constants.ANGLE_SPREAD_MISSILE,
-            Constants.EXPLOSION_RADIUS
-        )
+    def choose_ability(self):
+        return MissileBarrage(self)
 
     def _compute_cooldown_ability(self, dt):
         """

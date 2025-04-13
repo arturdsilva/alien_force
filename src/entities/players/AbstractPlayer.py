@@ -1,11 +1,8 @@
 from abc import ABC, abstractmethod
 
 from config.Constants import Constants, Colors
-from entities.projectiles.ProjectileGenerator import ProjectileGenerator
-from entities.projectiles.BaseProjectile import BaseProjectile
-from src.entities.Ability import MissileBarrage
-from src.entities.Ability import LaserBeam
-from src.entities.Ability import CriticalShot
+from src.entities.projectiles.ProjectileGenerator import ProjectileGenerator
+from src.entities.projectiles.BaseProjectile import BaseProjectile
 import pygame
 
 
@@ -48,12 +45,7 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
                                                         projectile_image,
                                                         self.get_projectile_damage(),
                                                         is_player_projectile=True)
-
-        ability_image = pygame.Surface(
-            (Constants.ABILITY_WIDTH, Constants.ABILITY_HEIGHT)
-        )
-        ability_image.fill(Constants.ABILITY_DEFAULT_COLOR)
-        self.ability_generator = self.choose_ability(ability_image)
+        self.ability_generator = self.choose_ability()
 
     @abstractmethod
     def get_player_color(self):
@@ -104,7 +96,7 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         pass
 
     @abstractmethod
-    def choose_ability(self, ability_image):
+    def choose_ability(self):
         """
         Returns the correct skill to the player.
         """
