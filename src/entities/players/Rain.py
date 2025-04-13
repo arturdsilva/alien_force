@@ -127,18 +127,8 @@ class Rain(AbstractPlayer):
     def get_ready_ability(self):
         return self._ready_ability
 
-    # TODO: probably remove ability parameter
-    def choose_ability(self, ability_image):
-        special_projectile_image = pygame.image.load(
-            "assets/sprites/projectiles/SpecialPrecisionRifleProjectile.png").convert_alpha()
-        special_projectile_image = pygame.transform.scale(
-            special_projectile_image, (25, 25))
-        return CriticalShot(
-            self,
-            Constants.ABILITY_SPEED * 3,
-            special_projectile_image,
-            Constants.ABILITY_DAMAGE
-        )
+    def choose_ability(self):
+        return CriticalShot(self)
 
     def _compute_cooldown_ability(self, dt):
         mouse_buttons = pygame.mouse.get_pressed()

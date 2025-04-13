@@ -124,6 +124,9 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
                 if hasattr(ability,
                            'create_explosion') and not ability.has_exploded:
                     ability.create_explosion(ability, ability_projectiles)
+                elif hasattr(ability,
+                             'create_hit_effect') and not ability.has_hit:
+                    ability.create_hit_effect(ability, ability_projectiles)
 
                 ability.kill()
 

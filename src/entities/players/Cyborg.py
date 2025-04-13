@@ -110,15 +110,8 @@ class Cyborg(AbstractPlayer):
     def get_ready_ability(self):
         return self._ready_ability
 
-    def choose_ability(self, ability_image):
-        return LaserBeam(
-            self,
-            Constants.ABILITY_DAMAGE,
-            Constants.LASER_DURATION,
-            Constants.LASER_WIDTH,
-            Constants.COLOR_LASER,
-            Constants.LASER_LIFETIME
-        )
+    def choose_ability(self):
+        return LaserBeam(self)
 
     def _compute_cooldown_ability(self, dt):
         if not self._ready_ability:

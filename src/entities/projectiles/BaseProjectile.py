@@ -62,4 +62,4 @@ class BaseProjectile(pygame.sprite.Sprite, ABC):
         """
         Returns the damage caused by the projectile.
         """
-        return self._damage 
+        return self._damage
