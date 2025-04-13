@@ -29,6 +29,9 @@ class Sounds:
     HIT = "hit"
     EXPLOSION = "explosion"
     BLAST = "blast"
+    BOOM = "boom"
+    PLASMA = "plasma"
+    STOMP = "stomp"
 
 class Constants:
     # GENERAL

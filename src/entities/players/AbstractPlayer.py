@@ -289,7 +289,7 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
             if pygame.sprite.collide_rect(self, projectile):
 
                 # Bomb only causes collision damage if it hasn't exploded yet.
-                if hasattr(projectile, '_exploded'):
+                if hasattr(projectile, '_exploded'): #Todo: encapsulate
                     if not projectile._exploded:
                         self._audio_manager.play_sound(Sounds.HIT)
                         self._health_points -= projectile.damage

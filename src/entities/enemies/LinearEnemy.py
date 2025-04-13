@@ -26,7 +26,7 @@ class LinearEnemy(AbstractEnemy):
         projectile_image.fill(Colors.RED)
         self._projectile_generator = ProjectileGenerator(self, 150, 1,
                                                          projectile_image,
-                                                         10, Sounds.LASER_SHOT)
+                                                         10, Sounds.PLASMA)
 
     def _initialize_sprite(self, x, y):
         """
