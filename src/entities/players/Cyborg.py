@@ -107,6 +107,12 @@ class Cyborg(AbstractPlayer):
     def get_projectile_damage(self):
         return int(Constants.PROJECTILE_DEFAULT_DAMAGE * 1.2)
 
+    def get_time_cooldown_ability(self):
+        return self._time_cooldown_ability
+
+    def get_ready_ability(self):
+        return self._ready_ability
+
     def choose_ability(self):
         return LaserBeam(self)
 
@@ -120,7 +126,6 @@ class Cyborg(AbstractPlayer):
             self._time_cooldown_ability += dt
             if self._time_cooldown_ability >= Constants.ABILITY_COOLDOWN:
                 self._ready_ability = True
-                self._time_cooldown_ability = 0
 
     def _compute_duration_ability(self, dt):
         """
@@ -128,8 +133,9 @@ class Cyborg(AbstractPlayer):
 
         :param dt: The duration of one iteration.
         """
-        if pygame.mouse.get_pressed()[2]:
+        if pygame.mouse.get_pressed()[2] and self._ready_ability:
             self._time_duration_ability += dt
+            self._time_cooldown_ability -= dt
             if self._time_duration_ability >= Constants.ABILITY_DURATION:
                 self._time_duration_ability = 0
                 self._ready_ability = False
