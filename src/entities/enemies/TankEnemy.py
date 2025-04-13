@@ -85,10 +85,9 @@ class TankEnemy(AbstractEnemy):
         if self._time_since_last_shot >= Constants.TANK_ENEMY_SHOOT_FREQUENCY:
             self._time_since_last_shot = 0
 
-            # Create bomb image
-            bomb_image = pygame.Surface(
-                (Constants.TANK_BOMB_WIDTH, Constants.TANK_BOMB_HEIGHT))
-            bomb_image.fill(Colors.PURPLE)
+            bomb_image = pygame.image.load("assets/sprites/projectiles/TankEnemyProjectile.png").convert_alpha()
+            bomb_image = pygame.transform.scale(bomb_image, (
+            Constants.TANK_BOMB_WIDTH, Constants.TANK_BOMB_HEIGHT))
 
             # Create bomb with vertical velocity
             velocity = pygame.Vector2(0, Constants.TANK_BOMB_SPEED)

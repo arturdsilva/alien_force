@@ -25,11 +25,11 @@ class WavyEnemy(AbstractEnemy):
         self.__amplitude = Constants.WAVY_ENEMY_AMPLITUDE
         self.__angular_frequency = Constants.WAVY_ENEMY_ANGULAR_FREQUENCY
 
-        projectile_image = pygame.Surface(
-            (Constants.PROJECTILE_DEFAULT_WIDTH,
-             Constants.PROJECTILE_DEFAULT_HEIGHT)
-        )
-        projectile_image.fill(Colors.GREEN)
+        projectile_image = pygame.image.load(
+            "assets/sprites/projectiles/WavyEnemyProjectile.png").convert_alpha()
+        projectile_image = pygame.transform.scale(projectile_image, (
+            Constants.WAVY_ENEMY_PROJECTILE_WIDTH,
+            Constants.WAVY_ENEMY_PROJECTILE_HEIGHT))
         self._projectile_generator = ProjectileGenerator(self, 200, 1,
                                                          projectile_image, 5)
 

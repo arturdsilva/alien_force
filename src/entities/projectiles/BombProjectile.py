@@ -1,4 +1,6 @@
 import pygame
+
+from config.Constants import Constants
 from .BaseProjectile import BaseProjectile
 
 
@@ -67,7 +69,7 @@ class BombProjectile(BaseProjectile):
         
         # Cria superfície da explosão
         self._explosion_surface = pygame.Surface((self._explosion_radius * 2, self._explosion_radius * 2), pygame.SRCALPHA)
-        pygame.draw.circle(self._explosion_surface, (128, 0, 128, 128), 
+        pygame.draw.circle(self._explosion_surface, Constants.TANK_BOMB_EXPLOSION_COLOR,
                          (self._explosion_radius, self._explosion_radius), 
                          self._explosion_radius)
         

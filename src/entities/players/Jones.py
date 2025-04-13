@@ -118,7 +118,6 @@ class Jones(AbstractPlayer):
         if not self._ready_ability:
             self._time_cooldown_ability += dt
             if self._time_cooldown_ability >= Constants.ABILITY_COOLDOWN:
-                print(self._time_cooldown_ability)
                 self._ready_ability = True
 
     def _compute_duration_ability(self, dt):
