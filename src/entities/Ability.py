@@ -25,10 +25,9 @@ class MissileBarrage(AbstractAbility):
         self.__angle_spread = Constants.ANGLE_SPREAD_MISSILE * (np.pi / 180)
         self.__explosion_radius = Constants.EXPLOSION_RADIUS
         self.__lifetime_missile = Constants.MISSILE_LIFETIME
-        missile_image = pygame.Surface(
-            (Constants.ABILITY_WIDTH, Constants.ABILITY_HEIGHT)
-        )
-        missile_image.fill(Constants.ABILITY_DEFAULT_COLOR)
+        missile_image = pygame.image.load("assets/sprites/projectiles/MissileLauncherProjectile.png").convert_alpha()
+        missile_image = pygame.transform.scale(
+            missile_image, (30, 30))
         self.__missile_image = missile_image
 
     def generate(self, missile_target, dt, missiles):
@@ -40,8 +39,11 @@ class MissileBarrage(AbstractAbility):
         :param missiles: Missiles sprite group.
         """
 
-        origin = pygame.math.Vector2(self._agent.rect.centerx,
-                                     self._agent.rect.centery)
+        if hasattr(self._agent, "get_projectile_origin"):
+            origin = self._agent.get_projectile_origin()
+        else:
+            origin = pygame.math.Vector2(self._agent.rect.centerx,
+                                         self._agent.rect.centery)
         center_angle = ProjectileGenerator.compute_shot_angle(origin,
                                                               missile_target)
         start_angle = center_angle - (
@@ -49,7 +51,6 @@ class MissileBarrage(AbstractAbility):
 
         for i in range(self.__num_missiles):
             missile_angle = start_angle + (i * self.__angle_spread)
-
             while missile_angle < 0:
                 missile_angle += 2 * np.pi
             while missile_angle > 2 * np.pi:
@@ -156,8 +157,11 @@ class LaserBeam(AbstractAbility):
         :param dt: Duration of one iteration
         :param beams: Sprite group to add the segments to
         """
-        origin = pygame.math.Vector2(self._agent.rect.centerx,
-                                     self._agent.rect.centery)
+        if hasattr(self._agent, "get_projectile_origin"):
+            origin = self._agent.get_projectile_origin()
+        else:
+            origin = pygame.math.Vector2(self._agent.rect.centerx,
+                                         self._agent.rect.centery)
         angle = ProjectileGenerator.compute_shot_angle(origin, target)
         direction = pygame.math.Vector2(np.cos(angle), np.sin(angle))
         safe_distance = self._agent.rect.width / 2
@@ -294,11 +298,11 @@ class CriticalShot(AbstractAbility):
         self.__shot_speed = self._speed * 3
         self.__critical_damage = self._damage * 5
         self.__lifetime = Constants.CRITICAL_SHOT_LIFETIME
-        ability_image = pygame.Surface(
-            (Constants.ABILITY_WIDTH, Constants.ABILITY_HEIGHT)
-        )
-        ability_image.fill(Constants.ABILITY_DEFAULT_COLOR)
-        self.__ability_image = ability_image
+        critical_shot_image = pygame.image.load(
+            "assets/sprites/projectiles/SpecialPrecisionRifleProjectile.png").convert_alpha()
+        critical_shot_image = pygame.transform.scale(
+            critical_shot_image, (25, 25))
+        self.__critical_shot_image = critical_shot_image
 
     def generate(self, target, dt, projectiles):
         """
@@ -308,15 +312,19 @@ class CriticalShot(AbstractAbility):
         :param dt: Duration of one iteration (delta time)
         :param projectiles: Sprite group to add the projectile to
         """
-        origin = pygame.math.Vector2(self._agent.rect.centerx,
-                                     self._agent.rect.centery)
+        import math
+        if hasattr(self._agent, "get_projectile_origin"):
+            origin = self._agent.get_projectile_origin()
+        else:
+            origin = pygame.math.Vector2(self._agent.rect.centerx,
+                                         self._agent.rect.centery)
         angle = ProjectileGenerator.compute_shot_angle(origin, target)
         velocity = pygame.math.Vector2(
-            self.__shot_speed * np.cos(angle),
-            self.__shot_speed * np.sin(angle)
+            self.__shot_speed * math.cos(angle),
+            self.__shot_speed * math.sin(angle)
         )
         position = pygame.math.Vector2(origin)
-        enhanced_image = self._apply_glow_effect(self.__ability_image)
+        enhanced_image = self._apply_glow_effect(self.__critical_shot_image)
 
         projectile = ProjectileAbility(
             position,

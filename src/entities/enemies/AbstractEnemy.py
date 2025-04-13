@@ -1,7 +1,5 @@
 from abc import ABC, abstractmethod
-from config.Constants import Constants, Colors
-from src.entities.projectiles.ProjectileGenerator import ProjectileGenerator
-from src.entities.projectiles.BaseProjectile import BaseProjectile
+from config.Constants import Constants
 import pygame
 
 

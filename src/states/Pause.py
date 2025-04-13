@@ -1,7 +1,7 @@
 import pygame
 
 from config.Constants import Constants
-from src.states import GameState
+from src.states.GameState import GameState
 
 
 class Pause(GameState):

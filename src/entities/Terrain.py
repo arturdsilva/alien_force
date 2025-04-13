@@ -1,9 +1,6 @@
 import math
-
 import pygame
-
 from config.Constants import Constants
-
 
 class Block(pygame.sprite.Sprite):
     """
@@ -19,11 +16,10 @@ class Block(pygame.sprite.Sprite):
         :param height: Height of the block
         """
         super().__init__()
-        self.image = pygame.Surface((math.ceil(width), math.ceil(height)))
+        self.texture = pygame.image.load("assets/sprites/Tile.png").convert_alpha()
+        self.image = pygame.transform.scale(self.texture, (math.ceil(width), math.ceil(height)))
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
-        self.image.fill(Constants.TERRAIN_COLOR)
-
 
 class Terrain(pygame.sprite.Group):
     """
