@@ -1,5 +1,5 @@
 import pygame
-from src.states import GameState
+from src.states.GameState import GameState
 from config.Constants import Constants, Colors
 
 

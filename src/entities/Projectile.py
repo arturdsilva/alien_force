@@ -94,24 +94,32 @@ class ProjectileGenerator:
         self.__projectile_damage = projectile_damage
         self.time_without_generation = 0
 
-    def generate(self, origin, target, dt, projectiles):
-        self.time_without_generation += dt
-        # Use o origin fornecido e o target para calcular o ângulo
-        angle = self.__compute_shot_angle(origin, target)
+    def generate(self, target, dt, projectiles):
+        """
+        Generates a projectile.
 
-        velocity = pygame.Vector2(
-            self.__projectile_speed * np.cos(angle),
-            self.__projectile_speed * np.sin(angle)
-        )
+        :param target: Point where projectile will be headed at.
+        :param dt: The duration of one iteration.
+        :param projectiles: Projectiles sprite group.
+        """
+
+        self.time_without_generation += dt
+        origin = pygame.math.Vector2(self.__agent.rect.centerx,
+                                     self.__agent.rect.centery)
+
+        angle = self.compute_shot_angle(origin, target)
+
+        velocity = pygame.Vector2()
+        velocity.x = self.__projectile_speed * np.cos(angle)
+        velocity.y = self.__projectile_speed * np.sin(angle)
         if self.time_without_generation >= 1 / self.__frequency:
             self.time_without_generation = 0
-            # Cria uma cópia do origin para evitar alterações indesejadas
-            initial_position = origin.copy()
+            initial_position = origin
             self_collision = True
             while self_collision:
-                initial_position += velocity * dt
-                projectile = Projectile(initial_position.copy(), angle,
-                                        velocity,
+                initial_position.x += velocity.x * dt
+                initial_position.y += velocity.y * dt
+                projectile = Projectile(initial_position, angle, velocity,
                                         self.__projectile_image,
                                         self.__projectile_damage)
                 if pygame.sprite.collide_rect(self.__agent, projectile):
@@ -121,7 +129,7 @@ class ProjectileGenerator:
                     self_collision = False
 
     @staticmethod
-    def __compute_shot_angle(origin, target):
+    def compute_shot_angle(origin, target):
         """
         Calculates angle between x-axis and shot trajectory.
         :param origin: The shot origin point.

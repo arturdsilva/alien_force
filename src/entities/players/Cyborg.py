@@ -10,12 +10,16 @@ class Cyborg(AbstractPlayer):
         super().__init__(x, y)
         old_center = self.rect.center
 
-        self.sprite_idle = pygame.image.load("assets/sprites/players/CyborgIdle.png").convert_alpha()
+
+        self.sprite_idle = pygame.image.load(
+            "assets/sprites/players/CyborgIdle.png").convert_alpha()
         self.sprite_idle = pygame.transform.scale(
             self.sprite_idle, (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT)
         )
 
-        walk_sheet = pygame.image.load("assets/sprites/players/CyborgWalk.png").convert_alpha()
+
+        walk_sheet = pygame.image.load(
+            "assets/sprites/players/CyborgWalk.png").convert_alpha()
         sheet_width, sheet_height = walk_sheet.get_size()
         frame_width = sheet_width // 2
         frame_height = sheet_height
@@ -25,7 +29,9 @@ class Cyborg(AbstractPlayer):
         frame2 = pygame.transform.scale(frame2, (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT))
         self.sprite_walk_frames = [frame1, frame2]
 
-        self.sprite_jump = pygame.image.load("assets/sprites/players/CyborgJump.png").convert_alpha()
+
+        self.sprite_jump = pygame.image.load(
+            "assets/sprites/players/CyborgJump.png").convert_alpha()
         self.sprite_jump = pygame.transform.scale(
             self.sprite_jump, (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT)
         )
@@ -101,17 +107,15 @@ class Cyborg(AbstractPlayer):
     def get_projectile_damage(self):
         return int(Constants.PROJECTILE_DEFAULT_DAMAGE * 1.2)
 
-    def choose_ability(self, ability_image):
-        return LaserBeam(
-            self,
-            Constants.ABILITY_DAMAGE,
-            Constants.LASER_DURATION,
-            Constants.LASER_WIDTH,
-            Constants.COLOR_LASER,
-            Constants.LASER_LIFETIME
-        )
+    def choose_ability(self):
+        return LaserBeam(self)
 
     def _compute_cooldown_ability(self, dt):
+        """
+        Updates the cooldown timer for the character's special ability.
+
+        :param dt: The duration of one iteration.
+        """
         if not self._ready_ability:
             self._time_cooldown_ability += dt
             if self._time_cooldown_ability >= Constants.ABILITY_COOLDOWN:
@@ -119,6 +123,11 @@ class Cyborg(AbstractPlayer):
                 self._time_cooldown_ability = 0
 
     def _compute_duration_ability(self, dt):
+        """
+        Updates the duration logic for the character's ability based on character type.
+
+        :param dt: The duration of one iteration.
+        """
         if pygame.mouse.get_pressed()[2]:
             self._time_duration_ability += dt
             if self._time_duration_ability >= Constants.ABILITY_DURATION:

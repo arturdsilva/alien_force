@@ -105,20 +105,8 @@ class Jones(AbstractPlayer):
     def get_projectile_damage(self):
         return int(Constants.PROJECTILE_DEFAULT_DAMAGE * 2)
 
-    def choose_ability(self, ability_image):
-        special_projectile_image = pygame.image.load("assets/sprites/projectiles/MissileLauncherProjectile.png").convert_alpha()
-        special_projectile_image = pygame.transform.scale(
-            special_projectile_image, (40, 40))
-
-        return MissileBarrage(
-            self,
-            Constants.ABILITY_SPEED,
-            special_projectile_image,
-            Constants.ABILITY_DAMAGE,
-            Constants.MISSILE_SHOT_CAPACITY,
-            Constants.ANGLE_SPREAD_MISSILE,
-            Constants.EXPLOSION_RADIUS
-        )
+    def choose_ability(self):
+        return MissileBarrage(self)
 
     def _compute_cooldown_ability(self, dt):
         if not self._ready_ability:
