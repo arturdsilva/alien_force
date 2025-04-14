@@ -2,10 +2,10 @@ import pygame
 
 from config.Constants import Constants, Sounds
 from src.utils.AudioManager import AudioManager
-from src.states.GameState import GameState
+from src.states.AbstractState import AbstractState
 
 
-class Pause(GameState):
+class Pause(AbstractState):
     """
     Game pause state.
     """
@@ -34,8 +34,8 @@ class Pause(GameState):
 
         # Options
         self.options = [
-            {'text': 'Continuar (ESC)', 'action': self.resume_game},
-            {'text': 'Menu Principal (M)', 'action': self.return_to_menu}
+            {'text': 'Continuar', 'action': self.resume_game},
+            {'text': 'Menu Principal', 'action': self.return_to_menu}
         ]
 
         self.options_surfaces = []

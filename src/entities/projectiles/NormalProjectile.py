@@ -1,8 +1,8 @@
 import pygame
-from .BaseProjectile import BaseProjectile
+from .AbstractProjectile import AbstractProjectile
 
 
-class NormalProjectile(BaseProjectile):
+class NormalProjectile(AbstractProjectile):
     """
     Normal projectile that moves in a straight line and causes damage upon hitting the target.
     """

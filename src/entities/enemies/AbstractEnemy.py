@@ -18,6 +18,7 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
         :param y: The initial enemy y coordinate.
         """
         super().__init__()
+        self.original_image = None
         self.image = None
         self.rect = None
         self._speed = Constants.ENEMY_SPEED
@@ -49,6 +50,7 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
         self._limit_bounds()
         self._compute_damage(player_projectiles, ability_projectiles)
         self._update_behavior(dt, terrain)
+        self._update_sprite(self._speed)
 
         if player:
             target = pygame.math.Vector2(player.sprite.rect.centerx,
@@ -78,6 +80,12 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
         :param terrain: Terrain sprite group (optional)
         """
         pass
+
+    def _update_sprite(self, velocity_x):
+        if velocity_x > 0:
+            self.image = self.original_image
+        else:
+            self.image = pygame.transform.flip(self.original_image, True, False)
 
     def _limit_bounds(self):
         """

@@ -9,13 +9,13 @@ from src.entities.enemies.LinearEnemy import LinearEnemy
 from src.entities.enemies.TankEnemy import TankEnemy
 from src.entities.enemies.WavyEnemy import WavyEnemy
 from src.entities.players.PlayerClassMap import PlayerClassMap
-from src.states.GameState import GameState
+from src.states.AbstractState import AbstractState
 from src.states.Pause import Pause
 from src.ui.Hud import Hud
 from src.utils.AudioManager import AudioManager
 
 
-class Play(GameState):
+class Play(AbstractState):
     """
     Game in progress state.
     """
@@ -36,7 +36,8 @@ class Play(GameState):
         random_terrain = terrains.get_random_terrain()
         self.__terrain = Terrain(random_terrain)
 
-        player = PlayerClassMap[player_name]()
+        self.player_name = player_name
+        player = PlayerClassMap[self.player_name]()
         player.rect.centerx = Constants.WIDTH / 2
         player.rect.bottom = 0
 
@@ -48,8 +49,10 @@ class Play(GameState):
 
         self.hud = Hud(player)
 
-        self.bg_image = pygame.image.load("assets/sprites/Background.png").convert()
-        self.bg_image = pygame.transform.scale(self.bg_image, (Constants.WIDTH, Constants.HEIGHT))
+        self.bg_image = pygame.image.load(
+            "assets/sprites/Background.png").convert()
+        self.bg_image = pygame.transform.scale(self.bg_image, (
+            Constants.WIDTH, Constants.HEIGHT))
 
         self._adjust_player_initial_position()
 
@@ -104,7 +107,8 @@ class Play(GameState):
 
         if player._health_points <= 0:
             from src.states.GameOver import GameOver
-            self.next_state = GameOver(self.game, self.hud.score)
+            self.next_state = GameOver(self.game, self.hud.score,
+                                       self.player_name)
             self.__audio_manager.pause_music()
             self.__audio_manager.play_sound(Sounds.GAME_OVER)
 
@@ -133,7 +137,7 @@ class Play(GameState):
         self.__enemies.draw(screen)
         for projectile in self.__enemies_projectiles:
             projectile.draw(screen)
-            
+
         self.__abilities.draw(screen)
 
         self.hud.draw(screen)
@@ -214,6 +218,7 @@ class Play(GameState):
         player_data = data.get("player")
         if data.get("player") is not None:
             player_type = player_data.get("type")
+            instance.player_name = player_type
             restored_player = PlayerClassMap[player_type].from_dict(
                 player_data)
             instance.__player = pygame.sprite.GroupSingle(restored_player)

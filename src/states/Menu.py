@@ -3,12 +3,12 @@ import json
 import pygame
 
 from config.Constants import Constants, Sounds
-from src.states.GameState import GameState
+from src.states.AbstractState import AbstractState
 from src.states.CharacterSelect import CharacterSelect
 from src.utils.AudioManager import AudioManager
 
 
-class Menu(GameState):
+class Menu(AbstractState):
     """
     Main menu game state.
     """
@@ -21,7 +21,8 @@ class Menu(GameState):
         """
         super().__init__(game)
         self.bg_image = pygame.image.load("assets/sprites/Menu.png").convert()
-        self.bg_image = pygame.transform.scale(self.bg_image, (Constants.WIDTH, Constants.HEIGHT))
+        self.bg_image = pygame.transform.scale(self.bg_image, (
+            Constants.WIDTH, Constants.HEIGHT))
         self.font = pygame.font.Font(None, 74)
         self.title = self.font.render('Alien Force', True,
                                       pygame.Color('white'))
@@ -33,9 +34,9 @@ class Menu(GameState):
         self.__audio_manager = AudioManager()
 
         self.options = [
-            {'text': 'ESPAÇO: Novo Jogo', 'action':
+            {'text': 'Novo Jogo', 'action':
                 self.start_from_beginning},
-            {'text': 'C: Continuar Jogo Salvo',
+            {'text': 'Continuar Jogo Salvo',
              'action': self.start_from_save},
         ]
 

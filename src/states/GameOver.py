@@ -1,16 +1,16 @@
 import pygame
-from src.states.GameState import GameState
+from src.states.AbstractState import AbstractState
 from config.Constants import Constants, Colors, Sounds
 from src.utils.AudioManager import AudioManager
 
 
-class GameOver(GameState):
+class GameOver(AbstractState):
     """
     Game over state of the game.
     Shows the final score and options to restart or return to menu.
     """
 
-    def __init__(self, game, score):
+    def __init__(self, game, score, player_name="Unknown"):
         """
         Initializes the game over state.
 
@@ -19,15 +19,16 @@ class GameOver(GameState):
         """
         super().__init__(game)
         self.score = score
-        self.font_large = pygame.font.Font(None, 72)
-        self.font_medium = pygame.font.Font(None, 36)
-        self.font_small = pygame.font.Font(None, 24)
+        self.font_large = pygame.font.Font(None, 120)
+        self.font_medium = pygame.font.Font(None, 60)
+        self.font_small = pygame.font.Font(None, 40)
         self.__audio_manager = AudioManager()
+        self.player_name = player_name
 
         # Opções do menu
         self.options = [
-            {'text': 'Reiniciar (R)', 'action': self.restart_game},
-            {'text': 'Voltar ao Menu (ESC)', 'action': self.return_to_menu}
+            {'text': 'Reiniciar', 'action': self.restart_game},
+            {'text': 'Voltar ao Menu', 'action': self.return_to_menu}
         ]
 
         self.options_surfaces = []
@@ -35,15 +36,17 @@ class GameOver(GameState):
 
         # Cria as superfícies e retângulos para cada opção
         for i, option in enumerate(self.options):
-            surface = self.font_small.render(option['text'], True, Colors.WHITE)
-            rect = surface.get_rect(center=(Constants.WIDTH/2, Constants.HEIGHT*2/3 + i * 30))
+            surface = self.font_small.render(option['text'], True,
+                                             Colors.WHITE)
+            rect = surface.get_rect(center=(
+                Constants.WIDTH / 2, Constants.HEIGHT * 2 / 3 + i * 30))
             self.options_surfaces.append(surface)
             self.options_rects.append(rect)
 
     def restart_game(self):
         """Reinicia o jogo."""
-        from src.states.CharacterSelect import CharacterSelect
-        self.next_state = CharacterSelect(self.game)
+        from src.states.Play import Play
+        self.next_state = Play(self.game, self.player_name)
         self.__audio_manager.unpause_music()
 
     def return_to_menu(self):
@@ -67,18 +70,22 @@ class GameOver(GameState):
 
         :param screen: The screen surface to draw on.
         """
-        overlay = pygame.Surface((Constants.WIDTH, Constants.HEIGHT), pygame.SRCALPHA)
+        overlay = pygame.Surface((Constants.WIDTH, Constants.HEIGHT),
+                                 pygame.SRCALPHA)
         overlay.fill((0, 0, 0, 200))
         screen.blit(overlay, (0, 0))
 
         # Title
         title = self.font_large.render("GAME OVER", True, Colors.RED)
-        title_rect = title.get_rect(center=(Constants.WIDTH/2, Constants.HEIGHT/3))
+        title_rect = title.get_rect(
+            center=(Constants.WIDTH / 2, Constants.HEIGHT / 3))
         screen.blit(title, title_rect)
 
         # Score
-        score_text = self.font_medium.render(f"Final Score: {self.score}", True, Colors.WHITE)
-        score_rect = score_text.get_rect(center=(Constants.WIDTH/2, Constants.HEIGHT/2))
+        score_text = self.font_medium.render(f"Final Score: {self.score}",
+                                             True, Colors.WHITE)
+        score_rect = score_text.get_rect(
+            center=(Constants.WIDTH / 2, Constants.HEIGHT / 2))
         screen.blit(score_text, score_rect)
 
         # Desenha as opções
@@ -103,4 +110,4 @@ class GameOver(GameState):
                 if event.button == 1:  # Left mouse button
                     for i, rect in enumerate(self.options_rects):
                         if rect.collidepoint(event.pos):
-                            self.options[i]['action']() 
+                            self.options[i]['action']()
