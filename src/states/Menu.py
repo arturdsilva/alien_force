@@ -3,12 +3,12 @@ import json
 import pygame
 
 from config.Constants import Constants, Sounds
-from src.states.GameState import GameState
+from src.states.AbstractState import AbstractState
 from src.states.CharacterSelect import CharacterSelect
 from src.utils.AudioManager import AudioManager
 
 
-class Menu(GameState):
+class Menu(AbstractState):
     """
     Main menu game state.
     """

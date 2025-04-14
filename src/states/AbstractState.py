@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class GameState(ABC):
+class AbstractState(ABC):
     """
     Abstract base class for game states.
     """

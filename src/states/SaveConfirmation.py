@@ -3,12 +3,12 @@ import json
 import os
 
 from config.Constants import Constants, Sounds
-from src.states.GameState import GameState
+from src.states.AbstractState import AbstractState
 from src.states.Menu import Menu
 from src.utils.AudioManager import AudioManager
 
 
-class SaveConfirmation(GameState):
+class SaveConfirmation(AbstractState):
     """
     Save and exit menu state used to save progress and exit the game.
     """

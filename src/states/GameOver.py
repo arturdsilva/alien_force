@@ -1,10 +1,10 @@
 import pygame
-from src.states.GameState import GameState
+from src.states.AbstractState import AbstractState
 from config.Constants import Constants, Colors, Sounds
 from src.utils.AudioManager import AudioManager
 
 
-class GameOver(GameState):
+class GameOver(AbstractState):
     """
     Game over state of the game.
     Shows the final score and options to restart or return to menu.

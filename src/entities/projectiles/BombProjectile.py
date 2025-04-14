@@ -1,12 +1,12 @@
 import pygame
 
 from config.Constants import Constants
-from .BaseProjectile import BaseProjectile
+from .AbstractProjectile import AbstractProjectile
 from config.Constants import Sounds
 from src.utils.AudioManager import AudioManager
 
 
-class BombProjectile(BaseProjectile):
+class BombProjectile(AbstractProjectile):
     """
     Bomb-type projectile that falls vertically and explodes upon hitting terrain or player.
     """

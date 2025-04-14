@@ -4,12 +4,12 @@ from config.Constants import Constants, Sounds
 from src.entities.players.Jones import Jones
 from src.entities.players.Cyborg import Cyborg
 from src.entities.players.Rain import Rain
-from src.states.GameState import GameState
+from src.states.AbstractState import AbstractState
 from src.states.Play import Play
 from src.utils.AudioManager import AudioManager
 
 
-class CharacterSelect(GameState):
+class CharacterSelect(AbstractState):
     """
     Character selection state.
     """

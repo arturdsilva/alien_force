@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 from config.Constants import Constants, Sounds
 from src.entities.projectiles.ProjectileGenerator import ProjectileGenerator
-from src.entities.projectiles.BaseProjectile import BaseProjectile
+from src.entities.projectiles.AbstractProjectile import AbstractProjectile
 from src.utils.AudioManager import AudioManager
 import pygame
 

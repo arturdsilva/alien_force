@@ -1,8 +1,8 @@
 import pygame
 import numpy as np
-from .BaseProjectile import BaseProjectile
+from .AbstractProjectile import AbstractProjectile
 
-class ProjectileAbility(BaseProjectile):
+class ProjectileAbility(AbstractProjectile):
     """
     Base class for projectile-based abilities that move along a trajectory
     """

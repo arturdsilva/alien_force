@@ -2,10 +2,10 @@ import pygame
 
 from config.Constants import Constants, Sounds
 from src.utils.AudioManager import AudioManager
-from src.states.GameState import GameState
+from src.states.AbstractState import AbstractState
 
 
-class Pause(GameState):
+class Pause(AbstractState):
     """
     Game pause state.
     """

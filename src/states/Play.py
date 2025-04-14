@@ -9,13 +9,13 @@ from src.entities.enemies.LinearEnemy import LinearEnemy
 from src.entities.enemies.TankEnemy import TankEnemy
 from src.entities.enemies.WavyEnemy import WavyEnemy
 from src.entities.players.PlayerClassMap import PlayerClassMap
-from src.states.GameState import GameState
+from src.states.AbstractState import AbstractState
 from src.states.Pause import Pause
 from src.ui.Hud import Hud
 from src.utils.AudioManager import AudioManager
 
 
-class Play(GameState):
+class Play(AbstractState):
     """
     Game in progress state.
     """
