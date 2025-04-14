@@ -11,10 +11,10 @@ class Cyborg(AbstractPlayer):
         old_center = self.rect.center
 
 
-        self.sprite_idle = pygame.image.load(
+        self._sprite_idle = pygame.image.load(
             "assets/sprites/players/CyborgIdle.png").convert_alpha()
-        self.sprite_idle = pygame.transform.scale(
-            self.sprite_idle, (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT)
+        self._sprite_idle = pygame.transform.scale(
+            self._sprite_idle, (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT)
         )
 
 
@@ -27,16 +27,16 @@ class Cyborg(AbstractPlayer):
         frame2 = walk_sheet.subsurface((frame_width, 0, frame_width, frame_height)).copy()
         frame1 = pygame.transform.scale(frame1, (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT))
         frame2 = pygame.transform.scale(frame2, (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT))
-        self.sprite_walk_frames = [frame1, frame2]
+        self._sprite_walk_frames = [frame1, frame2]
 
 
-        self.sprite_jump = pygame.image.load(
+        self._sprite_jump = pygame.image.load(
             "assets/sprites/players/CyborgJump.png").convert_alpha()
-        self.sprite_jump = pygame.transform.scale(
-            self.sprite_jump, (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT)
+        self._sprite_jump = pygame.transform.scale(
+            self._sprite_jump, (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT)
         )
 
-        self.image = self.sprite_idle
+        self.image = self._sprite_idle
         self.rect = self.image.get_rect()
         self.rect.center = old_center
 

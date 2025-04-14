@@ -15,9 +15,9 @@ class Jones(AbstractPlayer):
         super().__init__(x, y)
         old_center = self.rect.center
 
-        self.sprite_idle = pygame.image.load("assets/sprites/players/JonesIdle.png").convert_alpha()
-        self.sprite_idle = pygame.transform.scale(
-            self.sprite_idle, (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT)
+        self._sprite_idle = pygame.image.load("assets/sprites/players/JonesIdle.png").convert_alpha()
+        self._sprite_idle = pygame.transform.scale(
+            self._sprite_idle, (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT)
         )
 
         walk_sheet = pygame.image.load("assets/sprites/players/JonesWalk.png").convert_alpha()
@@ -26,14 +26,14 @@ class Jones(AbstractPlayer):
         )
         frame1 = walk_sheet.subsurface((0, 0, Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT)).copy()
         frame2 = walk_sheet.subsurface((Constants.PLAYER_WIDTH, 0, Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT)).copy()
-        self.sprite_walk_frames = [frame1, frame2]
+        self._sprite_walk_frames = [frame1, frame2]
 
-        self.sprite_jump = pygame.image.load("assets/sprites/players/JonesJump.png").convert_alpha()
-        self.sprite_jump = pygame.transform.scale(
-            self.sprite_jump, (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT)
+        self._sprite_jump = pygame.image.load("assets/sprites/players/JonesJump.png").convert_alpha()
+        self._sprite_jump = pygame.transform.scale(
+            self._sprite_jump, (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT)
         )
 
-        self.image = self.sprite_idle
+        self.image = self._sprite_idle
         self.rect = self.image.get_rect()
         self.rect.center = old_center
 

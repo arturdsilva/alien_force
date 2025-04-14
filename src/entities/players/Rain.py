@@ -1,6 +1,5 @@
 import pygame
 from config.Constants import Constants, Sounds
-from numpy.testing.print_coercion_tables import print_cancast_table
 from src.entities.Ability import CriticalShot
 from src.entities.players.AbstractPlayer import AbstractPlayer
 import math
@@ -17,10 +16,10 @@ class Rain(AbstractPlayer):
         super().__init__(x, y)
         old_center = self.rect.center
 
-        self.sprite_idle = pygame.image.load(
+        self._sprite_idle = pygame.image.load(
             "assets/sprites/players/RainIdle.png").convert_alpha()
-        self.sprite_idle = pygame.transform.scale(
-            self.sprite_idle,
+        self._sprite_idle = pygame.transform.scale(
+            self._sprite_idle,
             (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT)
         )
 
@@ -35,16 +34,16 @@ class Rain(AbstractPlayer):
         frame2 = walk_sheet.subsurface((Constants.PLAYER_WIDTH, 0,
                                         Constants.PLAYER_WIDTH,
                                         Constants.PLAYER_HEIGHT)).copy()
-        self.sprite_walk_frames = [frame1, frame2]
+        self._sprite_walk_frames = [frame1, frame2]
 
-        self.sprite_jump = pygame.image.load(
+        self._sprite_jump = pygame.image.load(
             "assets/sprites/players/RainJump.png").convert_alpha()
-        self.sprite_jump = pygame.transform.scale(
-            self.sprite_jump,
+        self._sprite_jump = pygame.transform.scale(
+            self._sprite_jump,
             (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT)
         )
 
-        self.image = self.sprite_idle
+        self.image = self._sprite_idle
         self.rect = self.image.get_rect()
         self.rect.center = old_center
         self.time_projectile_generation = 0

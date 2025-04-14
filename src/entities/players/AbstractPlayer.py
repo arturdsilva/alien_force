@@ -41,6 +41,9 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         self.walk_frame_timer = 0
         self.walk_frame_duration = 0.3
         self._facing_left = False
+        self._sprite_idle = None
+        self._sprite_jump = None
+        self._sprite_walk_frames = None
 
         if hasattr(self, "get_projectile_image"):
             projectile_image = self.get_projectile_image()
@@ -166,30 +169,17 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         self._compute_damage(enemies_projectiles)
 
         if self._is_jumping:
-            try:
-                self.image = self.sprite_jump
-            except AttributeError:
-                pass
+            self.image = self._sprite_jump
         elif keys[pygame.K_a] or keys[pygame.K_d]:
-            try:
-                if hasattr(self, 'sprite_walk_frames'):
-                    self.walk_frame_timer += dt
-                    if self.walk_frame_timer >= self.walk_frame_duration:
-                        self.walk_frame_timer = 0
-                        self.walk_frame_index = (
-                                                        self.walk_frame_index + 1) % len(
-                            self.sprite_walk_frames)
-                    self.image = self.sprite_walk_frames[
-                        self.walk_frame_index]
-                else:
-                    self.image = self.sprite_walk
-            except AttributeError:
-                pass
+            self.walk_frame_timer += dt
+            if self.walk_frame_timer >= self.walk_frame_duration:
+                self.walk_frame_timer = 0
+                self.walk_frame_index = (self.walk_frame_index + 1) % len(
+                    self._sprite_walk_frames)
+            self.image = self._sprite_walk_frames[
+                self.walk_frame_index]
         else:
-            try:
-                self.image = self.sprite_idle
-            except AttributeError:
-                pass
+            self.image = self._sprite_idle
 
         if self._facing_left:
             self.image = pygame.transform.flip(self.image, True, False)
