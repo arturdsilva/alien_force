@@ -62,7 +62,36 @@ class CharacterSelect(GameState):
 
         self.selected = 0
         self.preview_size = 150
+
+        self.char_name = None
+        self.char_name_rect = None
+        self.char_desc = None
+        self.char_desc_rect = None
+        self.controls = None
+        self.controls_rect = None
         self.update_character_info()
+
+        char = self.characters[self.selected]
+        orig_width, orig_height = char['image'].get_size()
+        new_height = 150
+        new_width = int((orig_width / orig_height) * new_height)
+        self.image = pygame.transform.scale(char['image'],
+                                            (new_width, new_height))
+
+        self.preview_rect = self.image.get_rect(
+            center=(Constants.WIDTH // 2, Constants.HEIGHT // 2))
+
+        self.right_arrow = self.font_chars.render('>', True,
+                                                  pygame.Color('white'))
+        self.right_rect = self.right_arrow.get_rect(
+            midleft=(self.preview_rect.right + 30, Constants.HEIGHT / 2))
+
+        self.left_arrow = self.font_chars.render('<', True,
+                                            pygame.Color('white'))
+        self.left_rect = self.left_arrow.get_rect(
+            midright=(self.preview_rect.left - 30, Constants.HEIGHT / 2))
+
+
         self.__audio_manager = AudioManager()
 
     def update_character_info(self):
@@ -88,6 +117,13 @@ class CharacterSelect(GameState):
         self.controls_rect = self.controls.get_rect(
             center=(Constants.WIDTH / 2, Constants.HEIGHT - 80))
 
+        char = self.characters[self.selected]
+        orig_width, orig_height = char['image'].get_size()
+        new_height = 150
+        new_width = int((orig_width / orig_height) * new_height)
+        self.image = pygame.transform.scale(char['image'],
+                                            (new_width, new_height))
+
     def update(self, dt):
         """
         Updates the character selection state.
@@ -108,29 +144,14 @@ class CharacterSelect(GameState):
         screen.blit(self.title, self.title_rect)
 
         # Draw character preview
-        char = self.characters[self.selected]
-        orig_width, orig_height = char['image'].get_size()
-        new_height = 150
-        new_width = int((orig_width / orig_height) * new_height)
-        image = pygame.transform.scale(char['image'], (new_width, new_height))
-        preview_rect = image.get_rect(
-            center=(Constants.WIDTH // 2, Constants.HEIGHT // 2))
-        screen.blit(image, preview_rect)
+        screen.blit(self.image, self.preview_rect)
 
         # Draw navigation arrows
         if self.selected > 0:
-            left_arrow = self.font_chars.render('<', True,
-                                                pygame.Color('white'))
-            left_rect = left_arrow.get_rect(
-                midright=(preview_rect.left - 30, Constants.HEIGHT / 2))
-            screen.blit(left_arrow, left_rect)
+            screen.blit(self.left_arrow, self.left_rect)
 
         if self.selected < len(self.characters) - 1:
-            right_arrow = self.font_chars.render('>', True,
-                                                 pygame.Color('white'))
-            right_rect = right_arrow.get_rect(
-                midleft=(preview_rect.right + 30, Constants.HEIGHT / 2))
-            screen.blit(right_arrow, right_rect)
+            screen.blit(self.right_arrow, self.right_rect)
 
         # Draw name and description
         screen.blit(self.char_name, self.char_name_rect)
@@ -173,23 +194,13 @@ class CharacterSelect(GameState):
                         Constants.WIDTH / 2, Constants.HEIGHT / 2)
 
                     if self.selected > 0:
-                        left_arrow = self.font_chars.render('<', True,
-                                                            pygame.Color(
-                                                                'white'))
-                        left_rect = left_arrow.get_rect(midright=(
-                            preview_rect.left - 30, Constants.HEIGHT / 2))
-                        if left_rect.collidepoint(mouse_pos):
+                        if self.left_rect.collidepoint(mouse_pos):
                             self.selected -= 1
                             self.update_character_info()
                             self.__audio_manager.play_sound(Sounds.CLICK)
 
                     if self.selected < len(self.characters) - 1:
-                        right_arrow = self.font_chars.render('>', True,
-                                                             pygame.Color(
-                                                                 'white'))
-                        right_rect = right_arrow.get_rect(midleft=(
-                            preview_rect.right + 30, Constants.HEIGHT / 2))
-                        if right_rect.collidepoint(mouse_pos):
+                        if self.right_rect.collidepoint(mouse_pos):
                             self.selected += 1
                             self.update_character_info()
                             self.__audio_manager.play_sound(Sounds.CLICK)
