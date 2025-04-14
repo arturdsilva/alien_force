@@ -22,6 +22,7 @@ class WavyEnemy(AbstractEnemy):
         super().__init__(x=x, y=y)
         self._health_points = Constants.WAVY_ENEMY_MAX_HEALTH
         self._speed = Constants.WAVY_ENEMY_SPEED
+        self._update_sprite(self._speed)
         self.__timer = 0
         self.__amplitude = Constants.WAVY_ENEMY_AMPLITUDE
         self.__angular_frequency = Constants.WAVY_ENEMY_ANGULAR_FREQUENCY
@@ -42,16 +43,17 @@ class WavyEnemy(AbstractEnemy):
         :param x: Initial x coordinate
         :param y: Initial y coordinate
         """
-        self.image = pygame.image.load(
+        self.original_image = pygame.image.load(
             "assets/sprites/enemies/WavyEnemy.png").convert_alpha()
-        self.image = pygame.transform.scale(
-            self.image,
+        self.original_image = pygame.transform.scale(
+            self.original_image,
             (Constants.WAVY_ENEMY_WIDTH, Constants.WAVY_ENEMY_HEIGHT)
         )
-        self._original_image = self.image.copy()  # Guarda a imagem original para referência, se necessário
-        self.rect = self.image.get_rect()
+        self.original_image = pygame.transform.flip(self.original_image, True, False)
+        self.rect = self.original_image.get_rect()
         self.rect.centerx = x
         self.rect.bottom = y
+
 
     def _move(self, dt, terrain=None):
         """

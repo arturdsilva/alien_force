@@ -28,6 +28,7 @@ class LinearEnemy(AbstractEnemy):
         self._projectile_generator = ProjectileGenerator(self, 150, 1,
                                                          projectile_image,
                                                          10, Sounds.PLASMA)
+        self._update_sprite(self._speed)
 
     def _initialize_sprite(self, x, y):
         """
@@ -36,11 +37,11 @@ class LinearEnemy(AbstractEnemy):
         :param x: Initial x coordinate
         :param y: Initial y coordinate
         """
-        self.image = pygame.image.load(
+        self.original_image = pygame.image.load(
             "assets/sprites/enemies/LinearEnemy.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image, (
+        self.original_image = pygame.transform.scale(self.original_image, (
             Constants.LINEAR_ENEMY_WIDTH, Constants.LINEAR_ENEMY_HEIGHT))
-        self.rect = self.image.get_rect(center=(x, y))
+        self.rect = self.original_image.get_rect(center=(x, y))
 
     def _move(self, dt, terrain=None):
         """
@@ -53,7 +54,6 @@ class LinearEnemy(AbstractEnemy):
 
         if self._limit_bounds():
             self._speed = -self._speed
-            self.image = pygame.transform.flip(self.image, True, False)
 
     def _update_behavior(self, dt, terrain=None):
         """

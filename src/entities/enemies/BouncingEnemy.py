@@ -31,6 +31,7 @@ class BouncingEnemy(AbstractEnemy):
         super().__init__(x=x, y=y)
         self._health_points = Constants.BOUNCING_ENEMY_MAX_HEALTH
         self._velocity_x = -Constants.BOUNCING_ENEMY_HORIZONTAL_SPEED  # Starts moving left
+        self._update_sprite(self._velocity_x)
         self._state = self.MOVING
         self._timer = 0
         self._wait_timer = 0
@@ -48,11 +49,11 @@ class BouncingEnemy(AbstractEnemy):
         :param x: Initial x coordinate
         :param y: Initial y coordinate
         """
-        self.image = pygame.image.load(
+        self.original_image = pygame.image.load(
             "assets/sprites/enemies/BouncingEnemy.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image, (
+        self.original_image = pygame.transform.scale(self.original_image, (
             Constants.BOUNCING_ENEMY_WIDTH, Constants.BOUNCING_ENEMY_HEIGHT))
-        self.rect = self.image.get_rect(center=(x, y))
+        self.rect = self.original_image.get_rect(center=(x, y))
 
     def _move(self, dt, terrain=None):
         """
@@ -69,11 +70,9 @@ class BouncingEnemy(AbstractEnemy):
         if self.rect.left <= 0:
             self.rect.left = 0
             self._velocity_x = Constants.BOUNCING_ENEMY_HORIZONTAL_SPEED
-            self.image = pygame.transform.flip(self.image, True, False)
         elif self.rect.right >= Constants.WIDTH:
             self.rect.right = Constants.WIDTH
             self._velocity_x = -Constants.BOUNCING_ENEMY_HORIZONTAL_SPEED
-            self.image = pygame.transform.flip(self.image, True, False)
 
 
         elif self._state == self.FALLING:
@@ -152,6 +151,7 @@ class BouncingEnemy(AbstractEnemy):
         self._update_behavior(dt, terrain)
         self._compute_damage(player_projectiles, ability_projectiles)
         self._attack(dt, player, enemies_projectiles)
+        self._update_sprite(self._velocity_x)
 
         # Verifica colisão com o player durante a queda
         if self._state == self.FALLING and player and pygame.sprite.collide_rect(self, player.sprite):

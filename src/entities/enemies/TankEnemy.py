@@ -21,6 +21,7 @@ class TankEnemy(AbstractEnemy):
         self._health_points = Constants.TANK_ENEMY_MAX_HEALTH
         self._speed = Constants.TANK_ENEMY_SPEED
         self._time_since_last_shot = 0
+        self._update_sprite(self._speed)
 
     def _initialize_sprite(self, x, y):
         """
@@ -29,12 +30,12 @@ class TankEnemy(AbstractEnemy):
         :param x: Initial x coordinate
         :param y: Initial y coordinate
         """
-        self.image = pygame.image.load(
+        self.original_image = pygame.image.load(
             "assets/sprites/enemies/TankEnemy.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image, (
+        self.original_image = pygame.transform.scale(self.original_image, (
             Constants.TANK_ENEMY_WIDTH, Constants.TANK_ENEMY_HEIGHT))
-        self._original_image = self.image.copy()
-        self.rect = self.image.get_rect(center=(x, y))
+        self._original_image = self.original_image.copy()
+        self.rect = self.original_image.get_rect(center=(x, y))
 
     def _move(self, dt, terrain=None):
         """
@@ -53,14 +54,9 @@ class TankEnemy(AbstractEnemy):
         if self.rect.left <= 0:
             self.rect.left = 0
             self._speed = abs(self._speed)
-            # Para mover à direita, usa a imagem original
-            self.image = self._original_image
         elif self.rect.right >= Constants.WIDTH:
             self.rect.right = Constants.WIDTH
             self._speed = -abs(self._speed)
-            # Para mover à esquerda, inverte horizontalmente a imagem original
-            self.image = pygame.transform.flip(self._original_image, True,
-                                               False)
 
     def _update_behavior(self, dt, terrain=None):
         """
