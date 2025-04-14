@@ -35,8 +35,10 @@ class GameOver(GameState):
 
         # Cria as superfícies e retângulos para cada opção
         for i, option in enumerate(self.options):
-            surface = self.font_small.render(option['text'], True, Colors.WHITE)
-            rect = surface.get_rect(center=(Constants.WIDTH/2, Constants.HEIGHT*2/3 + i * 30))
+            surface = self.font_small.render(option['text'], True,
+                                             Colors.WHITE)
+            rect = surface.get_rect(center=(
+                Constants.WIDTH / 2, Constants.HEIGHT * 2 / 3 + i * 30))
             self.options_surfaces.append(surface)
             self.options_rects.append(rect)
 
@@ -67,18 +69,22 @@ class GameOver(GameState):
 
         :param screen: The screen surface to draw on.
         """
-        overlay = pygame.Surface((Constants.WIDTH, Constants.HEIGHT), pygame.SRCALPHA)
+        overlay = pygame.Surface((Constants.WIDTH, Constants.HEIGHT),
+                                 pygame.SRCALPHA)
         overlay.fill((0, 0, 0, 200))
         screen.blit(overlay, (0, 0))
 
         # Title
         title = self.font_large.render("GAME OVER", True, Colors.RED)
-        title_rect = title.get_rect(center=(Constants.WIDTH/2, Constants.HEIGHT/3))
+        title_rect = title.get_rect(
+            center=(Constants.WIDTH / 2, Constants.HEIGHT / 3))
         screen.blit(title, title_rect)
 
         # Score
-        score_text = self.font_medium.render(f"Final Score: {self.score}", True, Colors.WHITE)
-        score_rect = score_text.get_rect(center=(Constants.WIDTH/2, Constants.HEIGHT/2))
+        score_text = self.font_medium.render(f"Final Score: {self.score}",
+                                             True, Colors.WHITE)
+        score_rect = score_text.get_rect(
+            center=(Constants.WIDTH / 2, Constants.HEIGHT / 2))
         screen.blit(score_text, score_rect)
 
         # Desenha as opções
@@ -103,4 +109,4 @@ class GameOver(GameState):
                 if event.button == 1:  # Left mouse button
                     for i, rect in enumerate(self.options_rects):
                         if rect.collidepoint(event.pos):
-                            self.options[i]['action']() 
+                            self.options[i]['action']()

@@ -23,7 +23,8 @@ class CharacterSelect(GameState):
         super().__init__(game)
 
         self.bg_image = pygame.image.load("assets/sprites/Menu.png").convert()
-        self.bg_image = pygame.transform.scale(self.bg_image, (Constants.WIDTH, Constants.HEIGHT))
+        self.bg_image = pygame.transform.scale(self.bg_image, (
+            Constants.WIDTH, Constants.HEIGHT))
         # Font configuration
         self.font_title = pygame.font.Font(None, 74)
         self.font_chars = pygame.font.Font(None, 54)
@@ -40,19 +41,22 @@ class CharacterSelect(GameState):
                 'name': 'Captain Cyborg',
                 'class': Cyborg,
                 'desc': 'Especialista em armas de assalto',
-                'image': pygame.image.load("assets/sprites/players/CyborgIdle.png").convert_alpha()
+                'image': pygame.image.load(
+                    "assets/sprites/players/CyborgIdle.png").convert_alpha()
             },
             {
                 'name': 'Sergeant Jones',
                 'class': Jones,
                 'desc': 'Especialista em explosivos',
-                'image': pygame.image.load("assets/sprites/players/JonesIdle.png").convert_alpha()
+                'image': pygame.image.load(
+                    "assets/sprites/players/JonesIdle.png").convert_alpha()
             },
             {
                 'name': 'Lieutenant Rain',
                 'class': Rain,
                 'desc': 'Especialista em precisão',
-                'image': pygame.image.load("assets/sprites/players/RainIdle.png").convert_alpha()
+                'image': pygame.image.load(
+                    "assets/sprites/players/RainIdle.png").convert_alpha()
             }
         ]
 
@@ -143,11 +147,14 @@ class CharacterSelect(GameState):
             if event.type == pygame.QUIT:
                 self.is_running = False
             if event.type == pygame.KEYDOWN:
-                if (event.key == pygame.K_LEFT or event.key == pygame.K_a) and self.selected > 0:
+                if (
+                        event.key == pygame.K_LEFT or event.key == pygame.K_a) and self.selected > 0:
                     self.selected -= 1
                     self.update_character_info()
                     self.__audio_manager.play_sound(Sounds.CLICK)
-                elif (event.key == pygame.K_RIGHT or event.key == pygame.K_d) and self.selected < len(self.characters) - 1:
+                elif (
+                        event.key == pygame.K_RIGHT or event.key == pygame.K_d) and self.selected < len(
+                    self.characters) - 1:
                     self.selected += 1
                     self.update_character_info()
                     self.__audio_manager.play_sound(Sounds.CLICK)
@@ -160,20 +167,28 @@ class CharacterSelect(GameState):
                 if event.button == 1:  # Left mouse button
                     mouse_pos = event.pos
                     # Check if clicked on navigation arrows
-                    preview_rect = pygame.Rect(0, 0, self.preview_size, self.preview_size)
-                    preview_rect.center = (Constants.WIDTH/2, Constants.HEIGHT/2)
-                    
+                    preview_rect = pygame.Rect(0, 0, self.preview_size,
+                                               self.preview_size)
+                    preview_rect.center = (
+                        Constants.WIDTH / 2, Constants.HEIGHT / 2)
+
                     if self.selected > 0:
-                        left_arrow = self.font_chars.render('<', True, pygame.Color('white'))
-                        left_rect = left_arrow.get_rect(midright=(preview_rect.left - 30, Constants.HEIGHT/2))
+                        left_arrow = self.font_chars.render('<', True,
+                                                            pygame.Color(
+                                                                'white'))
+                        left_rect = left_arrow.get_rect(midright=(
+                            preview_rect.left - 30, Constants.HEIGHT / 2))
                         if left_rect.collidepoint(mouse_pos):
                             self.selected -= 1
                             self.update_character_info()
                             self.__audio_manager.play_sound(Sounds.CLICK)
 
                     if self.selected < len(self.characters) - 1:
-                        right_arrow = self.font_chars.render('>', True, pygame.Color('white'))
-                        right_rect = right_arrow.get_rect(midleft=(preview_rect.right + 30, Constants.HEIGHT/2))
+                        right_arrow = self.font_chars.render('>', True,
+                                                             pygame.Color(
+                                                                 'white'))
+                        right_rect = right_arrow.get_rect(midleft=(
+                            preview_rect.right + 30, Constants.HEIGHT / 2))
                         if right_rect.collidepoint(mouse_pos):
                             self.selected += 1
                             self.update_character_info()
@@ -181,7 +196,8 @@ class CharacterSelect(GameState):
 
                     # Check if clicked on character preview
                     if preview_rect.collidepoint(mouse_pos):
-                        selected_char = self.characters[self.selected]['class']()
+                        selected_char = self.characters[self.selected][
+                            'class']()
                         selected_char_name = selected_char.__class__.__name__
                         self.next_state = Play(self.game, selected_char_name)
                         self.__audio_manager.play_sound(Sounds.CLICK)

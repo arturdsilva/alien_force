@@ -21,7 +21,8 @@ class Menu(GameState):
         """
         super().__init__(game)
         self.bg_image = pygame.image.load("assets/sprites/Menu.png").convert()
-        self.bg_image = pygame.transform.scale(self.bg_image, (Constants.WIDTH, Constants.HEIGHT))
+        self.bg_image = pygame.transform.scale(self.bg_image, (
+            Constants.WIDTH, Constants.HEIGHT))
         self.font = pygame.font.Font(None, 74)
         self.title = self.font.render('Alien Force', True,
                                       pygame.Color('white'))

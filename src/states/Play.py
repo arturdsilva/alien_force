@@ -48,8 +48,10 @@ class Play(GameState):
 
         self.hud = Hud(player)
 
-        self.bg_image = pygame.image.load("assets/sprites/Background.png").convert()
-        self.bg_image = pygame.transform.scale(self.bg_image, (Constants.WIDTH, Constants.HEIGHT))
+        self.bg_image = pygame.image.load(
+            "assets/sprites/Background.png").convert()
+        self.bg_image = pygame.transform.scale(self.bg_image, (
+            Constants.WIDTH, Constants.HEIGHT))
 
         self._adjust_player_initial_position()
 
@@ -133,7 +135,7 @@ class Play(GameState):
         self.__enemies.draw(screen)
         for projectile in self.__enemies_projectiles:
             projectile.draw(screen)
-            
+
         self.__abilities.draw(screen)
 
         self.hud.draw(screen)
