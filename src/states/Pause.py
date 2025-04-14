@@ -34,8 +34,8 @@ class Pause(GameState):
 
         # Options
         self.options = [
-            {'text': 'Continuar (ESC)', 'action': self.resume_game},
-            {'text': 'Menu Principal (M)', 'action': self.return_to_menu}
+            {'text': 'Continuar', 'action': self.resume_game},
+            {'text': 'Menu Principal', 'action': self.return_to_menu}
         ]
 
         self.options_surfaces = []

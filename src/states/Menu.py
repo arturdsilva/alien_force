@@ -34,9 +34,9 @@ class Menu(GameState):
         self.__audio_manager = AudioManager()
 
         self.options = [
-            {'text': 'ESPAÇO: Novo Jogo', 'action':
+            {'text': 'Novo Jogo', 'action':
                 self.start_from_beginning},
-            {'text': 'C: Continuar Jogo Salvo',
+            {'text': 'Continuar Jogo Salvo',
              'action': self.start_from_save},
         ]
 

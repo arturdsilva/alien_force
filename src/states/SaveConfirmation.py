@@ -38,8 +38,8 @@ class SaveConfirmation(GameState):
 
         # Define the menu options with associated actions
         self.options = [
-            {'text': 'Salvar (ENTER)', 'action': self.save_and_leave_session},
-            {'text': 'Sair sem salvar (N)',
+            {'text': 'Salvar', 'action': self.save_and_leave_session},
+            {'text': 'Sair sem salvar',
              'action': self.leave_session}
         ]
 
