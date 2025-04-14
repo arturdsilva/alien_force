@@ -10,7 +10,7 @@ class GameOver(GameState):
     Shows the final score and options to restart or return to menu.
     """
 
-    def __init__(self, game, score):
+    def __init__(self, game, score, player_name="Unknown"):
         """
         Initializes the game over state.
 
@@ -23,6 +23,7 @@ class GameOver(GameState):
         self.font_medium = pygame.font.Font(None, 36)
         self.font_small = pygame.font.Font(None, 24)
         self.__audio_manager = AudioManager()
+        self.player_name = player_name
 
         # Opções do menu
         self.options = [
@@ -44,8 +45,8 @@ class GameOver(GameState):
 
     def restart_game(self):
         """Reinicia o jogo."""
-        from src.states.CharacterSelect import CharacterSelect
-        self.next_state = CharacterSelect(self.game)
+        from src.states.Play import Play
+        self.next_state = Play(self.game, self.player_name)
         self.__audio_manager.unpause_music()
 
     def return_to_menu(self):

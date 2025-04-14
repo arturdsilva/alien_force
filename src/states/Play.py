@@ -36,7 +36,8 @@ class Play(GameState):
         random_terrain = terrains.get_random_terrain()
         self.__terrain = Terrain(random_terrain)
 
-        player = PlayerClassMap[player_name]()
+        self.player_name = player_name
+        player = PlayerClassMap[self.player_name]()
         player.rect.centerx = Constants.WIDTH / 2
         player.rect.bottom = 0
 
@@ -106,7 +107,8 @@ class Play(GameState):
 
         if player._health_points <= 0:
             from src.states.GameOver import GameOver
-            self.next_state = GameOver(self.game, self.hud.score)
+            self.next_state = GameOver(self.game, self.hud.score,
+                                       self.player_name)
             self.__audio_manager.pause_music()
             self.__audio_manager.play_sound(Sounds.GAME_OVER)
 
@@ -216,6 +218,7 @@ class Play(GameState):
         player_data = data.get("player")
         if data.get("player") is not None:
             player_type = player_data.get("type")
+            instance.player_name = player_type
             restored_player = PlayerClassMap[player_type].from_dict(
                 player_data)
             instance.__player = pygame.sprite.GroupSingle(restored_player)
