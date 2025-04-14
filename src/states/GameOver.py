@@ -19,9 +19,9 @@ class GameOver(GameState):
         """
         super().__init__(game)
         self.score = score
-        self.font_large = pygame.font.Font(None, 72)
-        self.font_medium = pygame.font.Font(None, 36)
-        self.font_small = pygame.font.Font(None, 24)
+        self.font_large = pygame.font.Font(None, 120)
+        self.font_medium = pygame.font.Font(None, 60)
+        self.font_small = pygame.font.Font(None, 40)
         self.__audio_manager = AudioManager()
         self.player_name = player_name
 
