@@ -39,6 +39,7 @@ class AudioManager:
             "laser beam": pygame.mixer.Sound("assets/sounds/laser_beam.wav"),
             "laser shot": pygame.mixer.Sound("assets/sounds/laser_shot.wav"),
             "plasma": pygame.mixer.Sound("assets/sounds/plasma.wav"),
+            "recharged": pygame.mixer.Sound("assets/sounds/recharged.wav"),
             "stomp": pygame.mixer.Sound("assets/sounds/stomp.wav")
         }
 
@@ -51,10 +52,11 @@ class AudioManager:
             "game over": 0.3,
             "gun shot": 0.2,
             "hit": 0.5,
-            "launcher": 0.5,
+            "launcher": 0.3,
             "laser beam": 0.1,
             "laser shot": 0.2,
             "plasma": 0.5,
+            "recharged": 0.2,
             "stomp": 0.3
         }
 
@@ -76,7 +78,7 @@ class AudioManager:
 
     def play_music(self, music_name: str, loop: int = -1):
         if self.current_music_name == music_name:
-            return  # Já está tocando
+            return
         path = self.songs.get(music_name)
         if path:
             pygame.mixer.music.load(path)

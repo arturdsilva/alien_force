@@ -111,6 +111,7 @@ class Cyborg(AbstractPlayer):
             if self._ability_downtime >= self._ability_cooldown:
                 self._ability_time_left = self._time_duration_ability
                 self._ready_ability = True
+                self._audio_manager.play_sound(Sounds.RECHARGED)
 
     def _compute_duration_ability(self, dt):
         """
