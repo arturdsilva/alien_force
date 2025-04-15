@@ -18,6 +18,10 @@ class GameOver(AbstractState):
         :param score: The player's final score.
         """
         super().__init__(game)
+        self.game_over_image = pygame.image.load(
+            "assets/sprites/GameOver.png").convert_alpha()
+        self.game_over_image = pygame.transform.scale(self.game_over_image, (
+            Constants.WIDTH, Constants.HEIGHT))
         self.score = score
         self.font_large = pygame.font.Font(None, 120)
         self.font_medium = pygame.font.Font(None, 60)
@@ -70,6 +74,7 @@ class GameOver(AbstractState):
 
         :param screen: The screen surface to draw on.
         """
+        screen.blit(self.game_over_image, (0, 0))
         overlay = pygame.Surface((Constants.WIDTH, Constants.HEIGHT),
                                  pygame.SRCALPHA)
         overlay.fill((0, 0, 0, 200))
