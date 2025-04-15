@@ -12,7 +12,7 @@ class Cyborg(AbstractPlayer):
         self._initial_health = Constants.PLAYER_MAX_HEALTH
         self._health_points = self._initial_health
         self._ability_cooldown = Constants.LASER_COOLDOWN
-        self._ability_duration = Constants.LASER_DURATION
+        self._time_duration_ability = Constants.LASER_DURATION
         self._ability_time_left = Constants.LASER_DURATION
         self._has_durable_ability = True
 
@@ -66,64 +66,38 @@ class Cyborg(AbstractPlayer):
         weapon_width = 100
         weapon_height = 100
 
-        self.weapon_original = pygame.image.load("assets/sprites/weapons/AssaultRifle.png").convert_alpha()
-        self.weapon_original = pygame.transform.scale(self.weapon_original, (
-        weapon_width, weapon_height))
+        self._weapon_original_image = pygame.image.load(
+            "assets/sprites/weapons/AssaultRifle.png").convert_alpha()
+        self._weapon_original_image = pygame.transform.scale(
+            self._weapon_original_image, (
+                weapon_width, weapon_height))
 
-        self.plasma_weapon_original = pygame.image.load("assets/sprites/weapons/PlasmaCannon.png").convert_alpha()
-        self.plasma_weapon_original = pygame.transform.scale(
-            self.plasma_weapon_original, (weapon_width, weapon_height))
+        self._special_weapon_original_image = pygame.image.load(
+            "assets/sprites/weapons/PlasmaCannon.png").convert_alpha()
+        self._special_weapon_original_image = pygame.transform.scale(
+            self._special_weapon_original_image, (weapon_width, weapon_height))
 
-        self.current_weapon_original = self.weapon_original.copy()
-        self.weapon_image = self.current_weapon_original.copy()  # inicia sem rotação
-        self.weapon_rect = self.weapon_image.get_rect(center=self.rect.center)
+        self._current_weapon_original_image = self._weapon_original_image.copy()
+        self._weapon_image = self._current_weapon_original_image.copy()
+        self._weapon_rect = self._weapon_image.get_rect(center=self.rect.center)
         self._special_weapon_offset = pygame.Vector2(20, -10)
 
     def update(self, keys, terrain, dt, *args, **kwargs):
         self.update_weapon()
         super().update(keys, terrain, dt, *args, **kwargs)
 
-    def update_weapon(self):
-        if pygame.mouse.get_pressed()[2]:
-            self.current_weapon_original = self.plasma_weapon_original.copy()
-            offset_x = 50 + self._special_weapon_offset.x
-            offset_y = 0 + self._special_weapon_offset.y
-        else:
-            self.current_weapon_original = self.weapon_original.copy()
-            offset_x, offset_y = 50, 0
-
-        mouse_x, mouse_y = pygame.mouse.get_pos()
-        dx = mouse_x - self.rect.centerx
-        dy = mouse_y - self.rect.centery
-        angle = math.degrees(math.atan2(-dy, dx))
-
-        self.weapon_image = pygame.transform.rotate(
-            self.current_weapon_original, angle)
-        new_center = (
-        self.rect.centerx + offset_x, self.rect.centery + offset_y)
-        self.weapon_rect = self.weapon_image.get_rect(center=new_center)
-
     def draw(self, screen):
         screen.blit(self.image, self.rect)
-        screen.blit(self.weapon_image, self.weapon_rect)
+        screen.blit(self._weapon_image, self._weapon_rect)
 
     def get_projectile_origin(self):
-        return pygame.math.Vector2(self.weapon_rect.center)
-
-    def get_ability_cooldown(self):
-        return self._ability_cooldown
-
-    def get_ability_downtime(self):
-        return self._ability_downtime
+        return pygame.math.Vector2(self._weapon_rect.center)
 
     def get_ability_duration(self):
-        return self._ability_duration
+        return self._time_duration_ability
 
     def get_ability_time_left(self):
         return self._ability_time_left
-
-    def get_ready_ability(self):
-        return self._ready_ability
 
     def choose_ability(self):
         return LaserBeam(self)
@@ -137,7 +111,7 @@ class Cyborg(AbstractPlayer):
         if not self._ready_ability:
             self._ability_downtime += dt
             if self._ability_downtime >= self._ability_cooldown:
-                self._ability_time_left = self._ability_duration
+                self._ability_time_left = self._time_duration_ability
                 self._ready_ability = True
 
     def _compute_duration_ability(self, dt):

@@ -19,6 +19,8 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         """
 
         super().__init__()
+        self.image = None
+        self.rect = None
         self._is_jumping = False
         self._y_speed = 0
         self._initial_health = 0
@@ -29,32 +31,29 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         self._has_durable_ability = False
         self._prev_mouse_pressed = False
         self._audio_manager = AudioManager()
-        self.walk_frame_index = 0
-        self.walk_frame_timer = 0
-        self.walk_frame_duration = 0.3
         self._facing_left = False
         self._sprite_idle = None
         self._sprite_jump = None
         self._sprite_walk_frames = None
         self._projectile_generator = None
-        self.ability_generator = self.choose_ability()
+        self._weapon_original_image = None
+        self._special_weapon_original_image = None
+        self._current_weapon_original_image = None
+        self._weapon_image = None
+        self._weapon_rect = None
         self._special_weapon_offset = pygame.Vector2(0, 0)
+        self.__ability_generator = self.choose_ability()
+        self.__walk_frame_index = 0
+        self.__walk_frame_timer = 0
+        self.__walk_frame_duration = 0.3
 
-    @abstractmethod
+    @property
     def get_ability_cooldown(self):
-        """
-        Returns the time it takes to recharge an ability.
-        """
+        return self._ability_cooldown
 
-        pass
-
-    @abstractmethod
+    @property
     def get_ability_downtime(self):
-        """
-        Returns the time the ability has been recharging for.
-        """
-
-        pass
+        return self._ability_downtime
 
     @property
     def has_durable_ability(self):
@@ -67,13 +66,9 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
     def health_points(self):
         return self._health_points
 
-    @abstractmethod
+    @property
     def get_ready_ability(self):
-        """
-        Returns the ready ability of the player.
-        """
-
-        pass
+        return self._ready_ability
 
     @abstractmethod
     def choose_ability(self):
@@ -112,13 +107,13 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         if self._is_jumping:
             self.image = self._sprite_jump
         elif keys[pygame.K_a] or keys[pygame.K_d]:
-            self.walk_frame_timer += dt
-            if self.walk_frame_timer >= self.walk_frame_duration:
-                self.walk_frame_timer = 0
-                self.walk_frame_index = (self.walk_frame_index + 1) % len(
+            self.__walk_frame_timer += dt
+            if self.__walk_frame_timer >= self.__walk_frame_duration:
+                self.__walk_frame_timer = 0
+                self.__walk_frame_index = (self.__walk_frame_index + 1) % len(
                     self._sprite_walk_frames)
             self.image = self._sprite_walk_frames[
-                self.walk_frame_index]
+                self.__walk_frame_index]
         else:
             self.image = self._sprite_idle
 
@@ -153,13 +148,35 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
             target_ability = pygame.math.Vector2(pygame.mouse.get_pos()[0],
                                                  pygame.mouse.get_pos()[1])
             if self._ready_ability:
-                self.ability_generator.generate(target_ability, dt, abilities)
+                self.__ability_generator.generate(target_ability, dt, abilities)
         self._compute_duration_ability(dt)
 
         if keys[pygame.K_a]:
             self._facing_left = True
         elif keys[pygame.K_d]:
             self._facing_left = False
+
+    def update_weapon(self):
+        import math
+
+        if pygame.mouse.get_pressed()[2]:
+            self._current_weapon_original_image = self._special_weapon_original_image.copy()
+
+            offset_x = 50 + self._special_weapon_offset.x
+            offset_y = 0 + self._special_weapon_offset.y
+        else:
+            self._current_weapon_original_image = self._weapon_original_image.copy()
+
+            offset_x, offset_y = 50, 0
+
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        dx = mouse_x - self.rect.centerx
+        dy = mouse_y - self.rect.centery
+        angle = math.degrees(math.atan2(-dy, dx))
+
+        self._weapon_image = pygame.transform.rotate(self._current_weapon_original_image, angle)
+        new_center = (self.rect.centerx + offset_x, self.rect.centery + offset_y)
+        self._weapon_rect = self._weapon_image.get_rect(center=new_center)
 
     def _compute_vertical_position(self, terrain, keys, dt):
         """
@@ -250,5 +267,4 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
             "y_speed": self._y_speed,
             "ready_ability": self._ready_ability,
             "time_cooldown_ability": self._ability_downtime,
-            "time_duration_ability": self._ability_time_spent
         }

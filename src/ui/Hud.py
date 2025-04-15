@@ -31,7 +31,7 @@ class Hud:
         self.__ability_bar_height = 15  # Lower bar
         self.__ability_bar_x = 20
         self.__ability_bar_y = 60
-        self.__ability_cooldown = player.get_ability_cooldown()
+        self.__ability_cooldown = player.get_ability_cooldown
 
         # Score position
         self.__score_x = Constants.WIDTH - 100  # Adjusted for smaller font
@@ -86,8 +86,8 @@ class Hud:
             ability_duration_percentage = 1
         ability_duration_width = self.__ability_bar_width * ability_duration_percentage
 
-        ability_cooldown_percentage = (self.__player.get_ability_downtime() /
-                                       self.__player.get_ability_cooldown())
+        ability_cooldown_percentage = (self.__player.get_ability_downtime /
+                                       self.__player.get_ability_cooldown)
         ability_cooldown_width = (self.__ability_bar_width *
                                   ability_cooldown_percentage)
 
@@ -97,7 +97,7 @@ class Hud:
                           self.__ability_bar_width,
                           self.__ability_bar_height))
         # Draw time cooldown bar
-        if self.__player.get_ready_ability():
+        if self.__player.get_ready_ability:
                 if ability_duration_percentage >= 1:
                     pygame.draw.rect(screen, self.__ability_bar_full_color,
                                      (self.__ability_bar_x,
@@ -118,7 +118,7 @@ class Hud:
                               self.__ability_bar_height))
 
         # Draw time cooldown text
-        if self.__player.get_ready_ability():
+        if self.__player.get_ready_ability:
             percentage = ability_duration_percentage
         else:
             percentage = ability_cooldown_percentage
