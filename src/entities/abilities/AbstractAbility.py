@@ -30,15 +30,6 @@ class AbstractAbility(pygame.sprite.Sprite, ABC):
         """
         return self._damage
 
-    def update(self, dt, speed_multiplier=1.0):
-        """
-        Updates the skill's position and lifetime.
-
-        :param dt: Duration of one iteration.
-        :param speed_multiplier: increase the ability speed
-        """
-        dt *= speed_multiplier
-
     @abstractmethod
     def generate(self, target, dt, abilities_group):
         pass

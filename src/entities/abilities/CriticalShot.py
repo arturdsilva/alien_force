@@ -21,12 +21,12 @@ class CriticalShot(AbstractAbility):
         super().__init__(agent)
         self._speed = Constants.CRITICAL_SHOT_SPEED
         self._damage = Constants.CRITICAL_DAMAGE
-        self.__lifetime = Constants.CRITICAL_SHOT_LIFETIME
+        self._lifetime = Constants.CRITICAL_SHOT_LIFETIME
         critical_shot_image = pygame.image.load(
             "assets/sprites/projectiles/SpecialPrecisionRifleProjectile.png").convert_alpha()
         critical_shot_image = pygame.transform.scale(
             critical_shot_image, (25, 25))
-        self.__critical_shot_image = critical_shot_image
+        self._image = critical_shot_image
 
     def generate(self, target, dt, projectiles):
         """
@@ -48,7 +48,7 @@ class CriticalShot(AbstractAbility):
             self._speed * math.sin(angle)
         )
         position = pygame.math.Vector2(origin)
-        enhanced_image = self._apply_glow_effect(self.__critical_shot_image)
+        enhanced_image = self.__apply_glow_effect(self._image)
 
         projectile = ProjectileAbility(
             position,
@@ -56,13 +56,13 @@ class CriticalShot(AbstractAbility):
             velocity,
             enhanced_image,
             self._damage,
-            self.__lifetime
+            self._lifetime
         )
 
         projectiles.add(projectile)
         return True
 
-    def _apply_glow_effect(self, base_image):
+    def __apply_glow_effect(self, base_image):
         """
         Applies a glow effect to the base image without heavy processing.
         """
