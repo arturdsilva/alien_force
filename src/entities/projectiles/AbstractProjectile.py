@@ -48,6 +48,15 @@ class AbstractProjectile(pygame.sprite.Sprite, ABC):
             player.inflict_damage(self.damage)
             self.kill()
 
+    def _move(self, dt):
+        """
+        Move the projectile along its trajectory
+
+        :param dt: Duration of one iteration
+        """
+        self._position += self._velocity * dt
+        self.rect.center = self._position
+
     def _handle_bounds(self):
         """
         Removes projectiles that go out of screen bounds.

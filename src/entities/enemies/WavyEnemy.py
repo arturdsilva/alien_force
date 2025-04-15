@@ -32,7 +32,7 @@ class WavyEnemy(AbstractEnemy):
         projectile_image = pygame.transform.scale(projectile_image, (
             Constants.WAVY_ENEMY_PROJECTILE_WIDTH,
             Constants.WAVY_ENEMY_PROJECTILE_HEIGHT))
-        self._projectile_generator = ProjectileGenerator(self, 200, 1,
+        self._projectile_generator = ProjectileGenerator(200, 1,
                                                          projectile_image,
                                                          5, Sounds.LASER_SHOT)
 

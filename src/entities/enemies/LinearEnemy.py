@@ -25,7 +25,7 @@ class LinearEnemy(AbstractEnemy):
             Constants.LINEAR_ENEMY_PROJECTILE_WIDTH,
             Constants.LINEAR_ENEMY_PROJECTILE_HEIGHT))
 
-        self._projectile_generator = ProjectileGenerator(self, 150, 1,
+        self._projectile_generator = ProjectileGenerator(150, 1,
                                                          projectile_image,
                                                          10, Sounds.PLASMA)
         self._update_sprite(self._speed)

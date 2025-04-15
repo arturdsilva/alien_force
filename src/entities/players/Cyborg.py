@@ -23,8 +23,7 @@ class Cyborg(AbstractPlayer):
         projectile_damage = int(Constants.PROJECTILE_DEFAULT_DAMAGE * 1.2)
         projectile_sound = Sounds.GUN_SHOT
 
-        self._projectile_generator = ProjectileGenerator(self,
-                                                         projectile_speed,
+        self._projectile_generator = ProjectileGenerator(projectile_speed,
                                                          projectile_frequency,
                                                          projectile_image,
                                                          projectile_damage,

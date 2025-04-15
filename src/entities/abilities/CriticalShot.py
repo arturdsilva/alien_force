@@ -2,7 +2,7 @@ import pygame
 
 from config.Constants import Constants
 from src.entities.abilities.AbstractAbility import AbstractAbility
-from src.entities.projectiles.ProjectileAbility import ProjectileAbility
+from src.entities.projectiles.AbilityProjectile import ProjectileAbility
 from src.entities.projectiles.ProjectileGenerator import ProjectileGenerator
 
 

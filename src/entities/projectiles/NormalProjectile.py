@@ -18,7 +18,6 @@ class NormalProjectile(AbstractProjectile):
         :param is_player_projectile: Indicates if it's a player projectile
         """
         super().__init__(position, velocity, image, damage)
-        self._is_player_projectile = is_player_projectile
 
     def update(self, dt, terrain=None, player=None):
         """
@@ -29,13 +28,10 @@ class NormalProjectile(AbstractProjectile):
         :param player: Player sprite (optional)
         """
         # Update projectile position
-        self._position += self._velocity * dt
-        self.rect.center = self._position
-        
-        # Verifica se saiu dos limites da tela
+        self._move(dt)
         self._handle_bounds()
         
-        # Verifica colisão com o terreno
+        # Check terrain collision
         if terrain:
             hits = pygame.sprite.spritecollide(self, terrain, False)
             if hits:
