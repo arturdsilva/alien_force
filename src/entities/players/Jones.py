@@ -1,7 +1,7 @@
 import pygame
 from config.Constants import Constants, Sounds
 from src.entities.players.AbstractPlayer import AbstractPlayer
-from src.entities.Ability import MissileBarrage
+from src.entities.abilities.MissileBarrage import MissileBarrage
 from src.entities.projectiles.ProjectileGenerator import ProjectileGenerator
 
 class Jones(AbstractPlayer):

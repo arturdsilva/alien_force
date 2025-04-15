@@ -1,6 +1,6 @@
 import pygame
 from config.Constants import Constants, Sounds
-from src.entities.Ability import CriticalShot
+from src.entities.abilities.CriticalShot import CriticalShot
 from src.entities.players.AbstractPlayer import AbstractPlayer
 from src.entities.projectiles.ProjectileGenerator import ProjectileGenerator
 
