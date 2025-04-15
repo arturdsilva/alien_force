@@ -116,6 +116,7 @@ class Rain(AbstractPlayer):
 
             if self._charged_shots >= Constants.NORMAL_SHOTS_REQUIRED:
                 self._ready_ability = True
+                self._audio_manager.play_sound(Sounds.RECHARGED)
 
     def _compute_duration_ability(self, dt):
         if pygame.mouse.get_pressed()[2]:

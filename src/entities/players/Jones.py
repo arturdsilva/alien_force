@@ -95,6 +95,7 @@ class Jones(AbstractPlayer):
             self._ability_downtime += dt
             if self._ability_downtime >= self._ability_cooldown:
                 self._ready_ability = True
+                self._audio_manager.play_sound(Sounds.RECHARGED)
 
     def _compute_duration_ability(self, dt):
         if pygame.mouse.get_pressed()[2] and self._ready_ability:
