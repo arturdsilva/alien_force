@@ -1,6 +1,7 @@
 import pygame
 
 from config.Constants import Constants
+from config.Constants import Colors
 from .AbstractProjectile import AbstractProjectile
 from config.Constants import Sounds
 from src.utils.AudioManager import AudioManager
@@ -72,10 +73,15 @@ class BombProjectile(AbstractProjectile):
         self._explosion_rect.center = self.rect.center
         
         # Cria superfície da explosão
+        color = Constants.TANK_BOMB_EXPLOSION_COLOR
         self._explosion_surface = pygame.Surface((self._explosion_radius * 2, self._explosion_radius * 2), pygame.SRCALPHA)
+        pygame.draw.circle(self._explosion_surface,
+                           (color[0], color[1], color[2], 80),
+                           (self._explosion_radius, self._explosion_radius), self._explosion_radius)
         pygame.draw.circle(self._explosion_surface, Constants.TANK_BOMB_EXPLOSION_COLOR,
-                         (self._explosion_radius, self._explosion_radius), 
-                         self._explosion_radius)
+                           (self._explosion_radius, self._explosion_radius), self._explosion_radius * 0.7)
+        pygame.draw.circle(self._explosion_surface, Colors.GLOW_WHITE,
+                           (self._explosion_radius, self._explosion_radius), self._explosion_radius * 0.3)
         
         # Aplica dano ao jogador se estiver no raio da explosão
         if player and self._explosion_rect.colliderect(player.rect):
