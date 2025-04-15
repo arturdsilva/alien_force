@@ -1,7 +1,7 @@
 import numpy as np
 import pygame
 
-from config.Constants import Constants, Colors
+from config.Constants import Constants, Colors, Sounds
 from src.entities.abilities.AbstractAbility import AbstractAbility
 from src.entities.projectiles.AbilityProjectile import ProjectileAbility
 from src.entities.projectiles.ProjectileGenerator import ProjectileGenerator
@@ -44,6 +44,7 @@ class LaserBeam(AbstractAbility):
         safe_distance = self._agent.rect.width / 2
         beam_start = origin + direction * safe_distance
         self.__create_laser_segments(beam_start, direction, beams)
+        self._audio_manager.play_sound(Sounds.LASER_BEAM)
 
         return True
 

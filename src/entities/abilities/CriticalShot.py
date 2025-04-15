@@ -1,6 +1,6 @@
 import pygame
 
-from config.Constants import Constants
+from config.Constants import Constants, Sounds
 from src.entities.abilities.AbstractAbility import AbstractAbility
 from src.entities.projectiles.AbilityProjectile import ProjectileAbility
 from src.entities.projectiles.ProjectileGenerator import ProjectileGenerator
@@ -60,6 +60,8 @@ class CriticalShot(AbstractAbility):
         )
 
         projectiles.add(projectile)
+        self._audio_manager.play_sound(Sounds.CRITICAL_SHOT)
+
         return True
 
     def __apply_glow_effect(self, base_image):

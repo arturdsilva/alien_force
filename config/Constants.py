@@ -24,18 +24,19 @@ class Sounds:
     PLAY = "play"
 
     # SOUND EFFECTS
-    GUN_SHOT = "gun shot"
-    LASER_SHOT = "laser shot"
-    LASER_BEAM = "laser beam"
-    CLICK = "click"
-    DEATH = "death"
-    HIT = "hit"
-    EXPLOSION = "explosion"
-    BLAST = "blast"
     BOOM = "boom"
-    PLASMA = "plasma"
-    STOMP = "stomp"
+    CLICK = "click"
+    CRITICAL_SHOT = "critical shot"
+    DEATH = "death"
     GAME_OVER = "game over"
+    GUN_SHOT = "gun shot"
+    HIT = "hit"
+    LAUNCHER = "launcher"
+    LASER_BEAM = "laser beam"
+    LASER_SHOT = "laser shot"
+    PLASMA = "plasma"
+    RECHARGED = "recharged"
+    STOMP = "stomp"
 
 class Constants:
     # GENERAL
