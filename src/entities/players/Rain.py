@@ -1,7 +1,6 @@
 import pygame
 from config.Constants import Constants, Sounds
-from numpy.testing.print_coercion_tables import print_cancast_table
-from src.entities.Ability import CriticalShot
+from src.entities.abilities.CriticalShot import CriticalShot
 from src.entities.players.AbstractPlayer import AbstractPlayer
 import math
 

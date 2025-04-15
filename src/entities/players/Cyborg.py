@@ -1,7 +1,7 @@
 import pygame
 from config.Constants import Constants, Sounds
 from src.entities.players.AbstractPlayer import AbstractPlayer
-from src.entities.Ability import LaserBeam
+from src.entities.abilities.LaserBeam import LaserBeam
 import math
 
 class Cyborg(AbstractPlayer):
