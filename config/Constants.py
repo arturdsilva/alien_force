@@ -30,12 +30,12 @@ class Sounds:
     CLICK = "click"
     DEATH = "death"
     HIT = "hit"
-    EXPLOSION = "explosion"
-    BLAST = "blast"
+    CRITICAL_SHOT = "critical shot"
     BOOM = "boom"
     PLASMA = "plasma"
     STOMP = "stomp"
     GAME_OVER = "game over"
+    LAUNCHER = "launcher"
 
 class Constants:
     # GENERAL

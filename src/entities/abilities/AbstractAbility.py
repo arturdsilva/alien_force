@@ -1,6 +1,7 @@
 import pygame
 from abc import ABC, abstractmethod
 from config.Constants import Constants
+from src.utils.AudioManager import AudioManager
 
 
 class AbstractAbility(pygame.sprite.Sprite, ABC):
@@ -20,6 +21,7 @@ class AbstractAbility(pygame.sprite.Sprite, ABC):
         self._image = None
         self._damage = Constants.ABILITY_DEFAULT_DAMAGE
         self._lifetime = None
+        self._audio_manager = AudioManager()
 
     @property
     def damage(self):

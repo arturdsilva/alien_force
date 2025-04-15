@@ -33,12 +33,13 @@ class AudioManager:
             "laser beam": pygame.mixer.Sound("assets/sounds/laser_beam.wav"),
             "death": pygame.mixer.Sound("assets/sounds/death.wav"),
             "hit": pygame.mixer.Sound("assets/sounds/hit.wav"),
-            "explosion": pygame.mixer.Sound("assets/sounds/explosion.wav"),
-            "blast": pygame.mixer.Sound("assets/sounds/blast.wav"),
+            "critical shot": pygame.mixer.Sound(
+                "assets/sounds/critical_shot.wav"),
             "boom": pygame.mixer.Sound("assets/sounds/boom.wav"),
             "plasma": pygame.mixer.Sound("assets/sounds/plasma.wav"),
             "stomp": pygame.mixer.Sound("assets/sounds/stomp.wav"),
-            "game over": pygame.mixer.Sound("assets/sounds/game_over.wav")
+            "game over": pygame.mixer.Sound("assets/sounds/game_over.wav"),
+            "launcher": pygame.mixer.Sound("assets/sounds/launcher.wav")
         }
 
         # Base volume for each sound
@@ -49,15 +50,15 @@ class AudioManager:
             "laser beam": 0.1,
             "death": 0.1,
             "hit": 0.5,
-            "explosion": 0.5,
-            "blast": 0.5,
+            "critical shot": 0.2,
             "bomb": 1,
             "plasma": 0.5,
             "stomp": 0.3,
-            "game over": 0.5
+            "game over": 0.3,
+            "launcher": 0.5
         }
 
-        self.musics = {
+        self.songs = {
             "play": "assets/sounds/soundtrack.mp3"
         }
 
@@ -76,7 +77,7 @@ class AudioManager:
     def play_music(self, music_name: str, loop: int = -1):
         if self.current_music_name == music_name:
             return  # Já está tocando
-        path = self.musics.get(music_name)
+        path = self.songs.get(music_name)
         if path:
             pygame.mixer.music.load(path)
             pygame.mixer.music.play(loop)

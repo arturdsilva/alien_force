@@ -1,7 +1,7 @@
 import numpy as np
 import pygame
 
-from config.Constants import Constants, Colors
+from config.Constants import Constants, Colors, Sounds
 from src.entities.abilities.AbstractAbility import AbstractAbility
 from src.entities.projectiles.AbilityProjectile import ProjectileAbility
 from src.entities.projectiles.ProjectileGenerator import ProjectileGenerator
@@ -87,6 +87,8 @@ class MissileBarrage(AbstractAbility):
                     missiles.add(missile)
                     self_collision = False
 
+        self._audio_manager.play_sound(Sounds.LAUNCHER)
+
         return True
 
     def __draw_explosion(self, radius, color):
@@ -129,6 +131,7 @@ class MissileBarrage(AbstractAbility):
             )
             explosion.radius = missile.explosion_radius
             ability_projectiles.add(explosion)
+            self._audio_manager.play_sound(Sounds.BOOM)
             missile.has_exploded = True
             return explosion
         return None
