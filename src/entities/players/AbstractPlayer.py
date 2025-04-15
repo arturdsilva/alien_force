@@ -1,12 +1,8 @@
 from abc import ABC, abstractmethod
 
-
 from config.Constants import Constants, Sounds
-from src.entities.projectiles.ProjectileGenerator import ProjectileGenerator
-from src.entities.projectiles.AbstractProjectile import AbstractProjectile
 from src.utils.AudioManager import AudioManager
 import pygame
-
 
 
 class AbstractPlayer(pygame.sprite.Sprite, ABC):
@@ -23,15 +19,10 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         """
 
         super().__init__()
-        self.image = pygame.Surface(
-            (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT))
-        self.image.fill(self.get_player_color())
-        self.rect = self.image.get_rect()
-        self.rect.centerx = x
-        self.rect.bottom = y
         self._is_jumping = False
         self._y_speed = 0
-        self._health_points = self.get_initial_health()
+        self._initial_health = 0
+        self._health_points = 0
         self._ready_ability = True
         self._time_cooldown_ability = Constants.ABILITY_COOLDOWN
         self._time_duration_ability = 0
@@ -44,79 +35,9 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         self._sprite_idle = None
         self._sprite_jump = None
         self._sprite_walk_frames = None
-
-        if hasattr(self, "get_projectile_image"):
-            projectile_image = self.get_projectile_image()
-        else:
-            projectile_image = pygame.Surface((
-                Constants.PROJECTILE_DEFAULT_WIDTH,
-                Constants.PROJECTILE_DEFAULT_HEIGHT))
-            projectile_image.fill(Constants.PROJECTILE_DEFAULT_COLOR)
-        self.projectile_generator = ProjectileGenerator(self,
-                                                        self.get_projectile_speed(),
-                                                        self.get_projectile_frequency(),
-                                                        projectile_image,
-                                                        self.get_projectile_damage(),
-                                                        self.get_projectile_sound(),
-                                                        is_player_projectile=True
-                                                        )
+        self._projectile_generator = None
         self.ability_generator = self.choose_ability()
-
-    @abstractmethod
-    def get_player_color(self):
-        """
-        Returns the color of the player.
-        """
-
-        pass
-
-    @abstractmethod
-    def get_initial_health(self):
-        """
-        Returns the initial health of the player.
-        """
-
-        pass
-
-    @abstractmethod
-    def get_projectile_color(self):
-        """
-        Returns the color of the projectiles.
-        """
-
-        pass
-
-    @abstractmethod
-    def get_projectile_speed(self):
-        """
-        Returns the speed of the projectiles.
-        """
-
-        pass
-
-    @abstractmethod
-    def get_projectile_frequency(self):
-        """
-        Returns the frequency of the projectiles.
-        """
-
-        pass
-
-    @abstractmethod
-    def get_projectile_damage(self):
-        """
-        Returns the damage of the projectiles.
-        """
-
-        pass
-
-    @abstractmethod
-    def get_projectile_sound(self):
-        """
-        Returns the sound of the projectile.
-        """
-
-        pass
+        self._special_weapon_offset = pygame.Vector2(0, 0)
 
     @abstractmethod
     def get_time_cooldown_ability(self):
@@ -125,6 +46,9 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         """
 
         pass
+
+    def get_initial_health(self):
+        return self._initial_health
 
     @abstractmethod
     def get_ready_ability(self):
@@ -204,8 +128,8 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
                 if hasattr(self, "get_projectile_origin")
                 else pygame.math.Vector2(self.rect.center)
             )
-            self.projectile_generator.generate(origin, target, dt,
-                                               projectiles)
+            self._projectile_generator.generate(origin, target, dt,
+                                                projectiles)
         self._compute_cooldown_ability(dt)
 
         if pygame.mouse.get_pressed()[2]:

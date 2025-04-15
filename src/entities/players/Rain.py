@@ -2,6 +2,7 @@ import pygame
 from config.Constants import Constants, Sounds
 from src.entities.Ability import CriticalShot
 from src.entities.players.AbstractPlayer import AbstractPlayer
+from src.entities.projectiles.ProjectileGenerator import ProjectileGenerator
 import math
 
 
@@ -14,7 +15,25 @@ class Rain(AbstractPlayer):
 
     def __init__(self, x=Constants.WIDTH / 2, y=Constants.HEIGHT / 2):
         super().__init__(x, y)
-        old_center = self.rect.center
+        self._initial_health = int(Constants.PLAYER_MAX_HEALTH * 0.9)
+        self._health_points = self._initial_health
+
+        projectile_image = pygame.image.load(
+            "assets/sprites/projectiles/PrecisionRifleProjectile.png").convert_alpha()
+        projectile_image = pygame.transform.scale(projectile_image, (15, 15))
+        projectile_speed = Constants.PROJECTILE_DEFAULT_SPEED * 2.0
+        projectile_frequency = Constants.PROJECTILE_DEFAULT_FREQUENCY * 0.5
+        projectile_damage = int(Constants.PROJECTILE_DEFAULT_DAMAGE * 1.8)
+        projectile_sound = Sounds.GUN_SHOT
+
+        self._projectile_generator = ProjectileGenerator(self,
+                                                         projectile_speed,
+                                                         projectile_frequency,
+                                                         projectile_image,
+                                                         projectile_damage,
+                                                         projectile_sound,
+                                                         is_player_projectile=True
+                                                         )
 
         self._sprite_idle = pygame.image.load(
             "assets/sprites/players/RainIdle.png").convert_alpha()
@@ -45,7 +64,8 @@ class Rain(AbstractPlayer):
 
         self.image = self._sprite_idle
         self.rect = self.image.get_rect()
-        self.rect.center = old_center
+        self.rect.centerx = x
+        self.rect.bottom = y
         self.time_projectile_generation = 0
         self._charging_critical = Constants.NORMAL_SHOTS_REQUIRED
 
@@ -71,22 +91,25 @@ class Rain(AbstractPlayer):
         super().update(keys, terrain, dt, *args, **kwargs)
 
     def update_weapon(self):
+        import math
+
         if pygame.mouse.get_pressed()[2]:
             self.current_weapon_original = self.special_weapon_original.copy()
-            offset_x, offset_y = 50, 0
+
+            offset_x = 50 + self._special_weapon_offset.x
+            offset_y = 0 + self._special_weapon_offset.y
         else:
             self.current_weapon_original = self.weapon_original.copy()
+
             offset_x, offset_y = 50, 0
 
         mouse_x, mouse_y = pygame.mouse.get_pos()
         dx = mouse_x - self.rect.centerx
         dy = mouse_y - self.rect.centery
         angle = math.degrees(math.atan2(-dy, dx))
-        self.weapon_angle = angle
-        self.weapon_image = pygame.transform.rotate(
-            self.current_weapon_original, angle)
-        new_center = (
-        self.rect.centerx + offset_x, self.rect.centery + offset_y)
+
+        self.weapon_image = pygame.transform.rotate(self.current_weapon_original, angle)
+        new_center = (self.rect.centerx + offset_x, self.rect.centery + offset_y)
         self.weapon_rect = self.weapon_image.get_rect(center=new_center)
 
     def draw(self, screen):
@@ -95,32 +118,6 @@ class Rain(AbstractPlayer):
 
     def get_projectile_origin(self):
         return pygame.math.Vector2(self.weapon_rect.center)
-
-    def get_player_color(self):
-        return pygame.Color('darkgreen')
-
-    def get_initial_health(self):
-        return int(Constants.PLAYER_MAX_HEALTH * 0.9)
-
-    def get_projectile_color(self):
-        return pygame.Color('lime')
-
-    def get_projectile_image(self):
-        image = pygame.image.load(
-            "assets/sprites/projectiles/PrecisionRifleProjectile.png").convert_alpha()
-        return pygame.transform.scale(image, (15, 15))
-
-    def get_projectile_speed(self):
-        return Constants.PROJECTILE_DEFAULT_SPEED * 2.0
-
-    def get_projectile_frequency(self):
-        return Constants.PROJECTILE_DEFAULT_FREQUENCY * 0.5
-
-    def get_projectile_damage(self):
-        return int(Constants.PROJECTILE_DEFAULT_DAMAGE * 1.8)
-
-    def get_projectile_sound(self):
-        return Sounds.GUN_SHOT
 
     def get_time_cooldown_ability(self):
         return self._time_cooldown_ability

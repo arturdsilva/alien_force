@@ -50,7 +50,7 @@ class ProjectileGenerator:
         if self._time_without_generation >= 1 / self._frequency:
             self._time_without_generation = 0
 
-            angle = self._compute_shot_angle(origin, target)
+            angle = self.compute_shot_angle(origin, target)
             
             velocity = pygame.Vector2()
             velocity.x = self._projectile_speed * np.cos(angle)
@@ -80,7 +80,7 @@ class ProjectileGenerator:
             self.__audio_manager.play_sound(self._sound)
 
     @staticmethod
-    def _compute_shot_angle(origin, target):
+    def compute_shot_angle(origin, target):
         """
         Calculates the angle between the x-axis and the shot trajectory.
 

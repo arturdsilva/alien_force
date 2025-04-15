@@ -2,14 +2,32 @@ import pygame
 from config.Constants import Constants, Sounds
 from src.entities.players.AbstractPlayer import AbstractPlayer
 from src.entities.Ability import LaserBeam
+from src.entities.projectiles.ProjectileGenerator import ProjectileGenerator
 import math
 
 class Cyborg(AbstractPlayer):
     def __init__(self, x=Constants.WIDTH / 2, y=Constants.HEIGHT / 2):
 
         super().__init__(x, y)
-        old_center = self.rect.center
+        self._initial_health = Constants.PLAYER_MAX_HEALTH
+        self._health_points = self._initial_health
 
+        projectile_image = pygame.image.load(
+            "assets/sprites/projectiles/AssaultRifleProjectile.png").convert_alpha()
+        projectile_image = pygame.transform.scale(projectile_image, (10, 10))
+        projectile_speed = Constants.PROJECTILE_DEFAULT_SPEED * 1.5
+        projectile_frequency = Constants.PROJECTILE_DEFAULT_FREQUENCY * 1.5
+        projectile_damage = int(Constants.PROJECTILE_DEFAULT_DAMAGE * 1.2)
+        projectile_sound = Sounds.GUN_SHOT
+
+        self._projectile_generator = ProjectileGenerator(self,
+                                                         projectile_speed,
+                                                         projectile_frequency,
+                                                         projectile_image,
+                                                         projectile_damage,
+                                                         projectile_sound,
+                                                         is_player_projectile=True
+                                                         )
 
         self._sprite_idle = pygame.image.load(
             "assets/sprites/players/CyborgIdle.png").convert_alpha()
@@ -38,7 +56,8 @@ class Cyborg(AbstractPlayer):
 
         self.image = self._sprite_idle
         self.rect = self.image.get_rect()
-        self.rect.center = old_center
+        self.rect.centerx = x
+        self.rect.bottom = y
 
         weapon_width = 100
         weapon_height = 100
@@ -54,6 +73,7 @@ class Cyborg(AbstractPlayer):
         self.current_weapon_original = self.weapon_original.copy()
         self.weapon_image = self.current_weapon_original.copy()  # inicia sem rotação
         self.weapon_rect = self.weapon_image.get_rect(center=self.rect.center)
+        self._special_weapon_offset = pygame.Vector2(20, -10)
 
     def update(self, keys, terrain, dt, *args, **kwargs):
         self.update_weapon()
@@ -62,7 +82,8 @@ class Cyborg(AbstractPlayer):
     def update_weapon(self):
         if pygame.mouse.get_pressed()[2]:
             self.current_weapon_original = self.plasma_weapon_original.copy()
-            offset_x, offset_y = 70, -10
+            offset_x = 50 + self._special_weapon_offset.x
+            offset_y = 0 + self._special_weapon_offset.y
         else:
             self.current_weapon_original = self.weapon_original.copy()
             offset_x, offset_y = 50, 0
@@ -84,31 +105,6 @@ class Cyborg(AbstractPlayer):
 
     def get_projectile_origin(self):
         return pygame.math.Vector2(self.weapon_rect.center)
-
-    def get_player_color(self):
-        return pygame.Color('steelblue')
-
-    def get_initial_health(self):
-        return Constants.PLAYER_MAX_HEALTH
-
-    def get_projectile_color(self):
-        return pygame.Color('yellow')
-
-    def get_projectile_image(self):
-        image = pygame.image.load("assets/sprites/projectiles/AssaultRifleProjectile.png").convert_alpha()
-        return pygame.transform.scale(image, (10, 10))
-
-    def get_projectile_speed(self):
-        return Constants.PROJECTILE_DEFAULT_SPEED * 1.5
-
-    def get_projectile_frequency(self):
-        return Constants.PROJECTILE_DEFAULT_FREQUENCY * 1.5
-
-    def get_projectile_damage(self):
-        return int(Constants.PROJECTILE_DEFAULT_DAMAGE * 1.2)
-
-    def get_projectile_sound(self):
-        return Sounds.GUN_SHOT
 
     def get_time_cooldown_ability(self):
         return self._time_cooldown_ability
