@@ -1,7 +1,7 @@
 from src.entities.projectiles.BombProjectile import BombProjectile
 import pygame
 
-from config.Constants import Constants, Colors
+from config.Constants import Constants
 from src.entities.enemies.AbstractEnemy import AbstractEnemy
 
 
@@ -20,8 +20,8 @@ class TankEnemy(AbstractEnemy):
         super().__init__(x=x, y=y)
         self._health_points = Constants.TANK_ENEMY_MAX_HEALTH
         self._speed = Constants.TANK_ENEMY_SPEED
-        self._time_since_last_shot = 0
         self._update_sprite(self._speed)
+        self.__time_since_last_shot = 0
 
     def _initialize_sprite(self, x, y):
         """
@@ -58,16 +58,6 @@ class TankEnemy(AbstractEnemy):
             self.rect.right = Constants.WIDTH
             self._speed = -abs(self._speed)
 
-    def _update_behavior(self, dt, terrain=None):
-        """
-        Updates specific tank enemy behaviors.
-        In this case, there are no additional behaviors to update.
-
-        :param dt: Time since last update
-        :param terrain: Terrain sprite group (not used by this enemy)
-        """
-        pass
-
     def _attack(self, dt, target, enemies_projectiles):
         """
         Launches a bomb that falls vertically and explodes on impact.
@@ -76,10 +66,10 @@ class TankEnemy(AbstractEnemy):
         :param target: Target position (not used for bombs)
         :param enemies_projectiles: Group of enemy projectiles
         """
-        self._time_since_last_shot += dt
+        self.__time_since_last_shot += dt
 
-        if self._time_since_last_shot >= Constants.TANK_ENEMY_SHOOT_FREQUENCY:
-            self._time_since_last_shot = 0
+        if self.__time_since_last_shot >= Constants.TANK_ENEMY_SHOOT_FREQUENCY:
+            self.__time_since_last_shot = 0
 
             bomb_image = pygame.image.load("assets/sprites/projectiles/TankEnemyProjectile.png").convert_alpha()
             bomb_image = pygame.transform.scale(bomb_image, (

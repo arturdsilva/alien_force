@@ -125,9 +125,6 @@ class Rain(AbstractPlayer):
                 self.time_projectile_generation = 0
                 self._ability_downtime = 0
 
-
-    # TODO: Implement special ability - Survival Mode (speed and reload buff)
-
     def to_dict(self):
         """
         Converts the player's state into a dictionary, including Rain-specific attributes.
@@ -137,7 +134,6 @@ class Rain(AbstractPlayer):
         data["time_projectile_geration"] = self.time_projectile_generation
         return data
 
-    # TODO: Implement special ability - Survival Mode (speed and reload buff)
     @classmethod
     def from_dict(cls, data):
         """

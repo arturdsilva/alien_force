@@ -32,9 +32,9 @@ class WavyEnemy(AbstractEnemy):
         projectile_image = pygame.transform.scale(projectile_image, (
             Constants.WAVY_ENEMY_PROJECTILE_WIDTH,
             Constants.WAVY_ENEMY_PROJECTILE_HEIGHT))
-        self._projectile_generator = ProjectileGenerator(200, 1,
-                                                         projectile_image,
-                                                         5, Sounds.LASER_SHOT)
+        self.__projectile_generator = ProjectileGenerator(200, 1,
+                                                          projectile_image,
+                                                          5, Sounds.LASER_SHOT)
 
     def _initialize_sprite(self, x, y):
         """
@@ -67,18 +67,11 @@ class WavyEnemy(AbstractEnemy):
             self.__angular_frequency * self.__timer
         )
 
-        if self._limit_bounds():
-            self._speed = -self._speed
-
-    def _update_behavior(self, dt, terrain=None):
-        """
-        Updates the timer for wavy movement.
-
-        :param dt: Time since last update
-        :param terrain: Terrain sprite group (not used by this enemy)
-        """
         self.__timer = (self.__timer + dt) % (
                 2 * np.pi / self.__angular_frequency)
+
+        if self._limit_bounds():
+            self._speed = -self._speed
 
     def _attack(self, dt, target, projectiles):
         """
@@ -89,7 +82,7 @@ class WavyEnemy(AbstractEnemy):
         :param projectiles: Projectiles sprite group.
         """
         origin = pygame.math.Vector2(self.rect.center)
-        self._projectile_generator.generate(origin, target, dt, projectiles)
+        self.__projectile_generator.generate(origin, target, dt, projectiles)
 
     def to_dict(self):
         """
