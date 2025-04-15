@@ -27,35 +27,35 @@ class AudioManager:
 
         # Sound effects
         self.sounds = {
+            "boom": pygame.mixer.Sound("assets/sounds/boom.wav"),
             "click": pygame.mixer.Sound("assets/sounds/retro_click.wav"),
-            "gun shot": pygame.mixer.Sound("assets/sounds/gun_shot.wav"),
-            "laser shot": pygame.mixer.Sound("assets/sounds/laser_shot.wav"),
-            "laser beam": pygame.mixer.Sound("assets/sounds/laser_beam.wav"),
-            "death": pygame.mixer.Sound("assets/sounds/death.wav"),
-            "hit": pygame.mixer.Sound("assets/sounds/hit.wav"),
             "critical shot": pygame.mixer.Sound(
                 "assets/sounds/critical_shot.wav"),
-            "boom": pygame.mixer.Sound("assets/sounds/boom.wav"),
-            "plasma": pygame.mixer.Sound("assets/sounds/plasma.wav"),
-            "stomp": pygame.mixer.Sound("assets/sounds/stomp.wav"),
+            "death": pygame.mixer.Sound("assets/sounds/death.wav"),
             "game over": pygame.mixer.Sound("assets/sounds/game_over.wav"),
-            "launcher": pygame.mixer.Sound("assets/sounds/launcher.wav")
+            "gun shot": pygame.mixer.Sound("assets/sounds/gun_shot.wav"),
+            "hit": pygame.mixer.Sound("assets/sounds/hit.wav"),
+            "launcher": pygame.mixer.Sound("assets/sounds/launcher.wav"),
+            "laser beam": pygame.mixer.Sound("assets/sounds/laser_beam.wav"),
+            "laser shot": pygame.mixer.Sound("assets/sounds/laser_shot.wav"),
+            "plasma": pygame.mixer.Sound("assets/sounds/plasma.wav"),
+            "stomp": pygame.mixer.Sound("assets/sounds/stomp.wav")
         }
 
         # Base volume for each sound
         self.base_volumes = {
+            "boom": 1,
             "click": 0.9,
-            "gun shot": 0.2,
-            "laser shot": 0.2,
-            "laser beam": 0.1,
-            "death": 0.1,
-            "hit": 0.5,
             "critical shot": 0.2,
-            "bomb": 1,
-            "plasma": 0.5,
-            "stomp": 0.3,
+            "death": 0.1,
             "game over": 0.3,
-            "launcher": 0.5
+            "gun shot": 0.2,
+            "hit": 0.5,
+            "launcher": 0.5,
+            "laser beam": 0.1,
+            "laser shot": 0.2,
+            "plasma": 0.5,
+            "stomp": 0.3
         }
 
         self.songs = {
