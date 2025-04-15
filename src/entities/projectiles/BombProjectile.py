@@ -75,8 +75,8 @@ class BombProjectile(AbstractProjectile):
         if player and self._explosion_rect.colliderect(player.rect):
             player.inflict_damage(self.damage)
 
-    def collide(self, player):
-        if not self.__exploded:
+    def compute_collision(self, player):
+        if not self.__exploded and pygame.sprite.collide_rect(self, player):
             self.__trigger_explosion(player)
 
     def draw(self, screen):

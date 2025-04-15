@@ -209,8 +209,7 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         :param enemies_projectiles: Enemies projectiles on screen.
         """
         for projectile in enemies_projectiles:
-            if pygame.sprite.collide_rect(self, projectile):
-                projectile.collide(self)
+            projectile.compute_collision(self)
 
     def inflict_damage(self, damage):
         """
