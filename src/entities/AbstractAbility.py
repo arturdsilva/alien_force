@@ -12,12 +12,13 @@ class AbstractAbility(pygame.sprite.Sprite, ABC):
         """
         Initializes a skill
 
+        :param agent: The ability user.
         """
         super().__init__()
         self._agent = agent
-        self._speed = Constants.ABILITY_SPEED
+        self._speed = Constants.ABILITY_DEFAULT_SPEED
         self._image = None
-        self._damage = Constants.ABILITY_DAMAGE
+        self._damage = Constants.ABILITY_DEFAULT_DAMAGE
         self._lifetime = None
 
     @property

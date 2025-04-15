@@ -11,6 +11,10 @@ class Cyborg(AbstractPlayer):
         super().__init__(x, y)
         self._initial_health = Constants.PLAYER_MAX_HEALTH
         self._health_points = self._initial_health
+        self._ability_cooldown = Constants.LASER_COOLDOWN
+        self._ability_duration = Constants.LASER_DURATION
+        self._ability_time_left = Constants.LASER_DURATION
+        self._has_durable_ability = True
 
         projectile_image = pygame.image.load(
             "assets/sprites/projectiles/AssaultRifleProjectile.png").convert_alpha()
@@ -106,8 +110,17 @@ class Cyborg(AbstractPlayer):
     def get_projectile_origin(self):
         return pygame.math.Vector2(self.weapon_rect.center)
 
-    def get_time_cooldown_ability(self):
-        return self._time_cooldown_ability
+    def get_ability_cooldown(self):
+        return self._ability_cooldown
+
+    def get_ability_downtime(self):
+        return self._ability_downtime
+
+    def get_ability_duration(self):
+        return self._ability_duration
+
+    def get_ability_time_left(self):
+        return self._ability_time_left
 
     def get_ready_ability(self):
         return self._ready_ability
@@ -122,8 +135,9 @@ class Cyborg(AbstractPlayer):
         :param dt: The duration of one iteration.
         """
         if not self._ready_ability:
-            self._time_cooldown_ability += dt
-            if self._time_cooldown_ability >= Constants.ABILITY_COOLDOWN:
+            self._ability_downtime += dt
+            if self._ability_downtime >= self._ability_cooldown:
+                self._ability_time_left = self._ability_duration
                 self._ready_ability = True
 
     def _compute_duration_ability(self, dt):
@@ -133,10 +147,9 @@ class Cyborg(AbstractPlayer):
         :param dt: The duration of one iteration.
         """
         if pygame.mouse.get_pressed()[2] and self._ready_ability:
-            self._time_duration_ability += dt
-            self._time_cooldown_ability -= dt
-            if self._time_duration_ability >= Constants.ABILITY_DURATION:
-                self._time_duration_ability = 0
+            self._ability_time_left -= dt
+            if self._ability_time_left <= 0:
+                self._ability_time_left = 0
                 self._ready_ability = False
 
     def to_dict(self):
@@ -157,6 +170,6 @@ class Cyborg(AbstractPlayer):
         instance._is_jumping = data["is_jumping"]
         instance._y_speed = data["y_speed"]
         instance._ready_ability = data["ready_ability"]
-        instance._time_cooldown_ability = data["time_cooldown_ability"]
+        instance._ability_downtime = data["time_cooldown_ability"]
         instance._time_duration_ability = data["time_duration_ability"]
         return instance

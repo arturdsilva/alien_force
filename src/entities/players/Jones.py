@@ -16,6 +16,7 @@ class Jones(AbstractPlayer):
         super().__init__(x, y)
         self._initial_health = int(Constants.PLAYER_MAX_HEALTH * 1.2)
         self._health_points = self._initial_health
+        self._ability_cooldown = Constants.MISSILE_COOLDOWN
 
         projectile_image = pygame.image.load(
             "assets/sprites/projectiles/GrenadeLauncherProjectile.png").convert_alpha()
@@ -105,8 +106,11 @@ class Jones(AbstractPlayer):
     def get_projectile_origin(self):
         return pygame.math.Vector2(self.weapon_rect.center)
 
-    def get_time_cooldown_ability(self):
-        return self._time_cooldown_ability
+    def get_ability_cooldown(self):
+        return self._ability_cooldown
+
+    def get_ability_downtime(self):
+        return self._ability_downtime
 
     def get_ready_ability(self):
         return self._ready_ability
@@ -116,14 +120,14 @@ class Jones(AbstractPlayer):
 
     def _compute_cooldown_ability(self, dt):
         if not self._ready_ability:
-            self._time_cooldown_ability += dt
-            if self._time_cooldown_ability >= Constants.ABILITY_COOLDOWN:
+            self._ability_downtime += dt
+            if self._ability_downtime >= self._ability_cooldown:
                 self._ready_ability = True
 
     def _compute_duration_ability(self, dt):
         if pygame.mouse.get_pressed()[2] and self._ready_ability:
             self._ready_ability = False
-            self._time_cooldown_ability = 0
+            self._ability_downtime = 0
 
     # TODO: Implement area damage for grenades
 
@@ -146,5 +150,5 @@ class Jones(AbstractPlayer):
         instance._y_speed = data["y_speed"]
         instance._ready_ability = data["ready_ability"]
         instance.time_cooldown_ability = data["time_cooldown_ability"]
-        instance._time_duration_ability = data["time_duration_ability"]
+        instance._ability_time_spent = data["time_duration_ability"]
         return instance

@@ -24,8 +24,9 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         self._initial_health = 0
         self._health_points = 0
         self._ready_ability = True
-        self._time_cooldown_ability = Constants.ABILITY_COOLDOWN
-        self._time_duration_ability = 0
+        self._ability_cooldown = None
+        self._ability_downtime = 0
+        self._has_durable_ability = False
         self._prev_mouse_pressed = False
         self._audio_manager = AudioManager()
         self.walk_frame_index = 0
@@ -40,15 +41,31 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         self._special_weapon_offset = pygame.Vector2(0, 0)
 
     @abstractmethod
-    def get_time_cooldown_ability(self):
+    def get_ability_cooldown(self):
         """
-        Returns the time cooldown ability of the player.
+        Returns the time it takes to recharge an ability.
         """
 
         pass
 
+    @abstractmethod
+    def get_ability_downtime(self):
+        """
+        Returns the time the ability has been recharging for.
+        """
+
+        pass
+
+    @property
+    def has_durable_ability(self):
+        return self._has_durable_ability
+
     def get_initial_health(self):
         return self._initial_health
+
+    @property
+    def health_points(self):
+        return self._health_points
 
     @abstractmethod
     def get_ready_ability(self):
@@ -232,6 +249,6 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
             "is_jumping": self._is_jumping,
             "y_speed": self._y_speed,
             "ready_ability": self._ready_ability,
-            "time_cooldown_ability": self._time_cooldown_ability,
-            "time_duration_ability": self._time_duration_ability
+            "time_cooldown_ability": self._ability_downtime,
+            "time_duration_ability": self._ability_time_spent
         }

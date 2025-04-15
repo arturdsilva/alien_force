@@ -19,8 +19,8 @@ class MissileBarrage(AbstractAbility):
         """
 
         super().__init__(agent)
-        self.__missile_speed = self._speed
-        self.__missile_damage = self._damage
+        self._speed = Constants.MISSILE_SPEED
+        self._damage = Constants.MISSILE_DAMAGE
         self.__num_missiles = Constants.MISSILE_SHOT_CAPACITY
         self.__angle_spread = Constants.ANGLE_SPREAD_MISSILE * (np.pi / 180)
         self.__explosion_radius = Constants.EXPLOSION_RADIUS
@@ -57,8 +57,8 @@ class MissileBarrage(AbstractAbility):
                 missile_angle -= 2 * np.pi
 
             velocity = pygame.math.Vector2()
-            velocity.x = self.__missile_speed * np.cos(missile_angle)
-            velocity.y = self.__missile_speed * np.sin(missile_angle)
+            velocity.x = self._speed * np.cos(missile_angle)
+            velocity.y = self._speed * np.sin(missile_angle)
             initial_position = pygame.math.Vector2(origin)
             self_collision = True
             temp_position = pygame.math.Vector2(initial_position)
@@ -71,11 +71,11 @@ class MissileBarrage(AbstractAbility):
                     missile_angle,
                     velocity,
                     self.__missile_image,
-                    self.__missile_damage,
+                    self._damage,
                     self.__lifetime_missile
                 )
                 missile.explosion_radius = self.__explosion_radius
-                missile.explosion_damage = self.__missile_damage * 0.8
+                missile.explosion_damage = self._damage * 0.8
                 missile.create_explosion = self.create_explosion
                 missile.has_exploded = False
 
@@ -131,7 +131,6 @@ class MissileBarrage(AbstractAbility):
             return explosion
         return None
 
-
 class LaserBeam(AbstractAbility):
     """
     Represents a continuous, fluid laser beam
@@ -144,6 +143,8 @@ class LaserBeam(AbstractAbility):
         :param agent: agent that fires the laser
         """
         super().__init__(agent)
+        self._damage = Constants.LASER_DAMAGE
+        self._speed = Constants.LASER_SPEED
         self.__width_laser = Constants.LASER_WIDTH
         self.__laser_color = Constants.COLOR_LASER
         self.__glow_color = Constants.GLOW_COLOR_LASER
@@ -281,7 +282,6 @@ class LaserBeam(AbstractAbility):
             return effect
         return None
 
-
 class CriticalShot(AbstractAbility):
     """
     Represents a sniper critical shot that is charged after a certain
@@ -295,8 +295,8 @@ class CriticalShot(AbstractAbility):
         :param agent: Agent that fires the critical shot
         """
         super().__init__(agent)
-        self.__shot_speed = self._speed * 3
-        self.__critical_damage = self._damage * 5
+        self._speed = Constants.CRITICAL_SHOT_SPEED
+        self._damage = Constants.CRITICAL_DAMAGE
         self.__lifetime = Constants.CRITICAL_SHOT_LIFETIME
         critical_shot_image = pygame.image.load(
             "assets/sprites/projectiles/SpecialPrecisionRifleProjectile.png").convert_alpha()
@@ -320,8 +320,8 @@ class CriticalShot(AbstractAbility):
                                          self._agent.rect.centery)
         angle = ProjectileGenerator.compute_shot_angle(origin, target)
         velocity = pygame.math.Vector2(
-            self.__shot_speed * math.cos(angle),
-            self.__shot_speed * math.sin(angle)
+            self._speed * math.cos(angle),
+            self._speed * math.sin(angle)
         )
         position = pygame.math.Vector2(origin)
         enhanced_image = self._apply_glow_effect(self.__critical_shot_image)
@@ -331,7 +331,7 @@ class CriticalShot(AbstractAbility):
             angle,
             velocity,
             enhanced_image,
-            self.__critical_damage,
+            self._damage,
             self.__lifetime
         )
 

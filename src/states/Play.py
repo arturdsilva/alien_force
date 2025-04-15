@@ -90,8 +90,6 @@ class Play(AbstractState):
                               self.__player, self.__terrain,
                               self.__speed_multiplier)
 
-        self.hud.update(dt)
-
         for enemy in self.__enemies.sprites():
             if enemy.health <= 0:
                 if isinstance(enemy, TankEnemy):

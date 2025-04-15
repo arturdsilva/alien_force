@@ -17,6 +17,7 @@ class Rain(AbstractPlayer):
         super().__init__(x, y)
         self._initial_health = int(Constants.PLAYER_MAX_HEALTH * 0.9)
         self._health_points = self._initial_health
+        self._ability_cooldown = Constants.CRITICAL_SHOT_COOLDOWN
 
         projectile_image = pygame.image.load(
             "assets/sprites/projectiles/PrecisionRifleProjectile.png").convert_alpha()
@@ -66,7 +67,7 @@ class Rain(AbstractPlayer):
         self.rect = self.image.get_rect()
         self.rect.centerx = x
         self.rect.bottom = y
-        self.time_projectile_generation = 0
+        self._charged_shots = Constants.NORMAL_SHOTS_REQUIRED
         self._charging_critical = Constants.NORMAL_SHOTS_REQUIRED
 
         weapon_width = 70
@@ -119,8 +120,11 @@ class Rain(AbstractPlayer):
     def get_projectile_origin(self):
         return pygame.math.Vector2(self.weapon_rect.center)
 
-    def get_time_cooldown_ability(self):
-        return self._time_cooldown_ability
+    def get_ability_cooldown(self):
+        return self._ability_cooldown
+
+    def get_ability_downtime(self):
+        return self._ability_downtime
 
     def get_ready_ability(self):
         return self._ready_ability
@@ -135,21 +139,23 @@ class Rain(AbstractPlayer):
             self.time_projectile_generation += dt
             if self.time_projectile_generation >= 1 / (
                     Constants.PROJECTILE_DEFAULT_FREQUENCY):
-                self._charging_critical += 1
+                self._charged_shots += 1
                 self.time_projectile_generation = 0
-                if self._charging_critical <= Constants.NORMAL_SHOTS_REQUIRED:
-                    self._time_cooldown_ability = self._charging_critical * Constants.ABILITY_COOLDOWN / Constants.NORMAL_SHOTS_REQUIRED
+                if self._charged_shots <= Constants.NORMAL_SHOTS_REQUIRED:
+                    self._ability_downtime = (self._charged_shots *
+                                              self._ability_cooldown /
+                                              Constants.NORMAL_SHOTS_REQUIRED)
 
-            if self._charging_critical >= Constants.NORMAL_SHOTS_REQUIRED:
+            if self._charged_shots >= Constants.NORMAL_SHOTS_REQUIRED:
                 self._ready_ability = True
 
     def _compute_duration_ability(self, dt):
         if pygame.mouse.get_pressed()[2]:
             self._ready_ability = False
-            if self._charging_critical >= Constants.NORMAL_SHOTS_REQUIRED:
-                self._charging_critical = 0
+            if self._charged_shots >= Constants.NORMAL_SHOTS_REQUIRED:
+                self._charged_shots = 0
                 self.time_projectile_generation = 0
-                self._time_cooldown_ability = 0
+                self._ability_downtime = 0
 
 
     # TODO: Implement special ability - Survival Mode (speed and reload buff)
@@ -159,7 +165,7 @@ class Rain(AbstractPlayer):
         Converts the player's state into a dictionary, including Rain-specific attributes.
         """
         data = super().to_dict()
-        data["charging_critical"] = self._charging_critical
+        data["charging_critical"] = self._charged_shots
         data["time_projectile_geration"] = self.time_projectile_generation
         return data
 
@@ -177,8 +183,8 @@ class Rain(AbstractPlayer):
         instance._y_speed = data["y_speed"]
         instance._ready_ability = data["ready_ability"]
         instance.time_cooldown_ability = data["time_cooldown_ability"]
-        instance._time_duration_ability = data["time_duration_ability"]
-        instance._charging_critical = data.get("charging_critical", 0)
+        instance._ability_time_spent = data["time_duration_ability"]
+        instance._charged_shots = data.get("charging_critical", 0)
         instance.time_projectile_generation = data.get(
             "time_projectile_geration", 0)
         return instance
