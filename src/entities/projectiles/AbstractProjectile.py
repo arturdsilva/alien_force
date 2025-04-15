@@ -38,6 +38,16 @@ class AbstractProjectile(pygame.sprite.Sprite, ABC):
         """
         pass
 
+    def collide(self, player):
+        """
+        Computes projectile collision and triggers subsequent behavior.
+
+        :param player: player the projectile is colliding with.
+        """
+
+        player.inflict_damage(self.damage)
+        self.kill()
+
     def _handle_bounds(self):
         """
         Removes projectiles that go out of screen bounds.

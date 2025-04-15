@@ -41,12 +41,6 @@ class NormalProjectile(AbstractProjectile):
             if hits:
                 self.kill()
 
-        # FixMe: already being computed in abstract player class
-        # Verifica colisão com o jogador apenas se não for um projétil do jogador
-        # if not self._is_player_projectile and player and pygame.sprite.collide_rect(self, player):
-        #     player._health_points -= self._damage
-        #     self.kill()
-
     def draw(self, screen):
         """
         Draws the projectile on screen.

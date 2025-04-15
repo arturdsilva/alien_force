@@ -286,17 +286,16 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         """
         for projectile in enemies_projectiles:
             if pygame.sprite.collide_rect(self, projectile):
+                projectile.collide(self)
 
-                # Bomb only causes collision damage if it hasn't exploded yet.
-                if hasattr(projectile, '_exploded'): #Todo: encapsulate
-                    if not projectile._exploded:
-                        self._audio_manager.play_sound(Sounds.HIT)
-                        self._health_points -= projectile.damage
-                        projectile._explode(None, self)
-                else:
-                    self._audio_manager.play_sound(Sounds.HIT)
-                    self._health_points -= projectile.damage
-                    projectile.kill()
+    def inflict_damage(self, damage):
+        """
+        inflicts damage on the player
+
+        :param damage: The damage to be inflicted on the player.
+        """
+        self._health_points -= damage
+        self._audio_manager.play_sound(Sounds.HIT)
 
     def to_dict(self):
         """
