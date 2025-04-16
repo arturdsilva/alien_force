@@ -1,8 +1,8 @@
-from src.entities.projectiles.ProjectileGenerator import ProjectileGenerator
 import pygame
 
 from config.Constants import Constants, Sounds
 from src.entities.enemies.AbstractEnemy import AbstractEnemy
+from src.entities.projectiles.ProjectileGenerator import ProjectileGenerator
 
 
 class LinearEnemy(AbstractEnemy):
@@ -20,14 +20,18 @@ class LinearEnemy(AbstractEnemy):
         super().__init__(x=x, y=y)
         self._health_points = Constants.LINEAR_ENEMY_MAX_HEALTH
         self._speed = Constants.LINEAR_ENEMY_SPEED
-        projectile_image = pygame.image.load("assets/sprites/projectiles/LinearEnemyProjectile.png").convert_alpha()
+        projectile_image = pygame.image.load(
+            "assets/sprites/projectiles/LinearEnemyProjectile.png").convert_alpha()
         projectile_image = pygame.transform.scale(projectile_image, (
             Constants.LINEAR_ENEMY_PROJECTILE_WIDTH,
             Constants.LINEAR_ENEMY_PROJECTILE_HEIGHT))
 
-        self.__projectile_generator = ProjectileGenerator(150, 1,
-                                                          projectile_image,
-                                                          10, Sounds.PLASMA)
+        self.__projectile_generator = ProjectileGenerator(
+            Constants.LINEAR_ENEMY_PROJECTILE_SPEED,
+            Constants.LINEAR_ENEMY_FIRE_RATE,
+            projectile_image,
+            Constants.LINEAR_ENEMY_DAMAGE,
+            Sounds.PLASMA)
         self._update_sprite(self._speed)
 
     def _initialize_sprite(self, x, y):

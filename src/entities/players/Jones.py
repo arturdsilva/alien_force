@@ -14,16 +14,16 @@ class Jones(AbstractPlayer):
     def __init__(self, x=Constants.WIDTH / 2, y=Constants.HEIGHT / 2):
 
         super().__init__(x, y)
-        self._initial_health = int(Constants.PLAYER_MAX_HEALTH * 1.2)
+        self._initial_health = int(Constants.JONES_MAX_HEALTH)
         self._health_points = self._initial_health
         self._ability_cooldown = Constants.MISSILE_COOLDOWN
 
         projectile_image = pygame.image.load(
             "assets/sprites/projectiles/GrenadeLauncherProjectile.png").convert_alpha()
         projectile_image = pygame.transform.scale(projectile_image, (15, 15))
-        projectile_speed = Constants.PROJECTILE_DEFAULT_SPEED * 0.7
-        projectile_frequency = Constants.PROJECTILE_DEFAULT_FREQUENCY * 0.5
-        projectile_damage = int(Constants.PROJECTILE_DEFAULT_DAMAGE * 2)
+        projectile_speed = Constants.JONES_PROJECTILE_SPEED
+        projectile_frequency = Constants.JONES_PROJECTILE_FREQUENCY
+        projectile_damage = int(Constants.JONES_PROJECTILE_DAMAGE)
         projectile_sound = Sounds.GUN_SHOT
 
         self._projectile_generator = ProjectileGenerator(projectile_speed,

@@ -8,7 +8,7 @@ class Cyborg(AbstractPlayer):
     def __init__(self, x=Constants.WIDTH / 2, y=Constants.HEIGHT / 2):
 
         super().__init__(x, y)
-        self._initial_health = Constants.PLAYER_MAX_HEALTH
+        self._initial_health = int(Constants.CYBORG_MAX_HEALTH)
         self._health_points = self._initial_health
         self._ability_cooldown = Constants.LASER_COOLDOWN
         self._time_duration_ability = Constants.LASER_DURATION
@@ -18,9 +18,9 @@ class Cyborg(AbstractPlayer):
         projectile_image = pygame.image.load(
             "assets/sprites/projectiles/AssaultRifleProjectile.png").convert_alpha()
         projectile_image = pygame.transform.scale(projectile_image, (10, 10))
-        projectile_speed = Constants.PROJECTILE_DEFAULT_SPEED * 1.5
-        projectile_frequency = Constants.PROJECTILE_DEFAULT_FREQUENCY * 1.5
-        projectile_damage = int(Constants.PROJECTILE_DEFAULT_DAMAGE * 1.2)
+        projectile_speed = Constants.CYBORG_PROJECTILE_SPEED
+        projectile_frequency = Constants.CYBORG_PROJECTILE_FREQUENCY
+        projectile_damage = int(Constants.CYBORG_PROJECTILE_DAMAGE)
         projectile_sound = Sounds.GUN_SHOT
 
         self._projectile_generator = ProjectileGenerator(projectile_speed,
