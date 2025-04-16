@@ -14,16 +14,16 @@ class Rain(AbstractPlayer):
 
     def __init__(self, x=Constants.WIDTH / 2, y=Constants.HEIGHT / 2):
         super().__init__(x, y)
-        self._initial_health = Constants.RAIN_MAX_HEALTH
+        self._initial_health = int(Constants.RAIN_MAX_HEALTH)
         self._health_points = self._initial_health
         self._ability_cooldown = Constants.CRITICAL_SHOT_COOLDOWN
 
         projectile_image = pygame.image.load(
             "assets/sprites/projectiles/PrecisionRifleProjectile.png").convert_alpha()
         projectile_image = pygame.transform.scale(projectile_image, (15, 15))
-        projectile_speed = Constants.PROJECTILE_DEFAULT_SPEED * 2.0
-        projectile_frequency = Constants.PROJECTILE_DEFAULT_FREQUENCY * 0.5
-        projectile_damage = int(Constants.PROJECTILE_DEFAULT_DAMAGE * 1.8)
+        projectile_speed = Constants.RAIN_PROJECTILE_SPEED
+        projectile_frequency = Constants.RAIN_PROJECTILE_FREQUENCY
+        projectile_damage = int(Constants.RAIN_PROJECTILE_DAMAGE)
         projectile_sound = Sounds.GUN_SHOT
 
         self._projectile_generator = ProjectileGenerator(projectile_speed,
@@ -106,7 +106,7 @@ class Rain(AbstractPlayer):
 
             self.time_projectile_generation += dt
             if self.time_projectile_generation >= 1 / (
-                    Constants.PROJECTILE_DEFAULT_FREQUENCY):
+                    Constants.RAIN_PROJECTILE_FREQUENCY):
                 self._charged_shots += 1
                 self.time_projectile_generation = 0
                 if self._charged_shots <= Constants.NORMAL_SHOTS_REQUIRED:

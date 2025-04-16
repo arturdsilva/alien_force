@@ -68,7 +68,7 @@ class TankEnemy(AbstractEnemy):
         """
         self.__time_since_last_shot += dt
 
-        if self.__time_since_last_shot >= Constants.TANK_ENEMY_SHOOT_FREQUENCY:
+        if self.__time_since_last_shot >= Constants.TANK_ENEMY_FIRE_RATE:
             self.__time_since_last_shot = 0
 
             bomb_image = pygame.image.load("assets/sprites/projectiles/TankEnemyProjectile.png").convert_alpha()
