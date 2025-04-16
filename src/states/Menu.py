@@ -20,36 +20,36 @@ class Menu(AbstractState):
         :param game: The main game instance.
         """
         super().__init__(game)
-        self.bg_image = pygame.image.load("assets/sprites/Menu.png").convert()
-        self.bg_image = pygame.transform.scale(self.bg_image, (
+        self.__bg_image = pygame.image.load("assets/sprites/Menu.png").convert()
+        self.__bg_image = pygame.transform.scale(self.__bg_image, (
             Constants.WIDTH, Constants.HEIGHT))
-        self.font = pygame.font.Font(None, 74)
-        self.title = self.font.render('Alien Force', True,
-                                      pygame.Color('white'))
-        self.title_rect = self.title.get_rect(
+        self.__font = pygame.font.Font(None, 74)
+        self.__title = self.__font.render('Alien Force', True,
+                                          pygame.Color('white'))
+        self.__title_rect = self.__title.get_rect(
             center=(Constants.WIDTH / 2, Constants.HEIGHT / 4))
 
-        self.font_options = pygame.font.Font(None, 54)
+        self.__font_options = pygame.font.Font(None, 54)
 
         self.__audio_manager = AudioManager()
 
-        self.options = [
+        self.__options = [
             {'text': 'Novo Jogo', 'action':
-                self.start_from_beginning},
+                self.__start_from_beginning},
             {'text': 'Continuar Jogo Salvo',
-             'action': self.start_from_save},
+             'action': self.__start_from_save},
         ]
 
-        self.options_surfaces = []
-        self.options_rects = []
+        self.__options_surfaces = []
+        self.__options_rects = []
 
-        for i, option in enumerate(self.options):
-            surface = self.font_options.render(option['text'], True,
-                                               pygame.Color('white'))
+        for i, option in enumerate(self.__options):
+            surface = self.__font_options.render(option['text'], True,
+                                                 pygame.Color('white'))
             rect = surface.get_rect(
                 center=(Constants.WIDTH / 2, Constants.HEIGHT / 2 + i * 60))
-            self.options_surfaces.append(surface)
-            self.options_rects.append(rect)
+            self.__options_surfaces.append(surface)
+            self.__options_rects.append(rect)
 
     def update(self, dt):
         """
@@ -65,9 +65,9 @@ class Menu(AbstractState):
 
         :param screen: The screen surface to draw on.
         """
-        screen.blit(self.bg_image, (0, 0))
-        screen.blit(self.title, self.title_rect)
-        for surface, rect in zip(self.options_surfaces, self.options_rects):
+        screen.blit(self.__bg_image, (0, 0))
+        screen.blit(self.__title, self.__title_rect)
+        for surface, rect in zip(self.__options_surfaces, self.__options_rects):
             screen.blit(surface, rect)
 
     def handle_events(self, events):
@@ -78,31 +78,31 @@ class Menu(AbstractState):
         """
         for event in events:
             if event.type == pygame.QUIT:
-                self.is_running = False
+                self._is_running = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    self.next_state = CharacterSelect(self.game)
+                    self._next_state = CharacterSelect(self._game)
                     self.__audio_manager.play_sound(Sounds.CLICK)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:  # Left mouse button
-                    for i, rect in enumerate(self.options_rects):
+                    for i, rect in enumerate(self.__options_rects):
                         if rect.collidepoint(event.pos):
-                            self.options[i]['action']()
+                            self.__options[i]['action']()
                             self.__audio_manager.play_sound(Sounds.CLICK)
 
-    def start_from_beginning(self):
-        self.load_from_save = False
-        self.next_state = CharacterSelect(self.game)
+    def __start_from_beginning(self):
+        self._load_from_save = False
+        self._next_state = CharacterSelect(self._game)
 
-    def start_from_save(self):
-        self.load_from_save = True
+    def __start_from_save(self):
+        self._load_from_save = True
         try:
             with open("saves/save_game.json", "r") as f:
                 data = json.load(f)
         except FileNotFoundError:
             print("Error: save file not found! Starting new game")
-            self.start_from_beginning()
+            self.__start_from_beginning()
             return
         player_name = "Jones"  # Default name
         from src.states.Play import Play
-        self.next_state = Play.from_dict(data, self.game, player_name)
+        self._next_state = Play.from_dict(data, self._game, player_name)

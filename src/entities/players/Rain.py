@@ -2,7 +2,7 @@ import pygame
 from config.Constants import Constants, Sounds
 from src.entities.abilities.CriticalShot import CriticalShot
 from src.entities.players.AbstractPlayer import AbstractPlayer
-import math
+from src.entities.projectiles.ProjectileGenerator import ProjectileGenerator
 
 
 class Rain(AbstractPlayer):
@@ -14,12 +14,31 @@ class Rain(AbstractPlayer):
 
     def __init__(self, x=Constants.WIDTH / 2, y=Constants.HEIGHT / 2):
         super().__init__(x, y)
-        old_center = self.rect.center
+        self._initial_health = int(Constants.RAIN_MAX_HEALTH)
+        self._health_points = self._initial_health
+        self._ability_cooldown = Constants.CRITICAL_SHOT_COOLDOWN
 
-        self.sprite_idle = pygame.image.load(
+        projectile_image = pygame.image.load(
+            "assets/sprites/projectiles/PrecisionRifleProjectile.png").convert_alpha()
+        projectile_image = pygame.transform.scale(projectile_image, (15, 15))
+        projectile_speed = Constants.RAIN_PROJECTILE_SPEED
+        projectile_frequency = Constants.RAIN_PROJECTILE_FREQUENCY
+        projectile_damage = int(Constants.RAIN_PROJECTILE_DAMAGE)
+        projectile_sound = Sounds.GUN_SHOT
+
+        self._projectile_generator = ProjectileGenerator(projectile_speed,
+                                                         projectile_frequency,
+                                                         projectile_image,
+                                                         projectile_damage,
+                                                         projectile_sound,
+                                                         is_player_projectile=True
+                                                         )
+        self.time_projectile_generation = 0
+
+        self._sprite_idle = pygame.image.load(
             "assets/sprites/players/RainIdle.png").convert_alpha()
-        self.sprite_idle = pygame.transform.scale(
-            self.sprite_idle,
+        self._sprite_idle = pygame.transform.scale(
+            self._sprite_idle,
             (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT)
         )
 
@@ -34,99 +53,49 @@ class Rain(AbstractPlayer):
         frame2 = walk_sheet.subsurface((Constants.PLAYER_WIDTH, 0,
                                         Constants.PLAYER_WIDTH,
                                         Constants.PLAYER_HEIGHT)).copy()
-        self.sprite_walk_frames = [frame1, frame2]
+        self._sprite_walk_frames = [frame1, frame2]
 
-        self.sprite_jump = pygame.image.load(
+        self._sprite_jump = pygame.image.load(
             "assets/sprites/players/RainJump.png").convert_alpha()
-        self.sprite_jump = pygame.transform.scale(
-            self.sprite_jump,
+        self._sprite_jump = pygame.transform.scale(
+            self._sprite_jump,
             (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT)
         )
 
-        self.image = self.sprite_idle
+        self.image = self._sprite_idle
         self.rect = self.image.get_rect()
-        self.rect.center = old_center
-        self.time_projectile_generation = 0
+        self.rect.centerx = x
+        self.rect.bottom = y
+        self._charged_shots = Constants.NORMAL_SHOTS_REQUIRED
         self._charging_critical = Constants.NORMAL_SHOTS_REQUIRED
 
         weapon_width = 70
         weapon_height = 70
 
-        self.weapon_original = pygame.image.load(
+        self._weapon_original_image = pygame.image.load(
             "assets/sprites/weapons/PrecisionRifle.png").convert_alpha()
-        self.weapon_original = pygame.transform.scale(self.weapon_original, (
+        self._weapon_original_image = pygame.transform.scale(self._weapon_original_image, (
         weapon_width, weapon_height))
 
-        self.special_weapon_original = pygame.image.load(
+        self._special_weapon_original_image = pygame.image.load(
             "assets/sprites/weapons/SpecialPrecisionRifle.png").convert_alpha()
-        self.special_weapon_original = pygame.transform.scale(
-            self.special_weapon_original, (weapon_width, weapon_height))
+        self._special_weapon_original_image = pygame.transform.scale(
+            self._special_weapon_original_image, (weapon_width, weapon_height))
 
-        self.current_weapon_original = self.weapon_original.copy()
-        self.weapon_image = self.current_weapon_original.copy()  # inicia sem rotação
-        self.weapon_rect = self.weapon_image.get_rect(center=self.rect.center)
+        self._current_weapon_original_image = self._weapon_original_image.copy()
+        self._weapon_image = self._current_weapon_original_image.copy()
+        self._weapon_rect = self._weapon_image.get_rect(center=self.rect.center)
 
     def update(self, keys, terrain, dt, *args, **kwargs):
         self.update_weapon()
         super().update(keys, terrain, dt, *args, **kwargs)
 
-    def update_weapon(self):
-        if pygame.mouse.get_pressed()[2]:
-            self.current_weapon_original = self.special_weapon_original.copy()
-            offset_x, offset_y = 50, 0
-        else:
-            self.current_weapon_original = self.weapon_original.copy()
-            offset_x, offset_y = 50, 0
-
-        mouse_x, mouse_y = pygame.mouse.get_pos()
-        dx = mouse_x - self.rect.centerx
-        dy = mouse_y - self.rect.centery
-        angle = math.degrees(math.atan2(-dy, dx))
-        self.weapon_angle = angle
-        self.weapon_image = pygame.transform.rotate(
-            self.current_weapon_original, angle)
-        new_center = (
-        self.rect.centerx + offset_x, self.rect.centery + offset_y)
-        self.weapon_rect = self.weapon_image.get_rect(center=new_center)
-
     def draw(self, screen):
         screen.blit(self.image, self.rect)
-        screen.blit(self.weapon_image, self.weapon_rect)
+        screen.blit(self._weapon_image, self._weapon_rect)
 
     def get_projectile_origin(self):
-        return pygame.math.Vector2(self.weapon_rect.center)
-
-    def get_player_color(self):
-        return pygame.Color('darkgreen')
-
-    def get_initial_health(self):
-        return int(Constants.PLAYER_MAX_HEALTH * 0.9)
-
-    def get_projectile_color(self):
-        return pygame.Color('lime')
-
-    def get_projectile_image(self):
-        image = pygame.image.load(
-            "assets/sprites/projectiles/PrecisionRifleProjectile.png").convert_alpha()
-        return pygame.transform.scale(image, (15, 15))
-
-    def get_projectile_speed(self):
-        return Constants.PROJECTILE_DEFAULT_SPEED * 2.0
-
-    def get_projectile_frequency(self):
-        return Constants.PROJECTILE_DEFAULT_FREQUENCY * 0.5
-
-    def get_projectile_damage(self):
-        return int(Constants.PROJECTILE_DEFAULT_DAMAGE * 1.8)
-
-    def get_projectile_sound(self):
-        return Sounds.GUN_SHOT
-
-    def get_time_cooldown_ability(self):
-        return self._time_cooldown_ability
-
-    def get_ready_ability(self):
-        return self._ready_ability
+        return pygame.math.Vector2(self._weapon_rect.center)
 
     def choose_ability(self):
         return CriticalShot(self)
@@ -137,36 +106,35 @@ class Rain(AbstractPlayer):
 
             self.time_projectile_generation += dt
             if self.time_projectile_generation >= 1 / (
-                    Constants.PROJECTILE_DEFAULT_FREQUENCY):
-                self._charging_critical += 1
+                    Constants.RAIN_PROJECTILE_FREQUENCY):
+                self._charged_shots += 1
                 self.time_projectile_generation = 0
-                if self._charging_critical <= Constants.NORMAL_SHOTS_REQUIRED:
-                    self._time_cooldown_ability = self._charging_critical * Constants.ABILITY_COOLDOWN / Constants.NORMAL_SHOTS_REQUIRED
+                if self._charged_shots <= Constants.NORMAL_SHOTS_REQUIRED:
+                    self._ability_downtime = (self._charged_shots *
+                                              self._ability_cooldown /
+                                              Constants.NORMAL_SHOTS_REQUIRED)
 
-            if self._charging_critical >= Constants.NORMAL_SHOTS_REQUIRED:
+            if self._charged_shots >= Constants.NORMAL_SHOTS_REQUIRED:
                 self._ready_ability = True
+                self._audio_manager.play_sound(Sounds.RECHARGED)
 
     def _compute_duration_ability(self, dt):
         if pygame.mouse.get_pressed()[2]:
             self._ready_ability = False
-            if self._charging_critical >= Constants.NORMAL_SHOTS_REQUIRED:
-                self._charging_critical = 0
+            if self._charged_shots >= Constants.NORMAL_SHOTS_REQUIRED:
+                self._charged_shots = 0
                 self.time_projectile_generation = 0
-                self._time_cooldown_ability = 0
-
-
-    # TODO: Implement special ability - Survival Mode (speed and reload buff)
+                self._ability_downtime = 0
 
     def to_dict(self):
         """
         Converts the player's state into a dictionary, including Rain-specific attributes.
         """
         data = super().to_dict()
-        data["charging_critical"] = self._charging_critical
+        data["charging_critical"] = self._charged_shots
         data["time_projectile_geration"] = self.time_projectile_generation
         return data
 
-    # TODO: Implement special ability - Survival Mode (speed and reload buff)
     @classmethod
     def from_dict(cls, data):
         """
@@ -180,8 +148,7 @@ class Rain(AbstractPlayer):
         instance._y_speed = data["y_speed"]
         instance._ready_ability = data["ready_ability"]
         instance.time_cooldown_ability = data["time_cooldown_ability"]
-        instance._time_duration_ability = data["time_duration_ability"]
-        instance._charging_critical = data.get("charging_critical", 0)
+        instance._charged_shots = data.get("charging_critical", 0)
         instance.time_projectile_generation = data.get(
             "time_projectile_geration", 0)
         return instance

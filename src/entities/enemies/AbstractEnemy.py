@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 
-from config.Constants import Constants, Sounds
-from src.utils.AudioManager import AudioManager
+from config.Constants import Constants
 import pygame
 
 
@@ -24,7 +23,6 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
         self._speed = Constants.ENEMY_SPEED
         self._health_points = None
         self._initialize_sprite(x, y)
-        self._audio_manager = AudioManager()
 
     @abstractmethod
     def _initialize_sprite(self, x, y):
@@ -33,10 +31,10 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
     def update(self, dt, player_projectiles, ability_projectiles,
                enemies_projectiles, player,
                terrain=None, speed_multiplier=1.0):
-
         """
         Updates the enemy state.
 
+        :param ability_projectiles: projectiles originated from abilities
         :param dt: Time since last update
         :param player_projectiles: Player projectiles on screen
         :param enemies_projectiles: Enemies projectiles on screen.
@@ -49,7 +47,6 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
         self._move(dt, terrain)
         self._limit_bounds()
         self._compute_damage(player_projectiles, ability_projectiles)
-        self._update_behavior(dt, terrain)
         self._update_sprite(self._speed)
 
         if player:
@@ -68,17 +65,6 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
         :param terrain: Terrain sprite group (optional)
         """
 
-        pass
-
-    @abstractmethod
-    def _update_behavior(self, dt, terrain=None):
-        """
-        Abstract method to update specific enemy behaviors.
-        Must be implemented by each child class.
-
-        :param dt: Time since last update
-        :param terrain: Terrain sprite group (optional)
-        """
         pass
 
     def _update_sprite(self, velocity_x):

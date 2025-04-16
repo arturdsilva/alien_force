@@ -16,8 +16,9 @@ class Block(pygame.sprite.Sprite):
         :param height: Height of the block
         """
         super().__init__()
-        self.texture = pygame.image.load("assets/sprites/Tile.png").convert_alpha()
-        self.image = pygame.transform.scale(self.texture, (math.ceil(width), math.ceil(height)))
+        self.__texture = pygame.image.load(
+            "assets/sprites/Tile.png").convert_alpha()
+        self.image = pygame.transform.scale(self.__texture, (math.ceil(width), math.ceil(height)))
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
 

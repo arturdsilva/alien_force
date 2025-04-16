@@ -1,11 +1,10 @@
 import numpy as np
 import pygame
 
-from config.Constants import Colors
-from config.Constants import Constants
-from src.entities.Projectile import ProjectileGenerator
+from config.Constants import Constants, Colors, Sounds
 from src.entities.abilities.AbstractAbility import AbstractAbility
-from src.entities.projectiles.ProjectileAbility import ProjectileAbility
+from src.entities.projectiles.AbilityProjectile import ProjectileAbility
+from src.entities.projectiles.ProjectileGenerator import ProjectileGenerator
 
 
 class LaserBeam(AbstractAbility):
@@ -20,10 +19,12 @@ class LaserBeam(AbstractAbility):
         :param agent: agent that fires the laser
         """
         super().__init__(agent)
+        self._damage = Constants.LASER_DAMAGE
+        self._speed = Constants.LASER_SPEED
+        self._lifetime = Constants.LASER_LIFETIME
         self.__width_laser = Constants.LASER_WIDTH
         self.__laser_color = Constants.COLOR_LASER
         self.__glow_color = Constants.GLOW_COLOR_LASER
-        self.__lifetime = Constants.LASER_LIFETIME
 
     def generate(self, target, dt, beams):
         """
@@ -42,11 +43,12 @@ class LaserBeam(AbstractAbility):
         direction = pygame.math.Vector2(np.cos(angle), np.sin(angle))
         safe_distance = self._agent.rect.width / 2
         beam_start = origin + direction * safe_distance
-        self._create_laser_segments(beam_start, direction, beams)
+        self.__create_laser_segments(beam_start, direction, beams)
+        self._audio_manager.play_sound(Sounds.LASER_BEAM)
 
         return True
 
-    def _create_laser_segments(self, start_pos, direction, beams):
+    def __create_laser_segments(self, start_pos, direction, beams):
         """
         Creates laser segments with a fluid effect
 
@@ -69,7 +71,7 @@ class LaserBeam(AbstractAbility):
             wave_offset = np.sin(time_factor + i * 0.2) * (
                     self.__width_laser * 0.2)
             segment_pos = segment_start + perpendicular * wave_offset
-            segment_surface = self._create_segment_surface(segment_length)
+            segment_surface = self.__create_segment_surface(segment_length)
             angle = np.arctan2(direction.y, direction.x)
 
             laser_segment = ProjectileAbility(
@@ -78,7 +80,7 @@ class LaserBeam(AbstractAbility):
                 direction,
                 segment_surface,
                 self._damage / num_segments,
-                self.__lifetime
+                self._lifetime
             )
             laser_segment.explosion_radius = Constants.EXPLOSION_RADIUS
             laser_segment.explosion_damage = 0
@@ -87,7 +89,7 @@ class LaserBeam(AbstractAbility):
 
             beams.add(laser_segment)
 
-    def _create_segment_surface(self, length):
+    def __create_segment_surface(self, length):
         """
         Creates the visual surface for a laser segment
 
@@ -120,7 +122,7 @@ class LaserBeam(AbstractAbility):
 
         return surface
 
-    def _draw_hit_effect(self, radius):
+    def __draw_hit_effect(self, radius):
         """
         Creates an explosion effect
 
@@ -141,7 +143,7 @@ class LaserBeam(AbstractAbility):
         :param ability_projectiles: Group to add the explosion effect to
         """
         if not laser.has_hit:
-            image_explosion = self._draw_hit_effect(laser.explosion_radius)
+            image_explosion = self.__draw_hit_effect(laser.explosion_radius)
 
             effect = ProjectileAbility(
                 pygame.math.Vector2(laser.rect.center),

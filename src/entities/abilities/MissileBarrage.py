@@ -1,11 +1,10 @@
 import numpy as np
 import pygame
 
-from config.Constants import Colors
-from config.Constants import Constants
-from src.entities.Projectile import ProjectileGenerator
+from config.Constants import Constants, Colors, Sounds
 from src.entities.abilities.AbstractAbility import AbstractAbility
-from src.entities.projectiles.ProjectileAbility import ProjectileAbility
+from src.entities.projectiles.AbilityProjectile import ProjectileAbility
+from src.entities.projectiles.ProjectileGenerator import ProjectileGenerator
 
 
 class MissileBarrage(AbstractAbility):
@@ -21,17 +20,17 @@ class MissileBarrage(AbstractAbility):
         """
 
         super().__init__(agent)
-        self.__missile_speed = self._speed
-        self.__missile_damage = self._damage
+        self._speed = Constants.MISSILE_SPEED
+        self._damage = Constants.MISSILE_DAMAGE
+        self._lifetime = Constants.MISSILE_LIFETIME
         self.__num_missiles = Constants.MISSILE_SHOT_CAPACITY
         self.__angle_spread = Constants.ANGLE_SPREAD_MISSILE * (np.pi / 180)
         self.__explosion_radius = Constants.EXPLOSION_RADIUS
-        self.__lifetime_missile = Constants.MISSILE_LIFETIME
         missile_image = pygame.image.load(
             "assets/sprites/projectiles/MissileLauncherProjectile.png").convert_alpha()
         missile_image = pygame.transform.scale(
             missile_image, (30, 30))
-        self.__missile_image = missile_image
+        self._image = missile_image
 
     def generate(self, missile_target, dt, missiles):
         """
@@ -60,8 +59,8 @@ class MissileBarrage(AbstractAbility):
                 missile_angle -= 2 * np.pi
 
             velocity = pygame.math.Vector2()
-            velocity.x = self.__missile_speed * np.cos(missile_angle)
-            velocity.y = self.__missile_speed * np.sin(missile_angle)
+            velocity.x = self._speed * np.cos(missile_angle)
+            velocity.y = self._speed * np.sin(missile_angle)
             initial_position = pygame.math.Vector2(origin)
             self_collision = True
             temp_position = pygame.math.Vector2(initial_position)
@@ -73,12 +72,12 @@ class MissileBarrage(AbstractAbility):
                     pygame.math.Vector2(temp_position),
                     missile_angle,
                     velocity,
-                    self.__missile_image,
-                    self.__missile_damage,
-                    self.__lifetime_missile
+                    self._image,
+                    self._damage,
+                    self._lifetime
                 )
                 missile.explosion_radius = self.__explosion_radius
-                missile.explosion_damage = self.__missile_damage * 0.8
+                missile.explosion_damage = self._damage * 0.8
                 missile.create_explosion = self.create_explosion
                 missile.has_exploded = False
 
@@ -88,9 +87,11 @@ class MissileBarrage(AbstractAbility):
                     missiles.add(missile)
                     self_collision = False
 
+        self._audio_manager.play_sound(Sounds.LAUNCHER)
+
         return True
 
-    def _draw_explosion(self, radius, color):
+    def __draw_explosion(self, radius, color):
         """
         Creates an explosion effect with area of effect damage
 
@@ -117,8 +118,8 @@ class MissileBarrage(AbstractAbility):
         :param ability_projectiles: Group to add the explosion effect to
         """
         if not missile.has_exploded:
-            image_explosion = self._draw_explosion(missile.explosion_radius,
-                                                   Constants.COLOR_EXPLOSION)
+            image_explosion = self.__draw_explosion(missile.explosion_radius,
+                                                    Constants.COLOR_EXPLOSION)
 
             explosion = ProjectileAbility(
                 pygame.math.Vector2(missile.rect.center),
@@ -130,6 +131,7 @@ class MissileBarrage(AbstractAbility):
             )
             explosion.radius = missile.explosion_radius
             ability_projectiles.add(explosion)
+            self._audio_manager.play_sound(Sounds.BOOM)
             missile.has_exploded = True
             return explosion
         return None

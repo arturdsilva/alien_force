@@ -7,7 +7,7 @@ class NormalProjectile(AbstractProjectile):
     Normal projectile that moves in a straight line and causes damage upon hitting the target.
     """
     
-    def __init__(self, position, velocity, image, damage, is_player_projectile=False):
+    def __init__(self, position, velocity, image, damage):
         """
         Initializes a normal projectile.
 
@@ -15,10 +15,8 @@ class NormalProjectile(AbstractProjectile):
         :param velocity: Velocity vector of the projectile
         :param image: Projectile image
         :param damage: Damage caused by the projectile
-        :param is_player_projectile: Indicates if it's a player projectile
         """
         super().__init__(position, velocity, image, damage)
-        self._is_player_projectile = is_player_projectile
 
     def update(self, dt, terrain=None, player=None):
         """
@@ -29,23 +27,14 @@ class NormalProjectile(AbstractProjectile):
         :param player: Player sprite (optional)
         """
         # Update projectile position
-        self._position += self._velocity * dt
-        self.rect.center = self._position
-        
-        # Verifica se saiu dos limites da tela
+        self._move(dt)
         self._handle_bounds()
         
-        # Verifica colisão com o terreno
+        # Check terrain collision
         if terrain:
             hits = pygame.sprite.spritecollide(self, terrain, False)
             if hits:
                 self.kill()
-
-        # FixMe: already being computed in abstract player class
-        # Verifica colisão com o jogador apenas se não for um projétil do jogador
-        # if not self._is_player_projectile and player and pygame.sprite.collide_rect(self, player):
-        #     player._health_points -= self._damage
-        #     self.kill()
 
     def draw(self, screen):
         """

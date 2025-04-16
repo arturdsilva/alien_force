@@ -1,12 +1,8 @@
 from abc import ABC, abstractmethod
 
-
 from config.Constants import Constants, Sounds
-from src.entities.projectiles.ProjectileGenerator import ProjectileGenerator
-from src.entities.projectiles.AbstractProjectile import AbstractProjectile
 from src.utils.AudioManager import AudioManager
 import pygame
-
 
 
 class AbstractPlayer(pygame.sprite.Sprite, ABC):
@@ -23,113 +19,86 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         """
 
         super().__init__()
-        self.image = pygame.Surface(
-            (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT))
-        self.image.fill(self.get_player_color())
-        self.rect = self.image.get_rect()
-        self.rect.centerx = x
-        self.rect.bottom = y
+        self.image = None
+        self.rect = None
         self._is_jumping = False
         self._y_speed = 0
-        self._health_points = self.get_initial_health()
+        self._initial_health = 0
+        self._health_points = 0
         self._ready_ability = True
-        self._time_cooldown_ability = Constants.ABILITY_COOLDOWN
-        self._time_duration_ability = 0
+        self._ability_cooldown = None
+        self._ability_downtime = 0
+        self._has_durable_ability = False
         self._prev_mouse_pressed = False
         self._audio_manager = AudioManager()
-        self.walk_frame_index = 0
-        self.walk_frame_timer = 0
-        self.walk_frame_duration = 0.3
         self._facing_left = False
+        self._sprite_idle = None
+        self._sprite_jump = None
+        self._sprite_walk_frames = None
+        self._projectile_generator = None
+        self._weapon_original_image = None
+        self._special_weapon_original_image = None
+        self._current_weapon_original_image = None
+        self._weapon_image = None
+        self._weapon_rect = None
+        self._special_weapon_offset = pygame.Vector2(0, 0)
+        self.__ability_generator = self.choose_ability()
+        self.__walk_frame_index = 0
+        self.__walk_frame_timer = 0
+        self.__walk_frame_duration = 0.3
 
-        if hasattr(self, "get_projectile_image"):
-            projectile_image = self.get_projectile_image()
-        else:
-            projectile_image = pygame.Surface((
-                Constants.PROJECTILE_DEFAULT_WIDTH,
-                Constants.PROJECTILE_DEFAULT_HEIGHT))
-            projectile_image.fill(Constants.PROJECTILE_DEFAULT_COLOR)
-        self.projectile_generator = ProjectileGenerator(self,
-                                                        self.get_projectile_speed(),
-                                                        self.get_projectile_frequency(),
-                                                        projectile_image,
-                                                        self.get_projectile_damage(),
-                                                        self.get_projectile_sound(),
-                                                        is_player_projectile=True
-                                                        )
-        self.ability_generator = self.choose_ability()
-
-    @abstractmethod
-    def get_player_color(self):
+    @property
+    def get_ability_cooldown(self):
         """
-        Returns the color of the player.
+        Gets the ability cooldown value.
+
+        :return: Cooldown value of the ability.
         """
+        return self._ability_cooldown
 
-        pass
+    @property
+    def get_ability_downtime(self):
+        """
+        Gets the current downtime of the ability.
 
-    @abstractmethod
+        :return: Downtime value.
+        """
+        return self._ability_downtime
+
+    @property
+    def has_durable_ability(self):
+        """
+        Indicates whether the ability has a duration effect.
+
+        :return: True if the ability is durable, False otherwise.
+        """
+        return self._has_durable_ability
+
     def get_initial_health(self):
         """
-        Returns the initial health of the player.
+        Returns the initial health value of the player.
+
+        :return: Initial health value.
         """
+        return self._initial_health
 
-        pass
-
-    @abstractmethod
-    def get_projectile_color(self):
+    @property
+    def health_points(self):
         """
-        Returns the color of the projectiles.
+        Gets the current health points of the player.
+
+        :return: Player's current health.
         """
+        return self._health_points
 
-        pass
-
-    @abstractmethod
-    def get_projectile_speed(self):
-        """
-        Returns the speed of the projectiles.
-        """
-
-        pass
-
-    @abstractmethod
-    def get_projectile_frequency(self):
-        """
-        Returns the frequency of the projectiles.
-        """
-
-        pass
-
-    @abstractmethod
-    def get_projectile_damage(self):
-        """
-        Returns the damage of the projectiles.
-        """
-
-        pass
-
-    @abstractmethod
-    def get_projectile_sound(self):
-        """
-        Returns the sound of the projectile.
-        """
-
-        pass
-
-    @abstractmethod
-    def get_time_cooldown_ability(self):
-        """
-        Returns the time cooldown ability of the player.
-        """
-
-        pass
-
-    @abstractmethod
+    @property
     def get_ready_ability(self):
         """
-        Returns the ready ability of the player.
-        """
+        Indicates whether the ability is ready to be used.
 
-        pass
+        :return: True if ability is ready, False otherwise.
+        """
+        return self._ready_ability
 
     @abstractmethod
     def choose_ability(self):
@@ -157,39 +126,35 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         :param dt: The duration of one iteration.
         """
 
-    pass
+        pass
 
     def update(self, keys, terrain, dt, player_projectiles,
                enemies_projectiles, abilities):
+        """
+        Updates the player's state, including movement, animation, and collisions.
+
+        :param keys: Dictionary of key states.
+        :param terrain: Group of terrain sprites.
+        :param dt: Time delta since last update.
+        :param player_projectiles: List of player projectiles.
+        :param enemies_projectiles: List of enemy projectiles.
+        :param abilities: List of active abilities.
+        """
         self._handle_input(terrain, keys, dt, player_projectiles, abilities)
         self._limit_bounds()
         self._compute_damage(enemies_projectiles)
 
         if self._is_jumping:
-            try:
-                self.image = self.sprite_jump
-            except AttributeError:
-                pass
+            self.image = self._sprite_jump
         elif keys[pygame.K_a] or keys[pygame.K_d]:
-            try:
-                if hasattr(self, 'sprite_walk_frames'):
-                    self.walk_frame_timer += dt
-                    if self.walk_frame_timer >= self.walk_frame_duration:
-                        self.walk_frame_timer = 0
-                        self.walk_frame_index = (
-                                                        self.walk_frame_index + 1) % len(
-                            self.sprite_walk_frames)
-                    self.image = self.sprite_walk_frames[
-                        self.walk_frame_index]
-                else:
-                    self.image = self.sprite_walk
-            except AttributeError:
-                pass
+            self.__walk_frame_timer += dt
+            if self.__walk_frame_timer >= self.__walk_frame_duration:
+                self.__walk_frame_timer = 0
+                self.__walk_frame_index = (self.__walk_frame_index + 1) % len(
+                    self._sprite_walk_frames)
+            self.image = self._sprite_walk_frames[self.__walk_frame_index]
         else:
-            try:
-                self.image = self.sprite_idle
-            except AttributeError:
-                pass
+            self.image = self._sprite_idle
 
         if self._facing_left:
             self.image = pygame.transform.flip(self.image, True, False)
@@ -202,6 +167,15 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
             self.kill()
 
     def _handle_input(self, terrain, keys, dt, projectiles, abilities):
+        """
+        Handles keyboard and mouse input from the player.
+
+        :param terrain: Group of terrain sprites.
+        :param keys: Dictionary of key states.
+        :param dt: Time delta since last update.
+        :param projectiles: List of active projectiles.
+        :param abilities: List of active abilities.
+        """
         self._compute_vertical_position(terrain, keys, dt)
         self._compute_horizontal_position(terrain, keys, dt)
 
@@ -214,21 +188,46 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
                 if hasattr(self, "get_projectile_origin")
                 else pygame.math.Vector2(self.rect.center)
             )
-            self.projectile_generator.generate(origin, target, dt,
-                                               projectiles)
+            self._projectile_generator.generate(origin, target, dt,
+                                                projectiles)
         self._compute_cooldown_ability(dt)
 
         if pygame.mouse.get_pressed()[2]:
             target_ability = pygame.math.Vector2(pygame.mouse.get_pos()[0],
                                                  pygame.mouse.get_pos()[1])
             if self._ready_ability:
-                self.ability_generator.generate(target_ability, dt, abilities)
+                self.__ability_generator.generate(target_ability, dt, abilities)
         self._compute_duration_ability(dt)
 
         if keys[pygame.K_a]:
             self._facing_left = True
         elif keys[pygame.K_d]:
             self._facing_left = False
+
+    def update_weapon(self):
+        """
+        Updates the current weapon's position and rotation according to the mouse pointer.
+        """
+        import math
+
+        if pygame.mouse.get_pressed()[2]:
+            self._current_weapon_original_image = self._special_weapon_original_image.copy()
+
+            offset_x = 50 + self._special_weapon_offset.x
+            offset_y = 0 + self._special_weapon_offset.y
+        else:
+            self._current_weapon_original_image = self._weapon_original_image.copy()
+
+            offset_x, offset_y = 50, 0
+
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        dx = mouse_x - self.rect.centerx
+        dy = mouse_y - self.rect.centery
+        angle = math.degrees(math.atan2(-dy, dx))
+
+        self._weapon_image = pygame.transform.rotate(self._current_weapon_original_image, angle)
+        new_center = (self.rect.centerx + offset_x, self.rect.centery + offset_y)
+        self._weapon_rect = self._weapon_image.get_rect(center=new_center)
 
     def _compute_vertical_position(self, terrain, keys, dt):
         """
@@ -244,7 +243,7 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
             self._y_speed = -Constants.JUMP_SPEED
             self._is_jumping = True
 
-        self._y_speed += + Constants.GRAVITY * dt
+        self._y_speed += Constants.GRAVITY * dt
         self.rect.y += self._y_speed * dt
 
         hits = pygame.sprite.spritecollide(self, terrain, False)
@@ -292,25 +291,26 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
     def _compute_damage(self, enemies_projectiles):
         """
         Computes projectile collision and damage taken.
+
         :param enemies_projectiles: Enemies projectiles on screen.
         """
         for projectile in enemies_projectiles:
-            if pygame.sprite.collide_rect(self, projectile):
+            projectile.compute_collision(self)
 
-                # Bomb only causes collision damage if it hasn't exploded yet.
-                if hasattr(projectile, '_exploded'): #Todo: encapsulate
-                    if not projectile._exploded:
-                        self._audio_manager.play_sound(Sounds.HIT)
-                        self._health_points -= projectile.damage
-                        projectile._explode(None, self)
-                else:
-                    self._audio_manager.play_sound(Sounds.HIT)
-                    self._health_points -= projectile.damage
-                    projectile.kill()
+    def inflict_damage(self, damage):
+        """
+        Inflicts damage on the player.
+
+        :param damage: The damage to be inflicted on the player.
+        """
+        self._health_points -= damage
+        self._audio_manager.play_sound(Sounds.HIT)
 
     def to_dict(self):
         """
         Converts the player's state into a dictionary.
+
+        :return: A dictionary representing the player's current state.
         """
         return {
             "type": self.__class__.__name__,
@@ -320,6 +320,5 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
             "is_jumping": self._is_jumping,
             "y_speed": self._y_speed,
             "ready_ability": self._ready_ability,
-            "time_cooldown_ability": self._time_cooldown_ability,
-            "time_duration_ability": self._time_duration_ability
+            "time_cooldown_ability": self._ability_downtime,
         }

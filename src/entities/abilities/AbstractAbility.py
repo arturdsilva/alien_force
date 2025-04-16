@@ -1,6 +1,7 @@
 import pygame
 from abc import ABC, abstractmethod
 from config.Constants import Constants
+from src.utils.AudioManager import AudioManager
 
 
 class AbstractAbility(pygame.sprite.Sprite, ABC):
@@ -12,13 +13,15 @@ class AbstractAbility(pygame.sprite.Sprite, ABC):
         """
         Initializes a skill
 
+        :param agent: The ability user.
         """
         super().__init__()
         self._agent = agent
-        self._speed = Constants.ABILITY_SPEED
+        self._speed = Constants.ABILITY_DEFAULT_SPEED
         self._image = None
-        self._damage = Constants.ABILITY_DAMAGE
+        self._damage = Constants.ABILITY_DEFAULT_DAMAGE
         self._lifetime = None
+        self._audio_manager = AudioManager()
 
     @property
     def damage(self):
@@ -28,15 +31,6 @@ class AbstractAbility(pygame.sprite.Sprite, ABC):
         :return: The damage value
         """
         return self._damage
-
-    def update(self, dt, speed_multiplier=1.0):
-        """
-        Updates the skill's position and lifetime.
-
-        :param dt: Duration of one iteration.
-        :param speed_multiplier: increase the ability speed
-        """
-        dt *= speed_multiplier
 
     @abstractmethod
     def generate(self, target, dt, abilities_group):

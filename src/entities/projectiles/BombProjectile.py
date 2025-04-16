@@ -23,12 +23,12 @@ class BombProjectile(AbstractProjectile):
         :param explosion_radius: Explosion radius
         """
         super().__init__(position, velocity, image, damage)
-        self._explosion_radius = explosion_radius
-        self._exploded = False
-        self._explosion_time = 0
-        self._explosion_duration = 1.0
-        self._explosion_surface = None
-        self._explosion_rect = None
+        self.__explosion_radius = explosion_radius
+        self.__exploded = False
+        self.__explosion_time = 0
+        self.__explosion_duration = 1.0
+        self.__explosion_surface = None
+        self.__explosion_rect = None
         self.__audio_manager = AudioManager()
 
     def update(self, dt, terrain=None, player=None):
@@ -39,53 +39,51 @@ class BombProjectile(AbstractProjectile):
         :param terrain: Terrain sprite group (optional)
         :param player: Player sprite (optional)
         """
-        if not self._exploded:
-            self._position += self._velocity * dt
-            self.rect.center = self._position
-            
-            # Verifica colisão com o jogador primeiro
-            if player and pygame.sprite.collide_rect(self, player):
-                self._explode(terrain, player)
-            # Depois verifica colisão com o terreno
-            elif terrain:
+        if not self.__exploded:
+            self._move(dt)
+
+            # Check terrain collision
+            if terrain:
                 hits = pygame.sprite.spritecollide(self, terrain, False)
                 if hits:
                     self.rect.bottom = hits[0].rect.top
-                    self._explode(terrain, player)
+                    self.__trigger_explosion(player)
         else:
-            # Atualiza o tempo da explosão
-            self._explosion_time += dt
-            if self._explosion_time >= self._explosion_duration:
+            self.__explosion_time += dt
+            if self.__explosion_time >= self.__explosion_duration:
                 self.kill()
 
-    def _explode(self, terrain, player):
+    def __trigger_explosion(self, player):
         """
         Triggers the bomb explosion and applies damage in the area.
 
-        :param terrain: Terrain sprite group
         :param player: Player sprite
         """
-        self._exploded = True
+        self.__exploded = True
         self.__audio_manager.play_sound(Sounds.BOOM)
 
-        # Cria área da explosão
-        self._explosion_rect = pygame.Rect(0, 0, self._explosion_radius * 2, self._explosion_radius * 2)
-        self._explosion_rect.center = self.rect.center
-        
-        # Cria superfície da explosão
+        # Create explosion area
+        self.__explosion_rect = pygame.Rect(0, 0, self.__explosion_radius * 2, self.__explosion_radius * 2)
+        self.__explosion_rect.center = self.rect.center
+        # Create explosion surface
         color = Constants.TANK_BOMB_EXPLOSION_COLOR
-        self._explosion_surface = pygame.Surface((self._explosion_radius * 2, self._explosion_radius * 2), pygame.SRCALPHA)
-        pygame.draw.circle(self._explosion_surface,
+        self.__explosion_surface = pygame.Surface((self.__explosion_radius * 2, self.__explosion_radius * 2), pygame.SRCALPHA)
+        pygame.draw.circle(self.__explosion_surface,
                            (color[0], color[1], color[2], 80),
-                           (self._explosion_radius, self._explosion_radius), self._explosion_radius)
-        pygame.draw.circle(self._explosion_surface, Constants.TANK_BOMB_EXPLOSION_COLOR,
-                           (self._explosion_radius, self._explosion_radius), self._explosion_radius * 0.7)
-        pygame.draw.circle(self._explosion_surface, Colors.GLOW_WHITE,
-                           (self._explosion_radius, self._explosion_radius), self._explosion_radius * 0.3)
-        
-        # Aplica dano ao jogador se estiver no raio da explosão
-        if player and self._explosion_rect.colliderect(player.rect):
-            player._health_points -= self._damage #Todo: encapsulate
+                           (self.__explosion_radius, self.__explosion_radius), self.__explosion_radius)
+        pygame.draw.circle(self.__explosion_surface, Constants.TANK_BOMB_EXPLOSION_COLOR,
+
+                           (self.__explosion_radius, self.__explosion_radius), self.__explosion_radius * 0.7)
+        pygame.draw.circle(self.__explosion_surface, Colors.GLOW_WHITE,
+                           (self.__explosion_radius, self.__explosion_radius), self.__explosion_radius * 0.3)
+
+        # Applies damage to the player if inside explosion radius
+        if player and self.__explosion_rect.colliderect(player.rect):
+            player.inflict_damage(self.damage)
+
+    def compute_collision(self, player):
+        if not self.__exploded and pygame.sprite.collide_rect(self, player):
+            self.__trigger_explosion(player)
 
     def draw(self, screen):
         """
@@ -93,11 +91,11 @@ class BombProjectile(AbstractProjectile):
 
         :param screen: Screen surface
         """
-        if self._exploded and self._explosion_surface:
-            # Calcula alpha baseado no tempo restante
-            alpha = int(255 * (1 - self._explosion_time / self._explosion_duration))
-            self._explosion_surface.set_alpha(alpha)
-            screen.blit(self._explosion_surface, self._explosion_rect)
+        if self.__exploded and self.__explosion_surface:
+            # Updates alpha according to remaining explosion time
+            alpha = int(255 * (1 - self.__explosion_time / self.__explosion_duration))
+            self.__explosion_surface.set_alpha(alpha)
+            screen.blit(self.__explosion_surface, self.__explosion_rect)
         else:
             screen.blit(self.image, self.rect)
 
@@ -106,11 +104,11 @@ class BombProjectile(AbstractProjectile):
         """
         Returns the explosion radius.
         """
-        return self._explosion_radius
+        return self.__explosion_radius
 
     @property
     def exploded(self):
         """
         Returns whether the bomb has exploded.
         """
-        return self._exploded 
+        return self.__exploded
