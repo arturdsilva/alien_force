@@ -1,8 +1,10 @@
 import pygame
+
 from config.Constants import Constants, Sounds
-from src.entities.players.AbstractPlayer import AbstractPlayer
 from src.entities.abilities.MissileBarrage import MissileBarrage
+from src.entities.players.AbstractPlayer import AbstractPlayer
 from src.entities.projectiles.ProjectileGenerator import ProjectileGenerator
+
 
 class Jones(AbstractPlayer):
     """
@@ -34,22 +36,30 @@ class Jones(AbstractPlayer):
                                                          is_player_projectile=True
                                                          )
 
-        self._sprite_idle = pygame.image.load("assets/sprites/players/JonesIdle.png").convert_alpha()
+        self._sprite_idle = pygame.image.load(
+            "assets/sprites/players/JonesIdle.png").convert_alpha()
         self._sprite_idle = pygame.transform.scale(
-            self._sprite_idle, (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT)
+            self._sprite_idle,
+            (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT)
         )
 
-        walk_sheet = pygame.image.load("assets/sprites/players/JonesWalk.png").convert_alpha()
+        walk_sheet = pygame.image.load(
+            "assets/sprites/players/JonesWalk.png").convert_alpha()
         walk_sheet = pygame.transform.scale(
             walk_sheet, (Constants.PLAYER_WIDTH * 2, Constants.PLAYER_HEIGHT)
         )
-        frame1 = walk_sheet.subsurface((0, 0, Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT)).copy()
-        frame2 = walk_sheet.subsurface((Constants.PLAYER_WIDTH, 0, Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT)).copy()
+        frame1 = walk_sheet.subsurface(
+            (0, 0, Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT)).copy()
+        frame2 = walk_sheet.subsurface((Constants.PLAYER_WIDTH, 0,
+                                        Constants.PLAYER_WIDTH,
+                                        Constants.PLAYER_HEIGHT)).copy()
         self._sprite_walk_frames = [frame1, frame2]
 
-        self._sprite_jump = pygame.image.load("assets/sprites/players/JonesJump.png").convert_alpha()
+        self._sprite_jump = pygame.image.load(
+            "assets/sprites/players/JonesJump.png").convert_alpha()
         self._sprite_jump = pygame.transform.scale(
-            self._sprite_jump, (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT)
+            self._sprite_jump,
+            (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT)
         )
 
         self.image = self._sprite_idle
@@ -62,17 +72,20 @@ class Jones(AbstractPlayer):
 
         self._weapon_original_image = pygame.image.load(
             "assets/sprites/weapons/GrenadeLauncher.png").convert_alpha()
-        self._weapon_original_image = pygame.transform.scale(self._weapon_original_image, (
-        weapon_width, weapon_height))
+        self._weapon_original_image = pygame.transform.scale(
+            self._weapon_original_image, (
+                weapon_width, weapon_height))
 
         self._special_weapon_original_image = pygame.image.load(
             "assets/sprites/weapons/MissileLauncher.png").convert_alpha()
         self._special_weapon_original_image = pygame.transform.scale(
-            self._special_weapon_original_image, (weapon_width, weapon_height))
+            self._special_weapon_original_image,
+            (weapon_width, weapon_height))
 
         self._current_weapon_original_image = self._weapon_original_image.copy()
         self._weapon_image = self._current_weapon_original_image.copy()
-        self._weapon_rect = self._weapon_image.get_rect(center=self.rect.center)
+        self._weapon_rect = self._weapon_image.get_rect(
+            center=self.rect.center)
         self._special_weapon_offset = pygame.Vector2(20, -10)
 
     def update(self, keys, terrain, dt, *args, **kwargs):

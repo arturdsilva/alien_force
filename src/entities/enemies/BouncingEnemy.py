@@ -133,7 +133,7 @@ class BouncingEnemy(AbstractEnemy):
     def _attack(self, dt, target, enemies_projectiles):
         # Checks for collision during fall
         if (self.__state == self.FALLING and target and
-                pygame.sprite.collide_rect( self, target.sprite)):
+                pygame.sprite.collide_rect(self, target.sprite)):
             target.sprite.inflict_damage(Constants.BOUNCING_ENEMY_FALL_DAMAGE)
 
     def update(self, dt, player_projectiles, ability_projectiles,
@@ -187,4 +187,3 @@ class BouncingEnemy(AbstractEnemy):
             Constants.BOUNCING_ENEMY_MAX_TIME_BEFORE_FALL))
         instance.__original_y = data.get("original_y", instance.rect.centery)
         return instance
-

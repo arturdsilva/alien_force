@@ -1,11 +1,15 @@
 import math
+
 import pygame
+
 from config.Constants import Constants
+
 
 class Block(pygame.sprite.Sprite):
     """
     Represents a terrain block sprite.
     """
+
     def __init__(self, x, y, width, height):
         """
         Initializes a terrain block.
@@ -18,14 +22,17 @@ class Block(pygame.sprite.Sprite):
         super().__init__()
         self.__texture = pygame.image.load(
             "assets/sprites/Tile.png").convert_alpha()
-        self.image = pygame.transform.scale(self.__texture, (math.ceil(width), math.ceil(height)))
+        self.image = pygame.transform.scale(self.__texture, (
+        math.ceil(width), math.ceil(height)))
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
+
 
 class Terrain(pygame.sprite.Group):
     """
     Represents a group of terrain blocks that form the game terrain.
     """
+
     def __init__(self, terrain):
         """
         Initializes the terrain from a matrix.

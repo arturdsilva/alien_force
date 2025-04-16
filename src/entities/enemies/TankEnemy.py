@@ -1,8 +1,8 @@
-from src.entities.projectiles.BombProjectile import BombProjectile
 import pygame
 
 from config.Constants import Constants
 from src.entities.enemies.AbstractEnemy import AbstractEnemy
+from src.entities.projectiles.BombProjectile import BombProjectile
 
 
 class TankEnemy(AbstractEnemy):
@@ -71,9 +71,10 @@ class TankEnemy(AbstractEnemy):
         if self.__time_since_last_shot >= Constants.TANK_ENEMY_FIRE_RATE:
             self.__time_since_last_shot = 0
 
-            bomb_image = pygame.image.load("assets/sprites/projectiles/TankEnemyProjectile.png").convert_alpha()
+            bomb_image = pygame.image.load(
+                "assets/sprites/projectiles/TankEnemyProjectile.png").convert_alpha()
             bomb_image = pygame.transform.scale(bomb_image, (
-            Constants.TANK_BOMB_WIDTH, Constants.TANK_BOMB_HEIGHT))
+                Constants.TANK_BOMB_WIDTH, Constants.TANK_BOMB_HEIGHT))
 
             # Create bomb with vertical velocity
             velocity = pygame.Vector2(0, Constants.TANK_BOMB_SPEED)

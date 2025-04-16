@@ -1,6 +1,7 @@
 import pygame
-from src.states.AbstractState import AbstractState
+
 from config.Constants import Constants, Colors
+from src.states.AbstractState import AbstractState
 from src.utils.AudioManager import AudioManager
 
 
@@ -20,8 +21,9 @@ class GameOver(AbstractState):
         super().__init__(game)
         self.__game_over_image = pygame.image.load(
             "assets/sprites/GameOver.png").convert_alpha()
-        self.__game_over_image = pygame.transform.scale(self.__game_over_image, (
-            Constants.WIDTH, Constants.HEIGHT))
+        self.__game_over_image = pygame.transform.scale(
+            self.__game_over_image, (
+                Constants.WIDTH, Constants.HEIGHT))
         self.__score = score
         self.__font_large = pygame.font.Font(None, 120)
         self.__font_medium = pygame.font.Font(None, 60)
@@ -94,7 +96,8 @@ class GameOver(AbstractState):
         screen.blit(score_text, score_rect)
 
         # Draws the options
-        for surface, rect in zip(self.__options_surfaces, self.__options_rects):
+        for surface, rect in zip(self.__options_surfaces,
+                                 self.__options_rects):
             screen.blit(surface, rect)
 
     def handle_events(self, events):

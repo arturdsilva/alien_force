@@ -1,5 +1,7 @@
-import pygame
 from abc import ABC, abstractmethod
+
+import pygame
+
 from config.Constants import Constants
 
 
@@ -8,7 +10,7 @@ class AbstractProjectile(pygame.sprite.Sprite, ABC):
     Abstract base class for all projectile types.
     Defines the common interface that all projectiles must implement.
     """
-    
+
     def __init__(self, position, velocity, image, damage):
         """
         Initializes a base projectile.

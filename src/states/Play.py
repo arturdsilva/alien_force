@@ -1,5 +1,7 @@
 import random
+
 import pygame
+
 from config.AvailableTerrains import AvailableTerrains
 from config.Constants import Constants, Sounds
 from src.entities.Terrain import Terrain
@@ -157,7 +159,8 @@ class Play(AbstractState):
                 self.__audio_manager.play_sound(Sounds.CLICK)
                 if self.__player.sprite is not None:
                     from src.states.SaveConfirmation import SaveConfirmation
-                    self._next_state = SaveConfirmation(self._game, self, False)
+                    self._next_state = SaveConfirmation(self._game, self,
+                                                        False)
                 else:
                     self._is_running = False
 
@@ -171,7 +174,7 @@ class Play(AbstractState):
             enemy_types = [
                 (WavyEnemy, Constants.WAVY_ENEMY_SPAWN_CHANCE),
                 (LinearEnemy, Constants.LINEAR_ENEMY_SPAWN_CHANCE),
-                (BouncingEnemy,Constants.BOUNCING_ENEMY_SPAWN_CHANCE),
+                (BouncingEnemy, Constants.BOUNCING_ENEMY_SPAWN_CHANCE),
                 (TankEnemy, Constants.TANK_ENEMY_SPAWN_CHANCE)
             ]
             enemy_class = random.choices(
@@ -179,7 +182,7 @@ class Play(AbstractState):
                 weights=[et[1] for et in enemy_types]
             )[0]
 
-            spawn_positions = [0,Constants.WIDTH]
+            spawn_positions = [0, Constants.WIDTH]
             spawn_x = random.choice(spawn_positions)
 
             self.__enemies.add(enemy_class(spawn_x))

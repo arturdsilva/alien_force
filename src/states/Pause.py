@@ -1,8 +1,8 @@
 import pygame
 
 from config.Constants import Constants, Sounds
-from src.utils.AudioManager import AudioManager
 from src.states.AbstractState import AbstractState
+from src.utils.AudioManager import AudioManager
 
 
 class Pause(AbstractState):
@@ -74,7 +74,8 @@ class Pause(AbstractState):
 
         # Draw pause menu
         screen.blit(self.__title, self.__title_rect)
-        for surface, rect in zip(self.__options_surfaces, self.__options_rects):
+        for surface, rect in zip(self.__options_surfaces,
+                                 self.__options_rects):
             screen.blit(surface, rect)
 
     def handle_events(self, events):
@@ -86,7 +87,8 @@ class Pause(AbstractState):
         for event in events:
             if event.type == pygame.QUIT:
                 from src.states.SaveConfirmation import SaveConfirmation
-                self._next_state = SaveConfirmation(self._game, self.__play_state,
+                self._next_state = SaveConfirmation(self._game,
+                                                    self.__play_state,
                                                     False)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
@@ -114,5 +116,6 @@ class Pause(AbstractState):
         Returns to the main menu.
         """
         from src.states.SaveConfirmation import SaveConfirmation
-        self._next_state = SaveConfirmation(self._game, self.__play_state, True)
+        self._next_state = SaveConfirmation(self._game, self.__play_state,
+                                            True)
         self.__audio_manager.play_sound(Sounds.CLICK)

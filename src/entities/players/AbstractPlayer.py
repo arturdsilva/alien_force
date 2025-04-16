@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
 
+import pygame
+
 from config.Constants import Constants, Sounds
 from src.utils.AudioManager import AudioManager
-import pygame
 
 
 class AbstractPlayer(pygame.sprite.Sprite, ABC):
@@ -196,7 +197,8 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
             target_ability = pygame.math.Vector2(pygame.mouse.get_pos()[0],
                                                  pygame.mouse.get_pos()[1])
             if self._ready_ability:
-                self.__ability_generator.generate(target_ability, dt, abilities)
+                self.__ability_generator.generate(target_ability, dt,
+                                                  abilities)
         self._compute_duration_ability(dt)
 
         if keys[pygame.K_a]:
@@ -225,8 +227,10 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         dy = mouse_y - self.rect.centery
         angle = math.degrees(math.atan2(-dy, dx))
 
-        self._weapon_image = pygame.transform.rotate(self._current_weapon_original_image, angle)
-        new_center = (self.rect.centerx + offset_x, self.rect.centery + offset_y)
+        self._weapon_image = pygame.transform.rotate(
+            self._current_weapon_original_image, angle)
+        new_center = (
+        self.rect.centerx + offset_x, self.rect.centery + offset_y)
         self._weapon_rect = self._weapon_image.get_rect(center=new_center)
 
     def _compute_vertical_position(self, terrain, keys, dt):

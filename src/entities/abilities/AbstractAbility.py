@@ -1,5 +1,7 @@
-import pygame
 from abc import ABC, abstractmethod
+
+import pygame
+
 from config.Constants import Constants
 from src.utils.AudioManager import AudioManager
 

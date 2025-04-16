@@ -1,4 +1,5 @@
 import pygame
+
 from .AbstractProjectile import AbstractProjectile
 
 
@@ -6,7 +7,7 @@ class NormalProjectile(AbstractProjectile):
     """
     Normal projectile that moves in a straight line and causes damage upon hitting the target.
     """
-    
+
     def __init__(self, position, velocity, image, damage):
         """
         Initializes a normal projectile.
@@ -29,7 +30,7 @@ class NormalProjectile(AbstractProjectile):
         # Update projectile position
         self._move(dt)
         self._handle_bounds()
-        
+
         # Check terrain collision
         if terrain:
             hits = pygame.sprite.spritecollide(self, terrain, False)

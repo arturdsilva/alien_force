@@ -1,8 +1,8 @@
 import pygame
 
 from config.Constants import Constants, Sounds
-from src.entities.players.Jones import Jones
 from src.entities.players.Cyborg import Cyborg
+from src.entities.players.Jones import Jones
 from src.entities.players.Rain import Rain
 from src.states.AbstractState import AbstractState
 from src.states.Play import Play
@@ -22,7 +22,8 @@ class CharacterSelect(AbstractState):
         """
         super().__init__(game)
 
-        self.__bg_image = pygame.image.load("assets/sprites/Menu.png").convert()
+        self.__bg_image = pygame.image.load(
+            "assets/sprites/Menu.png").convert()
         self.__bg_image = pygame.transform.scale(self.__bg_image, (
             Constants.WIDTH, Constants.HEIGHT))
         # Font configuration
@@ -30,7 +31,8 @@ class CharacterSelect(AbstractState):
         self.__font_chars = pygame.font.Font(None, 54)
         self.__font_desc = pygame.font.Font(None, 36)
 
-        self.__title = self.__font_title.render('Selecione seu Personagem', True,
+        self.__title = self.__font_title.render('Selecione seu Personagem',
+                                                True,
                                                 pygame.Color('white'))
         self.__title_rect = self.__title.get_rect(
             center=(Constants.WIDTH / 2, 80))
@@ -91,7 +93,6 @@ class CharacterSelect(AbstractState):
         self.__left_rect = self.__left_arrow.get_rect(
             midright=(self.__preview_rect.left - 30, Constants.HEIGHT / 2))
 
-
         self.__audio_manager = AudioManager()
 
     def __update_character_info(self):
@@ -112,7 +113,8 @@ class CharacterSelect(AbstractState):
         self.__char_desc_rect = self.__char_desc.get_rect(
             center=(Constants.WIDTH / 2, Constants.HEIGHT / 2 + 100))
 
-        self.__controls = self.__font_desc.render('ESPAÇO para confirmar', True,
+        self.__controls = self.__font_desc.render('ESPAÇO para confirmar',
+                                                  True,
                                                   pygame.Color('white'))
         self.__controls_rect = self.__controls.get_rect(
             center=(Constants.WIDTH / 2, Constants.HEIGHT - 80))
@@ -180,7 +182,8 @@ class CharacterSelect(AbstractState):
                     self.__update_character_info()
                     self.__audio_manager.play_sound(Sounds.CLICK)
                 elif event.key == pygame.K_SPACE:
-                    selected_char = self.__characters[self.__selected]['class']()
+                    selected_char = self.__characters[self.__selected][
+                        'class']()
                     selected_char_name = selected_char.__class__.__name__
                     self._next_state = Play(self._game, selected_char_name)
                     self.__audio_manager.play_sound(Sounds.CLICK)
@@ -210,5 +213,6 @@ class CharacterSelect(AbstractState):
                         selected_char = self.__characters[self.__selected][
                             'class']()
                         selected_char_name = selected_char.__class__.__name__
-                        self._next_state = Play(self._game, selected_char_name)
+                        self._next_state = Play(self._game,
+                                                selected_char_name)
                         self.__audio_manager.play_sound(Sounds.CLICK)

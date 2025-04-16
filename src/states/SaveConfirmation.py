@@ -1,6 +1,7 @@
-import pygame
 import json
 import os
+
+import pygame
 
 from config.Constants import Constants, Sounds
 from src.states.AbstractState import AbstractState
@@ -78,7 +79,8 @@ class SaveConfirmation(AbstractState):
         screen.blit(overlay, (0, 0))
 
         screen.blit(self.__title, self.__title_rect)
-        for surface, rect in zip(self.__options_surfaces, self.__options_rects):
+        for surface, rect in zip(self.__options_surfaces,
+                                 self.__options_rects):
             screen.blit(surface, rect)
 
     def handle_events(self, events):

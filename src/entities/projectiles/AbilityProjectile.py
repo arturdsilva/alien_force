@@ -1,6 +1,8 @@
-import pygame
 import numpy as np
+import pygame
+
 from .AbstractProjectile import AbstractProjectile
+
 
 class ProjectileAbility(AbstractProjectile):
     """
