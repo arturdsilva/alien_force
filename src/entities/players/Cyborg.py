@@ -8,7 +8,7 @@ class Cyborg(AbstractPlayer):
     def __init__(self, x=Constants.WIDTH / 2, y=Constants.HEIGHT / 2):
 
         super().__init__(x, y)
-        self._initial_health = Constants.PLAYER_MAX_HEALTH
+        self._initial_health = Constants.CYBORG_MAX_HEALTH
         self._health_points = self._initial_health
         self._ability_cooldown = Constants.LASER_COOLDOWN
         self._time_duration_ability = Constants.LASER_DURATION
