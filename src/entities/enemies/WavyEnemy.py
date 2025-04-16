@@ -32,9 +32,12 @@ class WavyEnemy(AbstractEnemy):
         projectile_image = pygame.transform.scale(projectile_image, (
             Constants.WAVY_ENEMY_PROJECTILE_WIDTH,
             Constants.WAVY_ENEMY_PROJECTILE_HEIGHT))
-        self.__projectile_generator = ProjectileGenerator(200, 1,
-                                                          projectile_image,
-                                                          5, Sounds.LASER_SHOT)
+        self.__projectile_generator = ProjectileGenerator(
+            Constants.WAVY_ENEMY_PROJECTILE_SPEED,
+            Constants.WAVY_ENEMY_FIRE_RATE,
+            projectile_image,
+            Constants.WAVY_ENEMY_DAMAGE,
+            Sounds.LASER_SHOT)
 
     def _initialize_sprite(self, x, y):
         """
@@ -49,11 +52,11 @@ class WavyEnemy(AbstractEnemy):
             self.original_image,
             (Constants.WAVY_ENEMY_WIDTH, Constants.WAVY_ENEMY_HEIGHT)
         )
-        self.original_image = pygame.transform.flip(self.original_image, True, False)
+        self.original_image = pygame.transform.flip(self.original_image, True,
+                                                    False)
         self.rect = self.original_image.get_rect()
         self.rect.centerx = x
         self.rect.bottom = y
-
 
     def _move(self, dt, terrain=None):
         """
