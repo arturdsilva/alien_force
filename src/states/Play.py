@@ -169,16 +169,20 @@ class Play(AbstractState):
         """
         if len(self.__enemies) < Constants.MAX_ENEMIES:
             enemy_types = [
-                (WavyEnemy, 30),
-                (LinearEnemy, 30),
-                (BouncingEnemy, 25),
-                (TankEnemy, 15)
+                (WavyEnemy, Constants.WAVY_ENEMY_SPAWN_CHANCE),
+                (LinearEnemy, Constants.LINEAR_ENEMY_SPAWN_CHANCE),
+                (BouncingEnemy,Constants.BOUNCING_ENEMY_SPAWN_CHANCE),
+                (TankEnemy, Constants.TANK_ENEMY_SPAWN_CHANCE)
             ]
             enemy_class = random.choices(
                 [et[0] for et in enemy_types],
                 weights=[et[1] for et in enemy_types]
             )[0]
-            self.__enemies.add(enemy_class())
+
+            spawn_positions = [0,Constants.WIDTH]
+            spawn_x = random.choice(spawn_positions)
+
+            self.__enemies.add(enemy_class(spawn_x))
 
     def to_dict(self):
         """
