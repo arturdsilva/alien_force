@@ -29,7 +29,7 @@ class GameOver(AbstractState):
         self.__audio_manager = AudioManager()
         self.__player_name = player_name
 
-        # Opções do menu
+        # Menu options
         self.__options = [
             {'text': 'Reiniciar', 'action': self.__restart_game},
             {'text': 'Voltar ao Menu', 'action': self.__return_to_menu}
@@ -38,7 +38,7 @@ class GameOver(AbstractState):
         self.__options_surfaces = []
         self.__options_rects = []
 
-        # Cria as superfícies e retângulos para cada opção
+        # Create surfaces and rectangles for each option
         for i, option in enumerate(self.__options):
             surface = self.__font_small.render(option['text'], True,
                                                Colors.WHITE)
@@ -48,13 +48,13 @@ class GameOver(AbstractState):
             self.__options_rects.append(rect)
 
     def __restart_game(self):
-        """Reinicia o jogo."""
+        """Restarts the game."""
         from src.states.Play import Play
         self._next_state = Play(self._game, self.__player_name)
         self.__audio_manager.unpause_music()
 
     def __return_to_menu(self):
-        """Volta para o menu principal."""
+        """Returns to the main menu."""
         from src.states.Menu import Menu
         self._next_state = Menu(self._game)
         self.__audio_manager.unpause_music()
@@ -93,7 +93,7 @@ class GameOver(AbstractState):
             center=(Constants.WIDTH / 2, Constants.HEIGHT / 2))
         screen.blit(score_text, score_rect)
 
-        # Desenha as opções
+        # Draws the options
         for surface, rect in zip(self.__options_surfaces, self.__options_rects):
             screen.blit(surface, rect)
 
@@ -107,9 +107,9 @@ class GameOver(AbstractState):
             if event.type == pygame.QUIT:
                 self._is_running = False
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_r:  # Reiniciar
+                if event.key == pygame.K_r:  # Restart
                     self.__restart_game()
-                elif event.key == pygame.K_ESCAPE:  # Voltar ao menu
+                elif event.key == pygame.K_ESCAPE:  # Return to menu
                     self.__return_to_menu()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:  # Left mouse button

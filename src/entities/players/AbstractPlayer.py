@@ -49,25 +49,55 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
 
     @property
     def get_ability_cooldown(self):
+        """
+        Gets the ability cooldown value.
+
+        :return: Cooldown value of the ability.
+        """
         return self._ability_cooldown
 
     @property
     def get_ability_downtime(self):
+        """
+        Gets the current downtime of the ability.
+
+        :return: Downtime value.
+        """
         return self._ability_downtime
 
     @property
     def has_durable_ability(self):
+        """
+        Indicates whether the ability has a duration effect.
+
+        :return: True if the ability is durable, False otherwise.
+        """
         return self._has_durable_ability
 
     def get_initial_health(self):
+        """
+        Returns the initial health value of the player.
+
+        :return: Initial health value.
+        """
         return self._initial_health
 
     @property
     def health_points(self):
+        """
+        Gets the current health points of the player.
+
+        :return: Player's current health.
+        """
         return self._health_points
 
     @property
     def get_ready_ability(self):
+        """
+        Indicates whether the ability is ready to be used.
+
+        :return: True if ability is ready, False otherwise.
+        """
         return self._ready_ability
 
     @abstractmethod
@@ -96,10 +126,20 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         :param dt: The duration of one iteration.
         """
 
-    pass
+        pass
 
     def update(self, keys, terrain, dt, player_projectiles,
                enemies_projectiles, abilities):
+        """
+        Updates the player's state, including movement, animation, and collisions.
+
+        :param keys: Dictionary of key states.
+        :param terrain: Group of terrain sprites.
+        :param dt: Time delta since last update.
+        :param player_projectiles: List of player projectiles.
+        :param enemies_projectiles: List of enemy projectiles.
+        :param abilities: List of active abilities.
+        """
         self._handle_input(terrain, keys, dt, player_projectiles, abilities)
         self._limit_bounds()
         self._compute_damage(enemies_projectiles)
@@ -112,8 +152,7 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
                 self.__walk_frame_timer = 0
                 self.__walk_frame_index = (self.__walk_frame_index + 1) % len(
                     self._sprite_walk_frames)
-            self.image = self._sprite_walk_frames[
-                self.__walk_frame_index]
+            self.image = self._sprite_walk_frames[self.__walk_frame_index]
         else:
             self.image = self._sprite_idle
 
@@ -128,6 +167,15 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
             self.kill()
 
     def _handle_input(self, terrain, keys, dt, projectiles, abilities):
+        """
+        Handles keyboard and mouse input from the player.
+
+        :param terrain: Group of terrain sprites.
+        :param keys: Dictionary of key states.
+        :param dt: Time delta since last update.
+        :param projectiles: List of active projectiles.
+        :param abilities: List of active abilities.
+        """
         self._compute_vertical_position(terrain, keys, dt)
         self._compute_horizontal_position(terrain, keys, dt)
 
@@ -157,6 +205,9 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
             self._facing_left = False
 
     def update_weapon(self):
+        """
+        Updates the current weapon's position and rotation according to the mouse pointer.
+        """
         import math
 
         if pygame.mouse.get_pressed()[2]:
@@ -192,7 +243,7 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
             self._y_speed = -Constants.JUMP_SPEED
             self._is_jumping = True
 
-        self._y_speed += + Constants.GRAVITY * dt
+        self._y_speed += Constants.GRAVITY * dt
         self.rect.y += self._y_speed * dt
 
         hits = pygame.sprite.spritecollide(self, terrain, False)
@@ -240,6 +291,7 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
     def _compute_damage(self, enemies_projectiles):
         """
         Computes projectile collision and damage taken.
+
         :param enemies_projectiles: Enemies projectiles on screen.
         """
         for projectile in enemies_projectiles:
@@ -247,7 +299,7 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
 
     def inflict_damage(self, damage):
         """
-        inflicts damage on the player
+        Inflicts damage on the player.
 
         :param damage: The damage to be inflicted on the player.
         """
@@ -257,6 +309,8 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
     def to_dict(self):
         """
         Converts the player's state into a dictionary.
+
+        :return: A dictionary representing the player's current state.
         """
         return {
             "type": self.__class__.__name__,

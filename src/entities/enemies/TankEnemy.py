@@ -50,7 +50,7 @@ class TankEnemy(AbstractEnemy):
         # Keep Y fixed at top
         self.rect.centery = Constants.TANK_ENEMY_Y
 
-        # Reverse direction at edges e ajustar a orientação da imagem
+        # Reverse direction at edges and adjust images orientation
         if self.rect.left <= 0:
             self.rect.left = 0
             self._speed = abs(self._speed)

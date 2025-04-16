@@ -71,7 +71,7 @@ class Jones(AbstractPlayer):
             self._special_weapon_original_image, (weapon_width, weapon_height))
 
         self._current_weapon_original_image = self._weapon_original_image.copy()
-        self._weapon_image = self._current_weapon_original_image.copy()  # inicia sem rotação
+        self._weapon_image = self._current_weapon_original_image.copy()
         self._weapon_rect = self._weapon_image.get_rect(center=self.rect.center)
         self._special_weapon_offset = pygame.Vector2(20, -10)
 

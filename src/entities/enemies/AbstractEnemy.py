@@ -34,6 +34,7 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
         """
         Updates the enemy state.
 
+        :param ability_projectiles: projectiles originated from abilities
         :param dt: Time since last update
         :param player_projectiles: Player projectiles on screen
         :param enemies_projectiles: Enemies projectiles on screen.
