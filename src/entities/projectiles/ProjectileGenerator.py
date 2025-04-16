@@ -69,7 +69,6 @@ class ProjectileGenerator:
                     velocity=velocity,
                     image=self.__projectile_image,
                     damage=self.__projectile_damage,
-                    is_player_projectile=self.__is_player_projectile
                 )
             
             projectiles.add(projectile)
