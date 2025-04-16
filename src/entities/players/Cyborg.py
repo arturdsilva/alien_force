@@ -144,5 +144,4 @@ class Cyborg(AbstractPlayer):
         instance._y_speed = data["y_speed"]
         instance._ready_ability = data["ready_ability"]
         instance._ability_downtime = data["time_cooldown_ability"]
-        instance._time_duration_ability = data["time_duration_ability"]
         return instance

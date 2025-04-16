@@ -1,6 +1,6 @@
 import pygame
 from src.states.AbstractState import AbstractState
-from config.Constants import Constants, Colors, Sounds
+from config.Constants import Constants, Colors
 from src.utils.AudioManager import AudioManager
 
 
@@ -18,45 +18,45 @@ class GameOver(AbstractState):
         :param score: The player's final score.
         """
         super().__init__(game)
-        self.game_over_image = pygame.image.load(
+        self.__game_over_image = pygame.image.load(
             "assets/sprites/GameOver.png").convert_alpha()
-        self.game_over_image = pygame.transform.scale(self.game_over_image, (
+        self.__game_over_image = pygame.transform.scale(self.__game_over_image, (
             Constants.WIDTH, Constants.HEIGHT))
-        self.score = score
-        self.font_large = pygame.font.Font(None, 120)
-        self.font_medium = pygame.font.Font(None, 60)
-        self.font_small = pygame.font.Font(None, 40)
+        self.__score = score
+        self.__font_large = pygame.font.Font(None, 120)
+        self.__font_medium = pygame.font.Font(None, 60)
+        self.__font_small = pygame.font.Font(None, 40)
         self.__audio_manager = AudioManager()
-        self.player_name = player_name
+        self.__player_name = player_name
 
         # Opções do menu
-        self.options = [
-            {'text': 'Reiniciar', 'action': self.restart_game},
-            {'text': 'Voltar ao Menu', 'action': self.return_to_menu}
+        self.__options = [
+            {'text': 'Reiniciar', 'action': self.__restart_game},
+            {'text': 'Voltar ao Menu', 'action': self.__return_to_menu}
         ]
 
-        self.options_surfaces = []
-        self.options_rects = []
+        self.__options_surfaces = []
+        self.__options_rects = []
 
         # Cria as superfícies e retângulos para cada opção
-        for i, option in enumerate(self.options):
-            surface = self.font_small.render(option['text'], True,
-                                             Colors.WHITE)
+        for i, option in enumerate(self.__options):
+            surface = self.__font_small.render(option['text'], True,
+                                               Colors.WHITE)
             rect = surface.get_rect(center=(
                 Constants.WIDTH / 2, Constants.HEIGHT * 2 / 3 + i * 30))
-            self.options_surfaces.append(surface)
-            self.options_rects.append(rect)
+            self.__options_surfaces.append(surface)
+            self.__options_rects.append(rect)
 
-    def restart_game(self):
+    def __restart_game(self):
         """Reinicia o jogo."""
         from src.states.Play import Play
-        self.next_state = Play(self.game, self.player_name)
+        self._next_state = Play(self._game, self.__player_name)
         self.__audio_manager.unpause_music()
 
-    def return_to_menu(self):
+    def __return_to_menu(self):
         """Volta para o menu principal."""
         from src.states.Menu import Menu
-        self.next_state = Menu(self.game)
+        self._next_state = Menu(self._game)
         self.__audio_manager.unpause_music()
 
     def update(self, dt):
@@ -74,27 +74,27 @@ class GameOver(AbstractState):
 
         :param screen: The screen surface to draw on.
         """
-        screen.blit(self.game_over_image, (0, 0))
+        screen.blit(self.__game_over_image, (0, 0))
         overlay = pygame.Surface((Constants.WIDTH, Constants.HEIGHT),
                                  pygame.SRCALPHA)
         overlay.fill((0, 0, 0, 200))
         screen.blit(overlay, (0, 0))
 
         # Title
-        title = self.font_large.render("GAME OVER", True, Colors.RED)
+        title = self.__font_large.render("GAME OVER", True, Colors.RED)
         title_rect = title.get_rect(
             center=(Constants.WIDTH / 2, Constants.HEIGHT / 3))
         screen.blit(title, title_rect)
 
         # Score
-        score_text = self.font_medium.render(f"Final Score: {self.score}",
-                                             True, Colors.WHITE)
+        score_text = self.__font_medium.render(f"Final Score: {self.__score}",
+                                               True, Colors.WHITE)
         score_rect = score_text.get_rect(
             center=(Constants.WIDTH / 2, Constants.HEIGHT / 2))
         screen.blit(score_text, score_rect)
 
         # Desenha as opções
-        for surface, rect in zip(self.options_surfaces, self.options_rects):
+        for surface, rect in zip(self.__options_surfaces, self.__options_rects):
             screen.blit(surface, rect)
 
     def handle_events(self, events):
@@ -105,14 +105,14 @@ class GameOver(AbstractState):
         """
         for event in events:
             if event.type == pygame.QUIT:
-                self.is_running = False
+                self._is_running = False
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_r:  # Reiniciar
-                    self.restart_game()
+                    self.__restart_game()
                 elif event.key == pygame.K_ESCAPE:  # Voltar ao menu
-                    self.return_to_menu()
+                    self.__return_to_menu()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:  # Left mouse button
-                    for i, rect in enumerate(self.options_rects):
+                    for i, rect in enumerate(self.__options_rects):
                         if rect.collidepoint(event.pos):
-                            self.options[i]['action']()
+                            self.__options[i]['action']()

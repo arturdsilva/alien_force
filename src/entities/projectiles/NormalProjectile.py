@@ -7,7 +7,7 @@ class NormalProjectile(AbstractProjectile):
     Normal projectile that moves in a straight line and causes damage upon hitting the target.
     """
     
-    def __init__(self, position, velocity, image, damage, is_player_projectile=False):
+    def __init__(self, position, velocity, image, damage):
         """
         Initializes a normal projectile.
 
@@ -15,7 +15,6 @@ class NormalProjectile(AbstractProjectile):
         :param velocity: Velocity vector of the projectile
         :param image: Projectile image
         :param damage: Damage caused by the projectile
-        :param is_player_projectile: Indicates if it's a player projectile
         """
         super().__init__(position, velocity, image, damage)
 
