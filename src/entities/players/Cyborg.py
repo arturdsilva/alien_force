@@ -1,8 +1,10 @@
 import pygame
+
 from config.Constants import Constants, Sounds
+from src.entities.abilities.LaserBeam import LaserBeam
 from src.entities.players.AbstractPlayer import AbstractPlayer
 from src.entities.projectiles.ProjectileGenerator import ProjectileGenerator
-from src.entities.abilities.LaserBeam import LaserBeam
+
 
 class Cyborg(AbstractPlayer):
     def __init__(self, x=Constants.WIDTH / 2, y=Constants.HEIGHT / 2):
@@ -34,26 +36,30 @@ class Cyborg(AbstractPlayer):
         self._sprite_idle = pygame.image.load(
             "assets/sprites/players/CyborgIdle.png").convert_alpha()
         self._sprite_idle = pygame.transform.scale(
-            self._sprite_idle, (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT)
+            self._sprite_idle,
+            (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT)
         )
-
 
         walk_sheet = pygame.image.load(
             "assets/sprites/players/CyborgWalk.png").convert_alpha()
         sheet_width, sheet_height = walk_sheet.get_size()
         frame_width = sheet_width // 2
         frame_height = sheet_height
-        frame1 = walk_sheet.subsurface((0, 0, frame_width, frame_height)).copy()
-        frame2 = walk_sheet.subsurface((frame_width, 0, frame_width, frame_height)).copy()
-        frame1 = pygame.transform.scale(frame1, (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT))
-        frame2 = pygame.transform.scale(frame2, (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT))
+        frame1 = walk_sheet.subsurface(
+            (0, 0, frame_width, frame_height)).copy()
+        frame2 = walk_sheet.subsurface(
+            (frame_width, 0, frame_width, frame_height)).copy()
+        frame1 = pygame.transform.scale(frame1, (
+        Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT))
+        frame2 = pygame.transform.scale(frame2, (
+        Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT))
         self._sprite_walk_frames = [frame1, frame2]
-
 
         self._sprite_jump = pygame.image.load(
             "assets/sprites/players/CyborgJump.png").convert_alpha()
         self._sprite_jump = pygame.transform.scale(
-            self._sprite_jump, (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT)
+            self._sprite_jump,
+            (Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT)
         )
 
         self.image = self._sprite_idle
@@ -73,11 +79,13 @@ class Cyborg(AbstractPlayer):
         self._special_weapon_original_image = pygame.image.load(
             "assets/sprites/weapons/PlasmaCannon.png").convert_alpha()
         self._special_weapon_original_image = pygame.transform.scale(
-            self._special_weapon_original_image, (weapon_width, weapon_height))
+            self._special_weapon_original_image,
+            (weapon_width, weapon_height))
 
         self._current_weapon_original_image = self._weapon_original_image.copy()
         self._weapon_image = self._current_weapon_original_image.copy()
-        self._weapon_rect = self._weapon_image.get_rect(center=self.rect.center)
+        self._weapon_rect = self._weapon_image.get_rect(
+            center=self.rect.center)
         self._special_weapon_offset = pygame.Vector2(20, -10)
 
     def update(self, keys, terrain, dt, *args, **kwargs):
@@ -110,6 +118,7 @@ class Cyborg(AbstractPlayer):
             self._ability_downtime += dt
             if self._ability_downtime >= self._ability_cooldown:
                 self._ability_time_left = self._time_duration_ability
+                self._ability_downtime = 0
                 self._ready_ability = True
                 self._audio_manager.play_sound(Sounds.RECHARGED)
 

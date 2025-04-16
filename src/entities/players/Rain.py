@@ -1,4 +1,5 @@
 import pygame
+
 from config.Constants import Constants, Sounds
 from src.entities.abilities.CriticalShot import CriticalShot
 from src.entities.players.AbstractPlayer import AbstractPlayer
@@ -74,17 +75,20 @@ class Rain(AbstractPlayer):
 
         self._weapon_original_image = pygame.image.load(
             "assets/sprites/weapons/PrecisionRifle.png").convert_alpha()
-        self._weapon_original_image = pygame.transform.scale(self._weapon_original_image, (
-        weapon_width, weapon_height))
+        self._weapon_original_image = pygame.transform.scale(
+            self._weapon_original_image, (
+                weapon_width, weapon_height))
 
         self._special_weapon_original_image = pygame.image.load(
             "assets/sprites/weapons/SpecialPrecisionRifle.png").convert_alpha()
         self._special_weapon_original_image = pygame.transform.scale(
-            self._special_weapon_original_image, (weapon_width, weapon_height))
+            self._special_weapon_original_image,
+            (weapon_width, weapon_height))
 
         self._current_weapon_original_image = self._weapon_original_image.copy()
         self._weapon_image = self._current_weapon_original_image.copy()
-        self._weapon_rect = self._weapon_image.get_rect(center=self.rect.center)
+        self._weapon_rect = self._weapon_image.get_rect(
+            center=self.rect.center)
 
     def update(self, keys, terrain, dt, *args, **kwargs):
         self.update_weapon()

@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 
-from config.Constants import Constants
 import pygame
+
+from config.Constants import Constants
 
 
 class AbstractEnemy(pygame.sprite.Sprite, ABC):
@@ -54,7 +55,6 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
                                          player.sprite.rect.centery)
             self._attack(dt, target, enemies_projectiles)
 
-
     @abstractmethod
     def _move(self, dt, terrain=None):
         """
@@ -71,7 +71,8 @@ class AbstractEnemy(pygame.sprite.Sprite, ABC):
         if velocity_x > 0:
             self.image = self.original_image
         else:
-            self.image = pygame.transform.flip(self.original_image, True, False)
+            self.image = pygame.transform.flip(self.original_image, True,
+                                               False)
 
     def _limit_bounds(self):
         """

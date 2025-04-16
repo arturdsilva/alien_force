@@ -1,7 +1,7 @@
 import pygame
 
-from config.Constants import Constants
 from config.Constants import Colors
+from config.Constants import Constants
 
 
 class Hud:
@@ -18,7 +18,8 @@ class Hud:
         """
         self.__player = player
         self.__score = 0
-        self.__font = pygame.font.Font(None, 24)  # Smaller font (24 instead of 36)
+        self.__font = pygame.font.Font(None,
+                                       24)  # Smaller font (24 instead of 36)
 
         # Health bar dimensions
         self.__health_bar_width = 150  # Narrower bar
@@ -76,12 +77,14 @@ class Hud:
         health_text = self.__font.render(
             f"Health: {self.__player.health_points}/{self.__player.get_initial_health()}",
             True, self.__text_color)
-        screen.blit(health_text, (self.__health_bar_x, self.__health_bar_y - 15))
+        screen.blit(health_text,
+                    (self.__health_bar_x, self.__health_bar_y - 15))
 
         # Calculate time cooldown percentage
         if self.__player.has_durable_ability:
-            ability_duration_percentage = (self.__player.get_ability_time_left()
-                                           / self.__player.get_ability_duration())
+            ability_duration_percentage = (
+                        self.__player.get_ability_time_left()
+                        / self.__player.get_ability_duration())
         else:
             ability_duration_percentage = 1
         ability_duration_width = self.__ability_bar_width * ability_duration_percentage
@@ -98,15 +101,15 @@ class Hud:
                           self.__ability_bar_height))
         # Draw time cooldown bar
         if self.__player.get_ready_ability:
-                if ability_duration_percentage >= 1:
-                    pygame.draw.rect(screen, self.__ability_bar_full_color,
-                                     (self.__ability_bar_x,
+            if ability_duration_percentage >= 1:
+                pygame.draw.rect(screen, self.__ability_bar_full_color,
+                                 (self.__ability_bar_x,
                                   self.__ability_bar_y,
                                   self.__ability_bar_width,
                                   self.__ability_bar_height))
-                elif self.__player.has_durable_ability:
-                    pygame.draw.rect(screen, self.__ability_bar_color,
-                                     (self.__ability_bar_x,
+            elif self.__player.has_durable_ability:
+                pygame.draw.rect(screen, self.__ability_bar_color,
+                                 (self.__ability_bar_x,
                                   self.__ability_bar_y,
                                   ability_duration_width,
                                   self.__ability_bar_height))
@@ -125,7 +128,8 @@ class Hud:
         time_cooldown_text = self.__font.render(
             f"Ability: {int(percentage * 100)} %",
             True, self.__text_color)
-        screen.blit(time_cooldown_text, (self.__ability_bar_x, self.__ability_bar_y - 15))
+        screen.blit(time_cooldown_text,
+                    (self.__ability_bar_x, self.__ability_bar_y - 15))
 
         # Draw score
         score_text = self.__font.render(f"Score: {self.__score}", True,

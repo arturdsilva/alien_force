@@ -1,17 +1,17 @@
 import pygame
 
-from config.Constants import Constants
 from config.Constants import Colors
-from .AbstractProjectile import AbstractProjectile
+from config.Constants import Constants
 from config.Constants import Sounds
 from src.utils.AudioManager import AudioManager
+from .AbstractProjectile import AbstractProjectile
 
 
 class BombProjectile(AbstractProjectile):
     """
     Bomb-type projectile that falls vertically and explodes upon hitting terrain or player.
     """
-    
+
     def __init__(self, position, velocity, image, damage, explosion_radius):
         """
         Initializes a bomb.
@@ -63,19 +63,26 @@ class BombProjectile(AbstractProjectile):
         self.__audio_manager.play_sound(Sounds.BOOM)
 
         # Create explosion area
-        self.__explosion_rect = pygame.Rect(0, 0, self.__explosion_radius * 2, self.__explosion_radius * 2)
+        self.__explosion_rect = pygame.Rect(0, 0, self.__explosion_radius * 2,
+                                            self.__explosion_radius * 2)
         self.__explosion_rect.center = self.rect.center
         # Create explosion surface
         color = Constants.TANK_BOMB_EXPLOSION_COLOR
-        self.__explosion_surface = pygame.Surface((self.__explosion_radius * 2, self.__explosion_radius * 2), pygame.SRCALPHA)
+        self.__explosion_surface = pygame.Surface(
+            (self.__explosion_radius * 2, self.__explosion_radius * 2),
+            pygame.SRCALPHA)
         pygame.draw.circle(self.__explosion_surface,
                            (color[0], color[1], color[2], 80),
-                           (self.__explosion_radius, self.__explosion_radius), self.__explosion_radius)
-        pygame.draw.circle(self.__explosion_surface, Constants.TANK_BOMB_EXPLOSION_COLOR,
+                           (self.__explosion_radius, self.__explosion_radius),
+                           self.__explosion_radius)
+        pygame.draw.circle(self.__explosion_surface,
+                           Constants.TANK_BOMB_EXPLOSION_COLOR,
 
-                           (self.__explosion_radius, self.__explosion_radius), self.__explosion_radius * 0.7)
+                           (self.__explosion_radius, self.__explosion_radius),
+                           self.__explosion_radius * 0.7)
         pygame.draw.circle(self.__explosion_surface, Colors.GLOW_WHITE,
-                           (self.__explosion_radius, self.__explosion_radius), self.__explosion_radius * 0.3)
+                           (self.__explosion_radius, self.__explosion_radius),
+                           self.__explosion_radius * 0.3)
 
         # Applies damage to the player if inside explosion radius
         if player and self.__explosion_rect.colliderect(player.rect):
@@ -93,7 +100,8 @@ class BombProjectile(AbstractProjectile):
         """
         if self.__exploded and self.__explosion_surface:
             # Updates alpha according to remaining explosion time
-            alpha = int(255 * (1 - self.__explosion_time / self.__explosion_duration))
+            alpha = int(
+                255 * (1 - self.__explosion_time / self.__explosion_duration))
             self.__explosion_surface.set_alpha(alpha)
             screen.blit(self.__explosion_surface, self.__explosion_rect)
         else:

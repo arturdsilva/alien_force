@@ -20,7 +20,8 @@ class Menu(AbstractState):
         :param game: The main game instance.
         """
         super().__init__(game)
-        self.__bg_image = pygame.image.load("assets/sprites/Menu.png").convert()
+        self.__bg_image = pygame.image.load(
+            "assets/sprites/Menu.png").convert()
         self.__bg_image = pygame.transform.scale(self.__bg_image, (
             Constants.WIDTH, Constants.HEIGHT))
         self.__font = pygame.font.Font(None, 74)
@@ -67,7 +68,8 @@ class Menu(AbstractState):
         """
         screen.blit(self.__bg_image, (0, 0))
         screen.blit(self.__title, self.__title_rect)
-        for surface, rect in zip(self.__options_surfaces, self.__options_rects):
+        for surface, rect in zip(self.__options_surfaces,
+                                 self.__options_rects):
             screen.blit(surface, rect)
 
     def handle_events(self, events):

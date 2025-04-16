@@ -1,16 +1,17 @@
-import pygame
 import numpy as np
+import pygame
+
 from config.Constants import Constants
+from src.utils.AudioManager import AudioManager
 from .BombProjectile import BombProjectile
 from .NormalProjectile import NormalProjectile
-from src.utils.AudioManager import AudioManager
 
 
 class ProjectileGenerator:
     """
     Projectile generator that controls projectile creation and behavior.
     """
-    
+
     def __init__(self, projectile_speed, frequency,
                  projectile_image, projectile_damage,
                  sound, projectile_type="normal", is_player_projectile=False):
@@ -44,16 +45,16 @@ class ProjectileGenerator:
         :param projectiles: Projectile sprite group
         """
         self.__time_without_generation += dt
-        
+
         if self.__time_without_generation >= 1 / self.__frequency:
             self.__time_without_generation = 0
 
             angle = self.compute_shot_angle(origin, target)
-            
+
             velocity = pygame.Vector2()
             velocity.x = self.__projectile_speed * np.cos(angle)
             velocity.y = self.__projectile_speed * np.sin(angle)
-            
+
             if self.__projectile_type == "bomb":
                 velocity = pygame.Vector2(0, self.__projectile_speed)
                 projectile = BombProjectile(
@@ -70,7 +71,7 @@ class ProjectileGenerator:
                     image=self.__projectile_image,
                     damage=self.__projectile_damage,
                 )
-            
+
             projectiles.add(projectile)
             self.__audio_manager.play_sound(self.__sound)
 
@@ -103,4 +104,4 @@ class ProjectileGenerator:
         if angle < 0:
             angle += 2 * np.pi
 
-        return angle 
+        return angle
