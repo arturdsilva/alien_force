@@ -12,10 +12,10 @@ class AbstractState(ABC):
 
         :param game: The main game instance.
         """
-        self.game = game
-        self.next_state = self
-        self.is_running = True
-        self.load_from_save = False
+        self._game = game
+        self._next_state = self
+        self._is_running = True
+        self._load_from_save = False
 
     @abstractmethod
     def update(self, dt):
@@ -43,3 +43,39 @@ class AbstractState(ABC):
         :param events: List of pygame events to process.
         """
         pass
+
+    @property
+    def next_state(self):
+        """
+         Gets the next state to transition to.
+
+         :return: The next GameState instance.
+         """
+        return self._next_state
+
+    @next_state.setter
+    def next_state(self, next_state):
+        """
+        Sets the next state to transition to.
+
+        :param next_state: The GameState instance to set as the next state.
+        """
+        self._next_state = next_state
+
+    @property
+    def is_running(self):
+        """
+        Indicates whether the game is still active.
+
+        :return: True if the state is running, False otherwise.
+        """
+        return self._is_running
+
+    @property
+    def load_from_save(self):
+        """
+        Indicates whether the state should load data from a saved game.
+
+        :return: True if the state should load from a save, False otherwise.
+        """
+        return self._load_from_save

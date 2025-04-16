@@ -22,21 +22,21 @@ class CharacterSelect(AbstractState):
         """
         super().__init__(game)
 
-        self.bg_image = pygame.image.load("assets/sprites/Menu.png").convert()
-        self.bg_image = pygame.transform.scale(self.bg_image, (
+        self.__bg_image = pygame.image.load("assets/sprites/Menu.png").convert()
+        self.__bg_image = pygame.transform.scale(self.__bg_image, (
             Constants.WIDTH, Constants.HEIGHT))
         # Font configuration
-        self.font_title = pygame.font.Font(None, 74)
-        self.font_chars = pygame.font.Font(None, 54)
-        self.font_desc = pygame.font.Font(None, 36)
+        self.__font_title = pygame.font.Font(None, 74)
+        self.__font_chars = pygame.font.Font(None, 54)
+        self.__font_desc = pygame.font.Font(None, 36)
 
-        self.title = self.font_title.render('Selecione seu Personagem', True,
-                                            pygame.Color('white'))
-        self.title_rect = self.title.get_rect(
+        self.__title = self.__font_title.render('Selecione seu Personagem', True,
+                                                pygame.Color('white'))
+        self.__title_rect = self.__title.get_rect(
             center=(Constants.WIDTH / 2, 80))
 
         # Available characters
-        self.characters = [
+        self.__characters = [
             {
                 'name': 'Captain Cyborg',
                 'class': Cyborg,
@@ -60,69 +60,69 @@ class CharacterSelect(AbstractState):
             }
         ]
 
-        self.selected = 0
-        self.preview_size = 150
+        self.__selected = 0
+        self.__preview_size = 150
 
-        self.char_name = None
-        self.char_name_rect = None
-        self.char_desc = None
-        self.char_desc_rect = None
-        self.controls = None
-        self.controls_rect = None
-        self.update_character_info()
+        self.__char_name = None
+        self.__char_name_rect = None
+        self.__char_desc = None
+        self.__char_desc_rect = None
+        self.__controls = None
+        self.__controls_rect = None
+        self.__update_character_info()
 
-        char = self.characters[self.selected]
+        char = self.__characters[self.__selected]
         orig_width, orig_height = char['image'].get_size()
         new_height = 150
         new_width = int((orig_width / orig_height) * new_height)
-        self.image = pygame.transform.scale(char['image'],
-                                            (new_width, new_height))
+        self.__image = pygame.transform.scale(char['image'],
+                                              (new_width, new_height))
 
-        self.preview_rect = self.image.get_rect(
+        self.__preview_rect = self.__image.get_rect(
             center=(Constants.WIDTH // 2, Constants.HEIGHT // 2))
 
-        self.right_arrow = self.font_chars.render('>', True,
-                                                  pygame.Color('white'))
-        self.right_rect = self.right_arrow.get_rect(
-            midleft=(self.preview_rect.right + 30, Constants.HEIGHT / 2))
+        self.__right_arrow = self.__font_chars.render('>', True,
+                                                      pygame.Color('white'))
+        self.__right_rect = self.__right_arrow.get_rect(
+            midleft=(self.__preview_rect.right + 30, Constants.HEIGHT / 2))
 
-        self.left_arrow = self.font_chars.render('<', True,
-                                            pygame.Color('white'))
-        self.left_rect = self.left_arrow.get_rect(
-            midright=(self.preview_rect.left - 30, Constants.HEIGHT / 2))
+        self.__left_arrow = self.__font_chars.render('<', True,
+                                                     pygame.Color('white'))
+        self.__left_rect = self.__left_arrow.get_rect(
+            midright=(self.__preview_rect.left - 30, Constants.HEIGHT / 2))
 
 
         self.__audio_manager = AudioManager()
 
-    def update_character_info(self):
+    def __update_character_info(self):
         """
         Updates the selected character information.
         """
-        char = self.characters[self.selected]
+        char = self.__characters[self.__selected]
 
         # Character name
-        self.char_name = self.font_chars.render(char['name'], True,
-                                                pygame.Color('white'))
-        self.char_name_rect = self.char_name.get_rect(
+        self.__char_name = self.__font_chars.render(char['name'], True,
+                                                    pygame.Color('white'))
+        self.__char_name_rect = self.__char_name.get_rect(
             center=(Constants.WIDTH / 2, Constants.HEIGHT / 2 - 100))
 
         # Character description
-        self.char_desc = self.font_desc.render(char['desc'], True,
-                                               pygame.Color('white'))
-        self.char_desc_rect = self.char_desc.get_rect(
+        self.__char_desc = self.__font_desc.render(char['desc'], True,
+                                                   pygame.Color('white'))
+        self.__char_desc_rect = self.__char_desc.get_rect(
             center=(Constants.WIDTH / 2, Constants.HEIGHT / 2 + 100))
 
-        self.controls = self.font_desc.render('ESPAÇO para confirmar', True,
-                                              pygame.Color('white'))
-        self.controls_rect = self.controls.get_rect(
+        self.__controls = self.__font_desc.render('ESPAÇO para confirmar', True,
+                                                  pygame.Color('white'))
+        self.__controls_rect = self.__controls.get_rect(
             center=(Constants.WIDTH / 2, Constants.HEIGHT - 80))
 
-        char = self.characters[self.selected]
+        char = self.__characters[self.__selected]
         orig_width, orig_height = char['image'].get_size()
         new_height = 150
         new_width = int((orig_width / orig_height) * new_height)
-        self.image = pygame.transform.scale(char['image'],
-                                            (new_width, new_height))
+        self.__image = pygame.transform.scale(char['image'],
+                                              (new_width, new_height))
 
     def update(self, dt):
         """
@@ -138,25 +138,25 @@ class CharacterSelect(AbstractState):
 
         :param screen: The screen surface to draw on.
         """
-        screen.blit(self.bg_image, (0, 0))
+        screen.blit(self.__bg_image, (0, 0))
 
         # Draw title
-        screen.blit(self.title, self.title_rect)
+        screen.blit(self.__title, self.__title_rect)
 
         # Draw character preview
-        screen.blit(self.image, self.preview_rect)
+        screen.blit(self.__image, self.__preview_rect)
 
         # Draw navigation arrows
-        if self.selected > 0:
-            screen.blit(self.left_arrow, self.left_rect)
+        if self.__selected > 0:
+            screen.blit(self.__left_arrow, self.__left_rect)
 
-        if self.selected < len(self.characters) - 1:
-            screen.blit(self.right_arrow, self.right_rect)
+        if self.__selected < len(self.__characters) - 1:
+            screen.blit(self.__right_arrow, self.__right_rect)
 
         # Draw name and description
-        screen.blit(self.char_name, self.char_name_rect)
-        screen.blit(self.char_desc, self.char_desc_rect)
-        screen.blit(self.controls, self.controls_rect)
+        screen.blit(self.__char_name, self.__char_name_rect)
+        screen.blit(self.__char_desc, self.__char_desc_rect)
+        screen.blit(self.__controls, self.__controls_rect)
 
     def handle_events(self, events):
         """
@@ -166,49 +166,49 @@ class CharacterSelect(AbstractState):
         """
         for event in events:
             if event.type == pygame.QUIT:
-                self.is_running = False
+                self._is_running = False
             if event.type == pygame.KEYDOWN:
                 if (
-                        event.key == pygame.K_LEFT or event.key == pygame.K_a) and self.selected > 0:
-                    self.selected -= 1
-                    self.update_character_info()
+                        event.key == pygame.K_LEFT or event.key == pygame.K_a) and self.__selected > 0:
+                    self.__selected -= 1
+                    self.__update_character_info()
                     self.__audio_manager.play_sound(Sounds.CLICK)
                 elif (
-                        event.key == pygame.K_RIGHT or event.key == pygame.K_d) and self.selected < len(
-                    self.characters) - 1:
-                    self.selected += 1
-                    self.update_character_info()
+                        event.key == pygame.K_RIGHT or event.key == pygame.K_d) and self.__selected < len(
+                    self.__characters) - 1:
+                    self.__selected += 1
+                    self.__update_character_info()
                     self.__audio_manager.play_sound(Sounds.CLICK)
                 elif event.key == pygame.K_SPACE:
-                    selected_char = self.characters[self.selected]['class']()
+                    selected_char = self.__characters[self.__selected]['class']()
                     selected_char_name = selected_char.__class__.__name__
-                    self.next_state = Play(self.game, selected_char_name)
+                    self._next_state = Play(self._game, selected_char_name)
                     self.__audio_manager.play_sound(Sounds.CLICK)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:  # Left mouse button
                     mouse_pos = event.pos
                     # Check if clicked on navigation arrows
-                    preview_rect = pygame.Rect(0, 0, self.preview_size,
-                                               self.preview_size)
+                    preview_rect = pygame.Rect(0, 0, self.__preview_size,
+                                               self.__preview_size)
                     preview_rect.center = (
                         Constants.WIDTH / 2, Constants.HEIGHT / 2)
 
-                    if self.selected > 0:
-                        if self.left_rect.collidepoint(mouse_pos):
-                            self.selected -= 1
-                            self.update_character_info()
+                    if self.__selected > 0:
+                        if self.__left_rect.collidepoint(mouse_pos):
+                            self.__selected -= 1
+                            self.__update_character_info()
                             self.__audio_manager.play_sound(Sounds.CLICK)
 
-                    if self.selected < len(self.characters) - 1:
-                        if self.right_rect.collidepoint(mouse_pos):
-                            self.selected += 1
-                            self.update_character_info()
+                    if self.__selected < len(self.__characters) - 1:
+                        if self.__right_rect.collidepoint(mouse_pos):
+                            self.__selected += 1
+                            self.__update_character_info()
                             self.__audio_manager.play_sound(Sounds.CLICK)
 
                     # Check if clicked on character preview
                     if preview_rect.collidepoint(mouse_pos):
-                        selected_char = self.characters[self.selected][
+                        selected_char = self.__characters[self.__selected][
                             'class']()
                         selected_char_name = selected_char.__class__.__name__
-                        self.next_state = Play(self.game, selected_char_name)
+                        self._next_state = Play(self._game, selected_char_name)
                         self.__audio_manager.play_sound(Sounds.CLICK)

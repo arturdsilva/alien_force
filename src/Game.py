@@ -20,10 +20,9 @@ class Game:
         self.__screen = pygame.display.set_mode(
             (Constants.WIDTH, Constants.HEIGHT))
         self.__current_state = Menu(self)
-        self.__next_state = None
         self.__audio_manager = AudioManager()
         self.__audio_manager.play_music(Sounds.PLAY)
-        self.load_from_save = False
+        self.__load_from_save = False
 
     def run(self):
         """
@@ -38,12 +37,12 @@ class Game:
             self.__current_state.draw(self.__screen)
 
             if self.__current_state.__class__.__name__ == "Menu":
-                self.load_from_save = self.__current_state.load_from_save
+                self.__load_from_save = self.__current_state.__load_from_save
             # Check if state change is needed
             if self.__current_state.next_state != self.__current_state:
-                self.__next_state = self.__current_state.next_state
+                # self.__current_state = self.__current_state.next_state
+                next_state = self.__current_state.next_state
                 self.__current_state.next_state = self.__current_state
-                self.__current_state = self.__next_state
-                self.__next_state = None
+                self.__current_state = next_state
 
             pygame.display.flip()

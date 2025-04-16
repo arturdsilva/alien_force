@@ -28,7 +28,7 @@ class Play(AbstractState):
         :param player_name: The character selected by the player.
         """
         super().__init__(game)
-        self.spawn_timer = 0
+        self.__spawn_timer = 0
         self.__audio_manager = AudioManager()
         self.__speed_multiplier = 1.0
 
@@ -36,8 +36,8 @@ class Play(AbstractState):
         random_terrain = terrains.get_random_terrain()
         self.__terrain = Terrain(random_terrain)
 
-        self.player_name = player_name
-        player = PlayerClassMap[self.player_name]()
+        self.__player_name = player_name
+        player = PlayerClassMap[self.__player_name]()
         player.rect.centerx = Constants.WIDTH / 2
         player.rect.bottom = 0
 
@@ -47,16 +47,16 @@ class Play(AbstractState):
         self.__enemies_projectiles = pygame.sprite.Group()
         self.__abilities = pygame.sprite.Group()
 
-        self.hud = Hud(player)
+        self.__hud = Hud(player)
 
-        self.bg_image = pygame.image.load(
+        self.__bg_image = pygame.image.load(
             "assets/sprites/Background.png").convert()
-        self.bg_image = pygame.transform.scale(self.bg_image, (
+        self.__bg_image = pygame.transform.scale(self.__bg_image, (
             Constants.WIDTH, Constants.HEIGHT))
 
-        self._adjust_player_initial_position()
+        self.__adjust_player_initial_position()
 
-    def _adjust_player_initial_position(self):
+    def __adjust_player_initial_position(self):
         """
         Adjusts the initial player position to be on terrain.
         """
@@ -93,27 +93,27 @@ class Play(AbstractState):
         for enemy in self.__enemies.sprites():
             if enemy.health <= 0:
                 if isinstance(enemy, TankEnemy):
-                    self.hud.add_score(100)
+                    self.__hud.add_score(100)
                 elif isinstance(enemy, WavyEnemy):
-                    self.hud.add_score(50)
+                    self.__hud.add_score(50)
                 elif isinstance(enemy, LinearEnemy):
-                    self.hud.add_score(30)
+                    self.__hud.add_score(30)
                 elif isinstance(enemy, BouncingEnemy):
-                    self.hud.add_score(40)
+                    self.__hud.add_score(40)
                 enemy.kill()
                 self.__audio_manager.play_sound(Sounds.DEATH)
 
-        if player._health_points <= 0:
+        if player.health_points <= 0:
             from src.states.GameOver import GameOver
-            self.next_state = GameOver(self.game, self.hud.score,
-                                       self.player_name)
+            self._next_state = GameOver(self._game, self.__hud.score,
+                                        self.__player_name)
             self.__audio_manager.pause_music()
             self.__audio_manager.play_sound(Sounds.GAME_OVER)
 
-        self.spawn_timer += dt
-        if self.spawn_timer >= Constants.SPAWN_TIMER:
-            self.spawn_enemy()
-            self.spawn_timer = 0
+        self.__spawn_timer += dt
+        if self.__spawn_timer >= Constants.SPAWN_TIMER:
+            self.__spawn_enemy()
+            self.__spawn_timer = 0
 
         if self.__speed_multiplier < Constants.SPEED_MULTIPLIER_LIMIT:
             self.__speed_multiplier += Constants.DIFFICULTY_FACTOR
@@ -124,7 +124,7 @@ class Play(AbstractState):
 
         :param screen: The screen surface to draw on.
         """
-        screen.blit(self.bg_image, (0, 0))
+        screen.blit(self.__bg_image, (0, 0))
 
         self.__terrain.draw(screen)
 
@@ -138,7 +138,7 @@ class Play(AbstractState):
 
         self.__abilities.draw(screen)
 
-        self.hud.draw(screen)
+        self.__hud.draw(screen)
 
     def handle_events(self, events):
         """
@@ -149,7 +149,7 @@ class Play(AbstractState):
         for event in events:
             if event.type == pygame.KEYDOWN:
                 if event.key in [pygame.K_ESCAPE, pygame.K_p]:
-                    self.next_state = Pause(self.game, self)
+                    self._next_state = Pause(self._game, self)
                     self.__audio_manager.pause_music()
                     self.__audio_manager.play_sound(Sounds.CLICK)
             if event.type == pygame.QUIT:
@@ -157,11 +157,11 @@ class Play(AbstractState):
                 self.__audio_manager.play_sound(Sounds.CLICK)
                 if self.__player.sprite is not None:
                     from src.states.SaveConfirmation import SaveConfirmation
-                    self.next_state = SaveConfirmation(self.game, self, False)
+                    self._next_state = SaveConfirmation(self._game, self, False)
                 else:
-                    self.is_running = False
+                    self._is_running = False
 
-    def spawn_enemy(self):
+    def __spawn_enemy(self):
         """
         Spawns random enemies in the game when appropriate.
         Enemies are chosen randomly from available types,
@@ -189,7 +189,7 @@ class Play(AbstractState):
         Converts the current Play state into a dictionary.
         """
         state = {
-            "spawn_timer": self.spawn_timer,
+            "spawn_timer": self.__spawn_timer,
             "speed_multiplier": self.__speed_multiplier,
             "terrain": self.__terrain.to_dict(),
             "player": None if self.__player.sprite is None else self.__player.sprite.to_dict(),
@@ -210,7 +210,7 @@ class Play(AbstractState):
         """
         # Create the Play state instance using the provided game and player
         instance = cls(game, player_name)
-        instance.spawn_timer = data.get("spawn_timer", 0)
+        instance.__spawn_timer = data.get("spawn_timer", 0)
         instance.__speed_multiplier = data.get("speed_multiplier", 1.0)
 
         # Restore Terrain
@@ -220,7 +220,7 @@ class Play(AbstractState):
         player_data = data.get("player")
         if data.get("player") is not None:
             player_type = player_data.get("type")
-            instance.player_name = player_type
+            instance.__player_name = player_type
             restored_player = PlayerClassMap[player_type].from_dict(
                 player_data)
             instance.__player = pygame.sprite.GroupSingle(restored_player)
@@ -239,6 +239,6 @@ class Play(AbstractState):
         instance.__player_projectiles = pygame.sprite.Group()
         instance.__enemies_projectiles = pygame.sprite.Group()
         instance.__abilities = pygame.sprite.Group()
-        instance.hud = Hud(instance.__player.sprite)
+        instance.__hud = Hud(instance.__player.sprite)
 
         return instance
