@@ -37,7 +37,7 @@ class Game:
             self.__current_state.draw(self.__screen)
 
             if self.__current_state.__class__.__name__ == "Menu":
-                self.__load_from_save = self.__current_state.__load_from_save
+                self.__load_from_save = self.__current_state.load_from_save
             # Check if state change is needed
             if self.__current_state.next_state != self.__current_state:
                 # self.__current_state = self.__current_state.next_state
