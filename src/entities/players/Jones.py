@@ -14,7 +14,7 @@ class Jones(AbstractPlayer):
     def __init__(self, x=Constants.WIDTH / 2, y=Constants.HEIGHT / 2):
 
         super().__init__(x, y)
-        self._initial_health = int(Constants.PLAYER_MAX_HEALTH * 1.2)
+        self._initial_health = Constants.JONES_MAX_HEALTH
         self._health_points = self._initial_health
         self._ability_cooldown = Constants.MISSILE_COOLDOWN
 

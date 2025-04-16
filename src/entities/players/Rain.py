@@ -14,7 +14,7 @@ class Rain(AbstractPlayer):
 
     def __init__(self, x=Constants.WIDTH / 2, y=Constants.HEIGHT / 2):
         super().__init__(x, y)
-        self._initial_health = int(Constants.PLAYER_MAX_HEALTH * 0.9)
+        self._initial_health = Constants.RAIN_MAX_HEALTH
         self._health_points = self._initial_health
         self._ability_cooldown = Constants.CRITICAL_SHOT_COOLDOWN
 
