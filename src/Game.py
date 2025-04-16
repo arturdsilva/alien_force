@@ -40,7 +40,6 @@ class Game:
                 self.__load_from_save = self.__current_state.load_from_save
             # Check if state change is needed
             if self.__current_state.next_state != self.__current_state:
-                # self.__current_state = self.__current_state.next_state
                 next_state = self.__current_state.next_state
                 self.__current_state.next_state = self.__current_state
                 self.__current_state = next_state
