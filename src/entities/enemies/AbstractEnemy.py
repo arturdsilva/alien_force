@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from config.Constants import Constants, Sounds
+from config.Constants import Constants
 import pygame
 
 
