@@ -100,14 +100,13 @@ class BouncingEnemy(AbstractEnemy):
                     Constants.BOUNCING_ENEMY_MIN_TIME_BEFORE_FALL,
                     Constants.BOUNCING_ENEMY_MAX_TIME_BEFORE_FALL
                 )
-        self.__update_behavior(dt, terrain)
+        self.__update_behavior(dt)
 
-    def __update_behavior(self, dt, terrain=None):
+    def __update_behavior(self, dt):
         """
         Updates enemy state and timers.
 
         :param dt: Time since last update
-        :param terrain: Terrain sprite group
         """
         if self.__state == self.MOVING:
             self.__timer += dt
@@ -152,7 +151,7 @@ class BouncingEnemy(AbstractEnemy):
         :param speed_multiplier: Speed multiplier for game difficulty
         """
         self._move(dt, terrain)
-        self.__update_behavior(dt, terrain)
+        self.__update_behavior(dt)
         self._compute_damage(player_projectiles, ability_projectiles)
         self._update_sprite(self._speed)
         self._attack(dt, player, enemies_projectiles)
