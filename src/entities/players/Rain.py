@@ -136,7 +136,7 @@ class Rain(AbstractPlayer):
         """
         data = super().to_dict()
         data["charging_critical"] = self._charged_shots
-        data["time_projectile_geration"] = self.time_projectile_generation
+        data["time_projectile_generation"] = self.time_projectile_generation
         return data
 
     @classmethod
@@ -154,5 +154,5 @@ class Rain(AbstractPlayer):
         instance.time_cooldown_ability = data["time_cooldown_ability"]
         instance._charged_shots = data.get("charging_critical", 0)
         instance.time_projectile_generation = data.get(
-            "time_projectile_geration", 0)
+            "time_projectile_generation", 0)
         return instance

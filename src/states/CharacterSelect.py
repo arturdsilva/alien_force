@@ -31,7 +31,7 @@ class CharacterSelect(AbstractState):
         self.__font_chars = pygame.font.Font(None, 54)
         self.__font_desc = pygame.font.Font(None, 36)
 
-        self.__title = self.__font_title.render('Selecione seu Personagem',
+        self.__title = self.__font_title.render('Choose Your Character',
                                                 True,
                                                 pygame.Color('white'))
         self.__title_rect = self.__title.get_rect(
@@ -42,21 +42,21 @@ class CharacterSelect(AbstractState):
             {
                 'name': 'Captain Cyborg',
                 'class': Cyborg,
-                'desc': 'Especialista em armas de assalto',
+                'desc': 'Assault weapons specialist',
                 'image': pygame.image.load(
                     "assets/sprites/players/CyborgIdle.png").convert_alpha()
             },
             {
                 'name': 'Sergeant Jones',
                 'class': Jones,
-                'desc': 'Especialista em explosivos',
+                'desc': 'Explosives specialist',
                 'image': pygame.image.load(
                     "assets/sprites/players/JonesIdle.png").convert_alpha()
             },
             {
                 'name': 'Lieutenant Rain',
                 'class': Rain,
-                'desc': 'Especialista em precisão',
+                'desc': 'Precision specialist',
                 'image': pygame.image.load(
                     "assets/sprites/players/RainIdle.png").convert_alpha()
             }
@@ -113,7 +113,7 @@ class CharacterSelect(AbstractState):
         self.__char_desc_rect = self.__char_desc.get_rect(
             center=(Constants.WIDTH / 2, Constants.HEIGHT / 2 + 100))
 
-        self.__controls = self.__font_desc.render('ESPAÇO para confirmar',
+        self.__controls = self.__font_desc.render('SPACEBAR to confirm',
                                                   True,
                                                   pygame.Color('white'))
         self.__controls_rect = self.__controls.get_rect(

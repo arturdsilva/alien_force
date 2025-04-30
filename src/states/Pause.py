@@ -27,15 +27,15 @@ class Pause(AbstractState):
         self.__font_options = pygame.font.Font(None, 48)
 
         # Title
-        self.__title = self.__font_title.render('PAUSADO', True,
+        self.__title = self.__font_title.render('PAUSED', True,
                                                 pygame.Color('white'))
         self.__title_rect = self.__title.get_rect(
             center=(Constants.WIDTH / 2, Constants.HEIGHT / 3))
 
         # Options
         self.__options = [
-            {'text': 'Continuar', 'action': self.__resume_game},
-            {'text': 'Menu Principal', 'action': self.__return_to_menu}
+            {'text': 'Continue', 'action': self.__resume_game},
+            {'text': 'Main Menu', 'action': self.__return_to_menu}
         ]
 
         self.__options_surfaces = []
