@@ -35,9 +35,9 @@ class Menu(AbstractState):
         self.__audio_manager = AudioManager()
 
         self.__options = [
-            {'text': 'Novo Jogo', 'action':
+            {'text': 'New Game', 'action':
                 self.__start_from_beginning},
-            {'text': 'Continuar Jogo Salvo',
+            {'text': 'Continue Saved Game',
              'action': self.__start_from_save},
         ]
 
@@ -105,6 +105,6 @@ class Menu(AbstractState):
             print("Error: save file not found! Starting new game")
             self.__start_from_beginning()
             return
-        player_name = "Jones"  # Default name
+        player_name = "Cyborg"  # Default name
         from src.states.Play import Play
         self._next_state = Play.from_dict(data, self._game, player_name)

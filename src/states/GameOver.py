@@ -33,8 +33,8 @@ class GameOver(AbstractState):
 
         # Menu options
         self.__options = [
-            {'text': 'Reiniciar', 'action': self.__restart_game},
-            {'text': 'Voltar ao Menu', 'action': self.__return_to_menu}
+            {'text': 'Restart', 'action': self.__restart_game},
+            {'text': 'Menu', 'action': self.__return_to_menu}
         ]
 
         self.__options_surfaces = []

@@ -32,15 +32,15 @@ class SaveConfirmation(AbstractState):
         self.__font_options = pygame.font.Font(None, 48)
 
         # Render the title text
-        self.__title = self.__font_title.render('Salvar o progresso?', True,
+        self.__title = self.__font_title.render('Save Progress?', True,
                                                 pygame.Color('white'))
         self.__title_rect = self.__title.get_rect(
             center=(Constants.WIDTH / 2, Constants.HEIGHT / 3))
 
         # Define the menu options with associated actions
         self.__options = [
-            {'text': 'Salvar', 'action': self.__save_and_leave_session},
-            {'text': 'Sair sem salvar',
+            {'text': 'Save', 'action': self.__save_and_leave_session},
+            {'text': 'Quit without saving',
              'action': self.__leave_session}
         ]
 
@@ -119,7 +119,7 @@ class SaveConfirmation(AbstractState):
                 json.dump(data, file, indent=4)
 
         except (IOError, OSError) as e:
-            print("Erro ao salvar o progresso: {}".format(e))
+            print("Error while saving progress: {}".format(e))
 
         self.__leave_session()
 
