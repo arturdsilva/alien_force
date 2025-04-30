@@ -47,6 +47,7 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         self.__walk_frame_index = 0
         self.__walk_frame_timer = 0
         self.__walk_frame_duration = 0.3
+        self.__immunity_frames = Constants.PLAYER_IMMUNITY_FRAMES
 
     @property
     def get_ability_cooldown(self):
@@ -144,25 +145,10 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         self._handle_input(terrain, keys, dt, player_projectiles, abilities)
         self._limit_bounds()
         self._compute_damage(enemies_projectiles)
+        self._update_sprite(keys, dt)
 
-        if self._is_jumping:
-            self.image = self._sprite_jump
-        elif keys[pygame.K_a] or keys[pygame.K_d]:
-            self.__walk_frame_timer += dt
-            if self.__walk_frame_timer >= self.__walk_frame_duration:
-                self.__walk_frame_timer = 0
-                self.__walk_frame_index = (self.__walk_frame_index + 1) % len(
-                    self._sprite_walk_frames)
-            self.image = self._sprite_walk_frames[self.__walk_frame_index]
-        else:
-            self.image = self._sprite_idle
-
-        if self._facing_left:
-            self.image = pygame.transform.flip(self.image, True, False)
-
-        center = self.rect.center
-        self.rect = self.image.get_rect()
-        self.rect.center = center
+        if self.__immunity_frames < Constants.PLAYER_IMMUNITY_FRAMES:
+            self.__immunity_frames += 1
 
         if self._health_points <= 0:
             self.kill()
@@ -230,7 +216,7 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         self._weapon_image = pygame.transform.rotate(
             self._current_weapon_original_image, angle)
         new_center = (
-        self.rect.centerx + offset_x, self.rect.centery + offset_y)
+            self.rect.centerx + offset_x, self.rect.centery + offset_y)
         self._weapon_rect = self._weapon_image.get_rect(center=new_center)
 
     def _compute_vertical_position(self, terrain, keys, dt):
@@ -301,14 +287,42 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         for projectile in enemies_projectiles:
             projectile.compute_collision(self)
 
+    def _update_sprite(self, keys, dt):
+        """
+        Updates player sprite.
+
+        :param keys: Dictionary of key states.
+        :param dt: The duration of one iteration.
+        """
+        if self._is_jumping:
+            self.image = self._sprite_jump
+        elif keys[pygame.K_a] or keys[pygame.K_d]:
+            self.__walk_frame_timer += dt
+            if self.__walk_frame_timer >= self.__walk_frame_duration:
+                self.__walk_frame_timer = 0
+                self.__walk_frame_index = (self.__walk_frame_index + 1) % len(
+                    self._sprite_walk_frames)
+            self.image = self._sprite_walk_frames[self.__walk_frame_index]
+        else:
+            self.image = self._sprite_idle
+
+        if self._facing_left:
+            self.image = pygame.transform.flip(self.image, True, False)
+
+        center = self.rect.center
+        self.rect = self.image.get_rect()
+        self.rect.center = center
+
     def inflict_damage(self, damage):
         """
         Inflicts damage on the player.
 
         :param damage: The damage to be inflicted on the player.
         """
-        self._health_points -= damage
-        self._audio_manager.play_sound(Sounds.HIT)
+        if self.__immunity_frames == Constants.PLAYER_IMMUNITY_FRAMES:
+            self._health_points -= damage
+            self.__immunity_frames = 0
+            self._audio_manager.play_sound(Sounds.HIT)
 
     def to_dict(self):
         """
