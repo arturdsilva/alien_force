@@ -47,6 +47,7 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         self.__walk_frame_index = 0
         self.__walk_frame_timer = 0
         self.__walk_frame_duration = 0.3
+        self.__immunity_frames = Constants.PLAYER_IMMUNITY_FRAMES
 
     @property
     def get_ability_cooldown(self):
@@ -163,6 +164,8 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
         center = self.rect.center
         self.rect = self.image.get_rect()
         self.rect.center = center
+        if self.__immunity_frames < Constants.PLAYER_IMMUNITY_FRAMES:
+            self.__immunity_frames += 1
 
         if self._health_points <= 0:
             self.kill()
@@ -307,8 +310,10 @@ class AbstractPlayer(pygame.sprite.Sprite, ABC):
 
         :param damage: The damage to be inflicted on the player.
         """
-        self._health_points -= damage
-        self._audio_manager.play_sound(Sounds.HIT)
+        if self.__immunity_frames == Constants.PLAYER_IMMUNITY_FRAMES:
+            self._health_points -= damage
+            self.__immunity_frames = 0
+            self._audio_manager.play_sound(Sounds.HIT)
 
     def to_dict(self):
         """
